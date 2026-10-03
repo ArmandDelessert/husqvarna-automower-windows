@@ -1,0 +1,99 @@
+{
+  "data": [
+    {
+      "type": "mower",
+      "id": "11111111-aaaa-4bbb-8ccc-000000000001",
+      "attributes": {
+        "system": {
+          "name": "Front Lawn",
+          "model": "HUSQVARNA AUTOMOWER® 450X",
+          "serialNumber": 100000001
+        },
+        "battery": {
+          "batteryPercent": 100,
+          "remainingChargingTime": 0
+        },
+        "capabilities": {
+          "headlights": true,
+          "workAreas": false,
+          "position": true,
+          "canConfirmError": false,
+          "stayOutZones": false
+        },
+        "mower": {
+          "mode": "MAIN_AREA",
+          "activity": "PARKED_IN_CS",
+          "inactiveReason": "NONE",
+          "state": "RESTRICTED",
+          "errorCode": 0,
+          "errorCodeTimestamp": 0,
+          "isErrorConfirmable": false
+        },
+        "calendar": {
+          "tasks": [
+            { "start": 480, "duration": 210, "monday": true, "tuesday": true, "wednesday": false, "thursday": true, "friday": true, "saturday": false, "sunday": false },
+            { "start": 510, "duration": 180, "monday": false, "tuesday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": true, "sunday": false }
+          ]
+        },
+        "planner": {
+          "nextStartTimestamp": 1790236800000,
+          "override": { "action": "NOT_ACTIVE" },
+          "restrictedReason": "WEEK_SCHEDULE"
+        },
+        "metadata": {
+          "connected": true,
+          "statusTimestamp": 1789987658000
+        },
+        "positions": [
+          { "latitude": 46.5, "longitude": 6.6 },
+          { "latitude": 46.50001, "longitude": 6.60001 }
+        ],
+        "settings": {
+          "cuttingHeight": 6,
+          "headlight": { "mode": "EVENING_AND_NIGHT" }
+        },
+        "statistics": {
+          "numberOfChargingCycles": 30,
+          "numberOfCollisions": 1403,
+          "totalChargingTime": 4302000,
+          "totalCuttingTime": 17244000,
+          "totalDriveDistance": 9593640,
+          "totalRunningTime": 17766000,
+          "totalSearchingTime": 522000
+        }
+      }
+    },
+    {
+      "type": "mower",
+      "id": "11111111-aaaa-4bbb-8ccc-000000000002",
+      "attributes": {
+        "system": {
+          "name": "Back Garden",
+          "model": "Husqvarna Automower® 450X",
+          "serialNumber": 100000002
+        },
+        "battery": { "batteryPercent": 42, "remainingChargingTime": 0 },
+        "capabilities": { "headlights": true, "workAreas": false, "position": true, "canConfirmError": false, "stayOutZones": false },
+        "mower": {
+          "mode": "MAIN_AREA",
+          "activity": "STOPPED_IN_GARDEN",
+          "inactiveReason": "NONE",
+          "state": "ERROR",
+          "errorCode": 9,
+          "errorCodeTimestamp": 1789990200000,
+          "isErrorConfirmable": false
+        },
+        "calendar": { "tasks": [] },
+        "planner": {
+          "nextStartTimestamp": 0,
+          "override": { "action": "NOT_ACTIVE" },
+          "restrictedReason": "NONE"
+        },
+        "metadata": { "connected": false, "statusTimestamp": 1789990200000 },
+        "positions": [],
+        "settings": { "cuttingHeight": 5, "headlight": { "mode": "ALWAYS_OFF" } },
+        "statistics": { "numberOfChargingCycles": 12 }
+      }
+    }
+  ]
+}
