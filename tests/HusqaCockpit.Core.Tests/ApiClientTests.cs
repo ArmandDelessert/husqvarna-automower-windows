@@ -203,6 +203,9 @@ public class AutomowerClientTests
         Assert.Equal(480, task["start"]!.GetValue<int>());
         Assert.True(task["monday"]!.GetValue<bool>());
         Assert.False(task["sunday"]!.GetValue<bool>());
+        Assert.Equal(
+            ["duration", "friday", "monday", "saturday", "start", "sunday", "thursday", "tuesday", "wednesday"],
+            task.AsObject().Select(p => p.Key).Order(StringComparer.Ordinal));
     }
 
     [Fact]

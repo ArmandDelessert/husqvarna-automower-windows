@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HusqaCockpit.Core.Models;
 
 // Mirrors the "attributes" object of GET /mowers (Automower Connect API v1).
@@ -78,6 +80,8 @@ public sealed record CalendarTask
     public bool Sunday { get; init; }
     public long? WorkAreaId { get; init; }
 
+    /// <summary>Convenience view of the day flags; not part of the API payload.</summary>
+    [JsonIgnore]
     public IEnumerable<DayOfWeek> Days
     {
         get
