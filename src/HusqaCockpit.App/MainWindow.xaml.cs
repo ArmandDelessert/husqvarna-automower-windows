@@ -94,25 +94,25 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    // ItemInvoked (not SelectionChanged): clicking "My mowers" must also leave a mower's detail page,
+    // although that item is already selected there.
+    private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
-        if (args.IsSettingsSelected)
+        var target = args.IsSettingsInvoked ? typeof(SettingsPage)
+            : ReferenceEquals(args.InvokedItemContainer, MapItem) ? typeof(MapPage)
+            : typeof(DashboardPage);
+        if (ContentFrame.Content?.GetType() != target)
         {
-            if (ContentFrame.Content is not SettingsPage)
-            {
-                ContentFrame.Navigate(typeof(SettingsPage));
-            }
-        }
-        else if (ReferenceEquals(args.SelectedItem, DashboardItem) && ContentFrame.Content is not DashboardPage)
-        {
-            ContentFrame.Navigate(typeof(DashboardPage));
+            ContentFrame.Navigate(target);
         }
     }
 
     private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
     {
         // Keep the navigation selection in sync with back navigation.
-        NavView.SelectedItem = e.SourcePageType == typeof(SettingsPage) ? NavView.SettingsItem : DashboardItem;
+        NavView.SelectedItem = e.SourcePageType == typeof(SettingsPage) ? NavView.SettingsItem
+            : e.SourcePageType == typeof(MapPage) ? MapItem
+            : DashboardItem;
     }
 
     private void AppTitleBar_BackRequested(TitleBar sender, object args)

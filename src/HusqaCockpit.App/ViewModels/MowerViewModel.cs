@@ -88,6 +88,16 @@ public sealed partial class MowerViewModel : ObservableObject
 
     public bool HasSchedule => _mower.Attributes.Calendar.Tasks.Count > 0;
 
+    /// <summary>Mowers with work areas use a different schedule endpoint, not supported yet.</summary>
+    public bool CanEditSchedule => !_mower.Attributes.Capabilities.WorkAreas;
+
+    public bool CannotEditSchedule => !CanEditSchedule;
+
+    public IReadOnlyList<CalendarTask> CurrentTasks => _mower.Attributes.Calendar.Tasks;
+
+    public Task SaveScheduleAsync(IReadOnlyList<CalendarTask> tasks) =>
+        RunAsync(() => _host.SetCalendarAsync(Id, tasks), "Command_ScheduleSent");
+
     public IReadOnlyList<StatisticItem> Statistics
     {
         get

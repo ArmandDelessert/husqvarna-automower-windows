@@ -49,11 +49,16 @@
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="True"
             PaneDisplayMode="LeftCompact"
-            SelectionChanged="NavView_SelectionChanged">
+            ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="DashboardItem" x:Uid="Nav_Dashboard" Tag="dashboard">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE80F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="MapItem" x:Uid="Nav_Map" Tag="map">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE707;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

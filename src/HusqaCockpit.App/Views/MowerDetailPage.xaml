@@ -202,7 +202,16 @@
             </Border>
 
             <!-- Schedule -->
-            <TextBlock x:Uid="Detail_ScheduleHeader" Style="{StaticResource SectionHeaderStyle}" />
+            <Grid>
+                <TextBlock x:Uid="Detail_ScheduleHeader" Style="{StaticResource SectionHeaderStyle}" />
+                <Button
+                    x:Uid="Detail_EditSchedule"
+                    Margin="0,16,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Click="EditSchedule_Click"
+                    Visibility="{x:Bind ViewModel.CanEditSchedule, Mode=OneWay}" />
+            </Grid>
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="8">
                     <ItemsRepeater ItemsSource="{x:Bind ViewModel.Schedule, Mode=OneWay}">
@@ -226,7 +235,11 @@
                         x:Uid="Detail_NoSchedule"
                         Style="{StaticResource SecondaryTextStyle}"
                         Visibility="{x:Bind local:BindingHelpers.VisibleWhenFalse(ViewModel.HasSchedule), Mode=OneWay}" />
-                    <TextBlock x:Uid="Detail_ScheduleHint" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
+                    <TextBlock
+                        x:Uid="Detail_ScheduleWorkAreas"
+                        Style="{StaticResource CaptionSecondaryStyle}"
+                        TextWrapping="Wrap"
+                        Visibility="{x:Bind ViewModel.CannotEditSchedule, Mode=OneWay}" />
                 </StackPanel>
             </Border>
 
@@ -254,13 +267,21 @@
             <!-- Position -->
             <TextBlock x:Uid="Detail_PositionHeader" Style="{StaticResource SectionHeaderStyle}" />
             <Border Style="{StaticResource CardStyle}">
-                <StackPanel Orientation="Horizontal" Spacing="16">
-                    <FontIcon Glyph="&#xE707;" />
-                    <TextBlock VerticalAlignment="Center" IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.PositionText, Mode=OneWay}" />
-                    <HyperlinkButton
-                        x:Uid="Detail_OpenMap"
-                        NavigateUri="{x:Bind ViewModel.MapUri, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.HasPosition, Mode=OneWay}" />
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <FontIcon Glyph="&#xE707;" />
+                        <TextBlock VerticalAlignment="Center" IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.PositionText, Mode=OneWay}" />
+                        <HyperlinkButton
+                            x:Uid="Detail_OpenMap"
+                            NavigateUri="{x:Bind ViewModel.MapUri, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.HasPosition, Mode=OneWay}" />
+                        <Button
+                            x:Uid="Detail_Recenter"
+                            Click="Recenter_Click"
+                            Visibility="{x:Bind ViewModel.HasPosition, Mode=OneWay}" />
+                    </StackPanel>
+                    <TextBlock x:Uid="Detail_TrackHint" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" Visibility="{x:Bind ViewModel.HasPosition, Mode=OneWay}" />
+                    <local:MapView x:Name="Map" Height="400" Visibility="{x:Bind ViewModel.HasPosition, Mode=OneWay}" />
                 </StackPanel>
             </Border>
 

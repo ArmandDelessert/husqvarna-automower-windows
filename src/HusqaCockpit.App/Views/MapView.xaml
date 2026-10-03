@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="HusqaCockpit.App.Views.MapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid CornerRadius="8">
+        <WebView2 x:Name="Web" />
+        <StackPanel
+            x:Name="ErrorPanel"
+            MaxWidth="360"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="8"
+            Visibility="Collapsed">
+            <FontIcon FontSize="32" Glyph="&#xE7BA;" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            <TextBlock
+                x:Name="ErrorText"
+                Style="{StaticResource SecondaryTextStyle}"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+            <HyperlinkButton
+                x:Uid="Map_GetWebView2"
+                HorizontalAlignment="Center"
+                NavigateUri="https://developer.microsoft.com/microsoft-edge/webview2/" />
+        </StackPanel>
+    </Grid>
+</UserControl>

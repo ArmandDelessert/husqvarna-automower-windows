@@ -221,11 +221,35 @@
   <data name="Detail_HeadlightsCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Headlights</value></data>
   <data name="Detail_ScheduleHeader.Text" xml:space="preserve"><value>Weekly schedule</value></data>
   <data name="Detail_NoSchedule.Text" xml:space="preserve"><value>No schedule defined.</value></data>
-  <data name="Detail_ScheduleHint.Text" xml:space="preserve"><value>The schedule can be viewed here; edit it in the Automower Connect app for now.</value></data>
+  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Edit schedule</value></data>
+  <data name="Detail_ScheduleWorkAreas.Text" xml:space="preserve"><value>This mower uses work areas: its schedule cannot be edited here yet.</value></data>
+  <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Weekly schedule</value></data>
+  <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Send to the mower</value></data>
+  <data name="ScheduleEditorDialog.CloseButtonText" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>The mower mows during these time slots, on the selected days. The change is sent to the mower when you confirm.</value></data>
+  <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>Start</value></data>
+  <data name="ScheduleEditor_End.Header" xml:space="preserve"><value>End</value></data>
+  <data name="ScheduleEditor_Add.Content" xml:space="preserve"><value>Add a time slot</value></data>
+  <data name="ScheduleEditor_Empty.Text" xml:space="preserve"><value>No time slot: the mower will not start on its own.</value></data>
+  <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Remove this slot</value></data>
+  <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Remove this slot</value></data>
+  <data name="Issue_NoDays" xml:space="preserve"><value>Slot {0}: select at least one day.</value></data>
+  <data name="Issue_EndBeforeStart" xml:space="preserve"><value>Slot {0}: the end must be after the start.</value></data>
+  <data name="Issue_CrossesMidnight" xml:space="preserve"><value>Slot {0} cannot continue past midnight.</value></data>
+  <data name="Issue_Overlap" xml:space="preserve"><value>Slots {0} and {1} overlap on {2}.</value></data>
+  <data name="Command_ScheduleSent" xml:space="preserve"><value>Schedule sent to the mower.</value></data>
   <data name="Detail_StatisticsHeader.Text" xml:space="preserve"><value>Statistics</value></data>
   <data name="Detail_ResetBlades.Content" xml:space="preserve"><value>Reset blade counter</value></data>
   <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Last known position</value></data>
-  <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Show on a map</value></data>
+  <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Open in OpenStreetMap</value></data>
+  <data name="Detail_Recenter.Content" xml:space="preserve"><value>Recenter</value></data>
+  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Line: the last positions reported by the mower (the large dot is the most recent one, the small one the oldest).</value></data>
+  <data name="Nav_Map.Content" xml:space="preserve"><value>Map</value></data>
+  <data name="Map_Title.Text" xml:space="preserve"><value>Map</value></data>
+  <data name="Map_RecenterText.Text" xml:space="preserve"><value>Recenter</value></data>
+  <data name="Map_Empty.Text" xml:space="preserve"><value>No GPS position available yet.</value></data>
+  <data name="Map_Unavailable" xml:space="preserve"><value>The map needs the Microsoft Edge WebView2 runtime, which could not be started.</value></data>
+  <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Download WebView2</value></data>
   <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Event history</value></data>
   <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Load history</value></data>
   <data name="Detail_NoMessages.Text" xml:space="preserve"><value>No events recorded.</value></data>

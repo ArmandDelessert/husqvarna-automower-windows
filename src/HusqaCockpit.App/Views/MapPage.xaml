@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HusqaCockpit.App.Views.MapPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HusqaCockpit.App.Views"
+    NavigationCacheMode="Required">
+
+    <Grid Padding="32,16,32,32" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Uid="Map_Title" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" />
+            <ItemsRepeater Grid.Column="1" Margin="24,0,0,0" VerticalAlignment="Center" x:Name="Legend">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Horizontal" Spacing="16" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="local:LegendItem">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse Width="12" Height="12" Fill="{x:Bind Brush}" />
+                            <TextBlock Text="{x:Bind Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+            <Button x:Uid="Map_Recenter" Grid.Column="2" Click="Recenter_Click">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon FontSize="14" Glyph="&#xE81D;" />
+                    <TextBlock x:Uid="Map_RecenterText" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+            <Grid>
+                <local:MapView x:Name="Map" />
+                <TextBlock
+                    x:Name="EmptyText"
+                    x:Uid="Map_Empty"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SecondaryTextStyle}"
+                    Visibility="Collapsed" />
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

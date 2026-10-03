@@ -96,6 +96,9 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
     public Task SetHeadlightModeAsync(string mowerId, HeadlightMode mode) =>
         RunCommandAsync(api => api.SetHeadlightModeAsync(mowerId, mode));
 
+    public Task SetCalendarAsync(string mowerId, IReadOnlyList<CalendarTask> tasks) =>
+        RunCommandAsync(api => api.SetCalendarAsync(mowerId, tasks));
+
     public Task ResetBladeUsageAsync(string mowerId) =>
         RunCommandAsync(api => api.ResetCuttingBladeUsageTimeAsync(mowerId));
 

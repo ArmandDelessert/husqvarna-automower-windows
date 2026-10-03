@@ -221,11 +221,35 @@
   <data name="Detail_HeadlightsCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Phares</value></data>
   <data name="Detail_ScheduleHeader.Text" xml:space="preserve"><value>Planning hebdomadaire</value></data>
   <data name="Detail_NoSchedule.Text" xml:space="preserve"><value>Aucun planning défini.</value></data>
-  <data name="Detail_ScheduleHint.Text" xml:space="preserve"><value>Le planning est consultable ici ; pour l'instant, modifiez-le dans l'application Automower Connect.</value></data>
+  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Modifier le planning</value></data>
+  <data name="Detail_ScheduleWorkAreas.Text" xml:space="preserve"><value>Cette tondeuse utilise des zones de travail : son planning n'est pas encore modifiable ici.</value></data>
+  <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Planning hebdomadaire</value></data>
+  <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Envoyer à la tondeuse</value></data>
+  <data name="ScheduleEditorDialog.CloseButtonText" xml:space="preserve"><value>Annuler</value></data>
+  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>La tondeuse tond pendant ces créneaux, aux jours sélectionnés. La modification est envoyée à la tondeuse quand vous confirmez.</value></data>
+  <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>Début</value></data>
+  <data name="ScheduleEditor_End.Header" xml:space="preserve"><value>Fin</value></data>
+  <data name="ScheduleEditor_Add.Content" xml:space="preserve"><value>Ajouter un créneau</value></data>
+  <data name="ScheduleEditor_Empty.Text" xml:space="preserve"><value>Aucun créneau : la tondeuse ne démarrera pas toute seule.</value></data>
+  <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Supprimer ce créneau</value></data>
+  <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Supprimer ce créneau</value></data>
+  <data name="Issue_NoDays" xml:space="preserve"><value>Créneau {0} : sélectionnez au moins un jour.</value></data>
+  <data name="Issue_EndBeforeStart" xml:space="preserve"><value>Créneau {0} : la fin doit être après le début.</value></data>
+  <data name="Issue_CrossesMidnight" xml:space="preserve"><value>Le créneau {0} ne peut pas dépasser minuit.</value></data>
+  <data name="Issue_Overlap" xml:space="preserve"><value>Les créneaux {0} et {1} se chevauchent le {2}.</value></data>
+  <data name="Command_ScheduleSent" xml:space="preserve"><value>Planning envoyé à la tondeuse.</value></data>
   <data name="Detail_StatisticsHeader.Text" xml:space="preserve"><value>Statistiques</value></data>
   <data name="Detail_ResetBlades.Content" xml:space="preserve"><value>Remettre à zéro le compteur des lames</value></data>
   <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Dernière position connue</value></data>
-  <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Voir sur une carte</value></data>
+  <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Ouvrir dans OpenStreetMap</value></data>
+  <data name="Detail_Recenter.Content" xml:space="preserve"><value>Recentrer</value></data>
+  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Trait : les dernières positions signalées par la tondeuse (le grand point est la plus récente, le petit la plus ancienne).</value></data>
+  <data name="Nav_Map.Content" xml:space="preserve"><value>Carte</value></data>
+  <data name="Map_Title.Text" xml:space="preserve"><value>Carte</value></data>
+  <data name="Map_RecenterText.Text" xml:space="preserve"><value>Recentrer</value></data>
+  <data name="Map_Empty.Text" xml:space="preserve"><value>Aucune position GPS disponible pour l'instant.</value></data>
+  <data name="Map_Unavailable" xml:space="preserve"><value>La carte nécessite le runtime Microsoft Edge WebView2, qui n'a pas pu démarrer.</value></data>
+  <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Télécharger WebView2</value></data>
   <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Historique des événements</value></data>
   <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Charger l'historique</value></data>
   <data name="Detail_NoMessages.Text" xml:space="preserve"><value>Aucun événement enregistré.</value></data>

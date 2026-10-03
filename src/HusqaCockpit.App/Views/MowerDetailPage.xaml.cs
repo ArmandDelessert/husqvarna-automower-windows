@@ -37,6 +37,7 @@ public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
         ViewModel = viewModel;
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         Bindings.Update();
+        UpdateMap(recenter: true);
         base.OnNavigatedTo(e);
     }
 
@@ -46,6 +47,8 @@ public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
         {
             ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
+        // A new page (and map) is created on every visit: release the browser process.
+        Map.CloseWebView();
         base.OnNavigatedFrom(e);
     }
 
@@ -55,13 +58,45 @@ public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NoMessagesVisibility)));
         }
+        if (string.IsNullOrEmpty(e.PropertyName))
+        {
+            // The mower was updated: its track may have grown.
+            UpdateMap(recenter: false);
+        }
     }
+
+    private void UpdateMap(bool recenter)
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        var index = Math.Max(0, App.Current.Dashboard.Mowers.IndexOf(ViewModel));
+        Map.SetTracks([MapTrack.From(ViewModel.Mower, MapTrack.ColorFor(index))], labels: false, recenter);
+    }
+
+    private void Recenter_Click(object sender, RoutedEventArgs e) => Map.Recenter();
 
     private void CommandInfo_Closed(InfoBar sender, InfoBarClosedEventArgs args)
     {
         if (ViewModel is not null)
         {
             ViewModel.CommandMessage = null;
+        }
+    }
+
+    private async void EditSchedule_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        var dialog = new ScheduleEditorDialog(ViewModel.CurrentTasks) { XamlRoot = XamlRoot };
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        {
+            await ViewModel.SaveScheduleAsync(dialog.ViewModel.ToTasks());
         }
     }
 
