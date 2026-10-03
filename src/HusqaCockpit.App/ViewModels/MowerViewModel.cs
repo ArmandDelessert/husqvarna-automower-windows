@@ -1,0 +1,304 @@
+using System.Collections.ObjectModel;
+using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HusqaCockpit.App.Services;
+using HusqaCockpit.Core.Api;
+using HusqaCockpit.Core.Models;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+
+namespace HusqaCockpit.App.ViewModels;
+
+public sealed record ScheduleItem(string Days, string Hours);
+
+public sealed record StatisticItem(string Label, string Value);
+
+public sealed record MessageItem(string When, string Text, string Severity, string Glyph);
+
+/// <summary>One mower card / detail page. All members must be used on the UI thread.</summary>
+public sealed partial class MowerViewModel : ObservableObject
+{
+    public static readonly IReadOnlyList<HeadlightMode> HeadlightModes =
+        [HeadlightMode.AlwaysOn, HeadlightMode.AlwaysOff, HeadlightMode.EveningOnly, HeadlightMode.EveningAndNight];
+
+    private readonly CockpitHost _host;
+    private Mower _mower;
+
+    public MowerViewModel(Mower mower, CockpitHost host)
+    {
+        _host = host;
+        _mower = mower;
+        Id = mower.Id;
+        ResetDrafts();
+    }
+
+    public string Id { get; }
+    public Mower Mower => _mower;
+
+    // ----- Identity -----
+    public string Name => _mower.Name;
+    public string Model => ShortModel(_mower.Model);
+    public string SerialNumber => _mower.Attributes.System.SerialNumber.ToString(CultureInfo.InvariantCulture);
+
+    // ----- Status -----
+    private StatusSummary Summary => MowerFormatter.Summarize(_mower, DateTimeOffset.Now);
+    public string StatusTitle => Summary.Title;
+    public string StatusDetail => Summary.Detail;
+    public StatusSeverity Severity => Summary.Severity;
+    public Brush SeverityBrush => SeverityBrushes.For(Severity);
+    public bool HasError => _mower.HasError;
+    public bool IsConnected => _mower.IsConnected;
+    public bool CanConfirmError => _mower.CanConfirmError;
+    public string ErrorText => _mower.ErrorCode != 0 ? Loc.Format("Mower_ErrorCode", _mower.ErrorCode, Loc.ErrorCode(_mower.ErrorCode)) : "";
+    public string ActivityText => Loc.Enum(_mower.Activity);
+    public string StateText => Loc.Enum(_mower.State);
+    public string ModeText => Loc.Enum(_mower.Mode);
+
+    public string LastSeenText => _mower.LastStatusTime is { } seen
+        ? Loc.Format("Mower_Updated", MowerFormatter.Relative(seen, DateTimeOffset.Now))
+        : "";
+
+    // ----- Battery -----
+    public int BatteryPercent => _mower.BatteryPercent;
+    public string BatteryText => string.Format(CultureInfo.CurrentCulture, "{0} %", _mower.BatteryPercent);
+    public string BatteryGlyph => BatteryGlyphFor(_mower.BatteryPercent, _mower.Activity == MowerActivity.Charging);
+
+    // ----- Settings -----
+    public bool HasHeadlights => _mower.Attributes.Capabilities.Headlights;
+    public string CuttingHeightText => _mower.Attributes.Settings.CuttingHeight?.ToString(CultureInfo.CurrentCulture) ?? "—";
+    public string HeadlightText => Loc.Enum(_mower.Attributes.Settings.Headlight.Mode);
+    public IReadOnlyList<string> HeadlightModeNames { get; } = HeadlightModes.Select(m => Loc.Enum(m)).ToList();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsCuttingHeightChanged))]
+    public partial double CuttingHeightDraft { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsHeadlightChanged))]
+    public partial int HeadlightDraftIndex { get; set; }
+
+    public bool IsCuttingHeightChanged => (int)CuttingHeightDraft != (_mower.Attributes.Settings.CuttingHeight ?? 0);
+    public bool IsHeadlightChanged => HeadlightDraftIndex >= 0 && HeadlightModes[HeadlightDraftIndex] != _mower.Attributes.Settings.Headlight.Mode;
+
+    // ----- Schedule, statistics, position -----
+    public IReadOnlyList<ScheduleItem> Schedule => _mower.Attributes.Calendar.Tasks
+        .Select(t => new ScheduleItem(MowerFormatter.Days(t), MowerFormatter.TimeRange(t)))
+        .ToList();
+
+    public bool HasSchedule => _mower.Attributes.Calendar.Tasks.Count > 0;
+
+    public IReadOnlyList<StatisticItem> Statistics
+    {
+        get
+        {
+            var s = _mower.Attributes.Statistics;
+            var items = new List<StatisticItem>
+            {
+                new(Loc.Get("Stats_CuttingTime"), MowerFormatter.Hours(s.TotalCuttingTime)),
+                new(Loc.Get("Stats_RunningTime"), MowerFormatter.Hours(s.TotalRunningTime)),
+                new(Loc.Get("Stats_ChargingTime"), MowerFormatter.Hours(s.TotalChargingTime)),
+                new(Loc.Get("Stats_SearchingTime"), MowerFormatter.Hours(s.TotalSearchingTime)),
+                new(Loc.Get("Stats_ChargingCycles"), MowerFormatter.Count(s.NumberOfChargingCycles)),
+                new(Loc.Get("Stats_Collisions"), MowerFormatter.Count(s.NumberOfCollisions)),
+                new(Loc.Get("Stats_Distance"), MowerFormatter.Kilometers(s.TotalDriveDistance)),
+            };
+            if (s.CuttingBladeUsageTime is not null)
+            {
+                items.Add(new(Loc.Get("Stats_BladeUsage"), MowerFormatter.Hours(s.CuttingBladeUsageTime)));
+            }
+            return items;
+        }
+    }
+
+    public bool HasPosition => _mower.LastPosition is not null;
+
+    public string PositionText => _mower.LastPosition is { } p
+        ? string.Format(CultureInfo.CurrentCulture, "{0:F6}, {1:F6}", p.Latitude, p.Longitude)
+        : Loc.Get("Mower_NoPosition");
+
+    public Uri? MapUri => _mower.LastPosition is { } p
+        ? new Uri(string.Format(CultureInfo.InvariantCulture,
+            "https://www.openstreetmap.org/?mlat={0}&mlon={1}#map=19/{0}/{1}", p.Latitude, p.Longitude))
+        : null;
+
+    // ----- Messages -----
+    public ObservableCollection<MessageItem> Messages { get; } = [];
+
+    [ObservableProperty]
+    public partial bool MessagesLoaded { get; set; }
+
+    // ----- Command feedback -----
+    [ObservableProperty]
+    public partial bool IsBusy { get; set; }
+
+    [ObservableProperty]
+    public partial string? CommandMessage { get; set; }
+
+    [ObservableProperty]
+    public partial bool CommandFailed { get; set; }
+
+    public bool HasCommandMessage => !string.IsNullOrEmpty(CommandMessage);
+
+    partial void OnCommandMessageChanged(string? value) => OnPropertyChanged(nameof(HasCommandMessage));
+
+    /// <summary>Applies a new snapshot from the API.</summary>
+    public void Update(Mower mower)
+    {
+        var settingsChanged = mower.Attributes.Settings != _mower.Attributes.Settings;
+        _mower = mower;
+        if (settingsChanged)
+        {
+            ResetDrafts();
+        }
+        // Empty name: every binding on this object is refreshed.
+        OnPropertyChanged(string.Empty);
+    }
+
+    /// <summary>Re-evaluates time-relative texts ("5 min ago").</summary>
+    public void Tick()
+    {
+        OnPropertyChanged(nameof(StatusDetail));
+        OnPropertyChanged(nameof(LastSeenText));
+    }
+
+    private void ResetDrafts()
+    {
+        CuttingHeightDraft = _mower.Attributes.Settings.CuttingHeight ?? 1;
+        HeadlightDraftIndex = HeadlightModes.ToList().IndexOf(_mower.Attributes.Settings.Headlight.Mode);
+    }
+
+    // ----- Commands -----
+
+    [RelayCommand]
+    private Task StartAsync(string minutes) =>
+        RunAsync(() => _host.SendActionAsync(Id, MowerAction.Start(Minutes(minutes))), "Command_StartSent");
+
+    [RelayCommand]
+    private Task PauseAsync() => RunAsync(() => _host.SendActionAsync(Id, MowerAction.Pause()), "Command_PauseSent");
+
+    [RelayCommand]
+    private Task ResumeScheduleAsync() =>
+        RunAsync(() => _host.SendActionAsync(Id, MowerAction.ResumeSchedule()), "Command_ResumeSent");
+
+    [RelayCommand]
+    private Task ParkUntilNextScheduleAsync() =>
+        RunAsync(() => _host.SendActionAsync(Id, MowerAction.ParkUntilNextSchedule()), "Command_ParkSent");
+
+    [RelayCommand]
+    private Task ParkUntilFurtherNoticeAsync() =>
+        RunAsync(() => _host.SendActionAsync(Id, MowerAction.ParkUntilFurtherNotice()), "Command_ParkSent");
+
+    [RelayCommand]
+    private Task ParkForAsync(string minutes) =>
+        RunAsync(() => _host.SendActionAsync(Id, MowerAction.Park(Minutes(minutes))), "Command_ParkSent");
+
+    [RelayCommand]
+    private Task ConfirmErrorAsync() => RunAsync(() => _host.ConfirmErrorAsync(Id), "Command_ConfirmSent");
+
+    [RelayCommand]
+    private Task ApplyCuttingHeightAsync() =>
+        RunAsync(() => _host.SetCuttingHeightAsync(Id, (int)CuttingHeightDraft), "Command_SettingsSent");
+
+    [RelayCommand]
+    private Task ApplyHeadlightAsync() =>
+        HeadlightDraftIndex < 0
+            ? Task.CompletedTask
+            : RunAsync(() => _host.SetHeadlightModeAsync(Id, HeadlightModes[HeadlightDraftIndex]), "Command_SettingsSent");
+
+    [RelayCommand]
+    private Task ResetBladeUsageAsync() => RunAsync(() => _host.ResetBladeUsageAsync(Id), "Command_BladeResetSent");
+
+    [RelayCommand]
+    private async Task LoadMessagesAsync()
+    {
+        IsBusy = true;
+        try
+        {
+            var messages = await _host.GetMessagesAsync(Id);
+            Messages.Clear();
+            foreach (var message in messages.OrderByDescending(m => m.Time).Take(50))
+            {
+                var when = MowerTime.FromMowerLocal(message.Time, _mower.TimeZone);
+                Messages.Add(new MessageItem(
+                    when?.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) ?? "",
+                    Loc.ErrorCode(message.Code),
+                    Loc.Enum(message.Severity),
+                    message.Severity is MessageSeverity.Error or MessageSeverity.Fatal ? "" : ""));
+            }
+            MessagesLoaded = true;
+            CommandMessage = null;
+        }
+        catch (Exception ex)
+        {
+            CommandFailed = true;
+            CommandMessage = Loc.Format("Command_Failed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task RunAsync(Func<Task> action, string successKey)
+    {
+        IsBusy = true;
+        CommandMessage = null;
+        try
+        {
+            await action();
+            CommandFailed = false;
+            CommandMessage = Loc.Get(successKey);
+        }
+        catch (Exception ex)
+        {
+            CommandFailed = true;
+            CommandMessage = Loc.Format("Command_Failed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private static TimeSpan Minutes(string minutes) =>
+        TimeSpan.FromMinutes(int.Parse(minutes, NumberStyles.Integer, CultureInfo.InvariantCulture));
+
+    private static string ShortModel(string model)
+    {
+        // "HUSQVARNA AUTOMOWER® 450X" / "Husqvarna Automower® 450X" → "Automower® 450X"
+        var trimmed = model.Trim();
+        if (trimmed.StartsWith("Husqvarna ", StringComparison.OrdinalIgnoreCase))
+        {
+            trimmed = trimmed["Husqvarna ".Length..];
+        }
+        return trimmed.Replace("AUTOMOWER", "Automower", StringComparison.Ordinal);
+    }
+
+    private static string BatteryGlyphFor(int percent, bool charging)
+    {
+        // Segoe Fluent Icons: Battery0–9 = E850–E859, Battery10 = E83F; BatteryCharging0–9 = E85A–E863, BatteryCharging10 = E83E.
+        var level = Math.Clamp((int)Math.Round(percent / 10.0), 0, 10);
+        if (level == 10)
+        {
+            return charging ? "" : "";
+        }
+        return ((char)((charging ? 0xE85A : 0xE850) + level)).ToString();
+    }
+}
+
+internal static class SeverityBrushes
+{
+    public static Brush For(StatusSeverity severity)
+    {
+        var key = severity switch
+        {
+            StatusSeverity.Ok => "SystemFillColorSuccessBrush",
+            StatusSeverity.Info => "AccentFillColorDefaultBrush",
+            StatusSeverity.Warning => "SystemFillColorCautionBrush",
+            StatusSeverity.Error => "SystemFillColorCriticalBrush",
+            _ => "SystemFillColorNeutralBrush",
+        };
+        return (Brush)Application.Current.Resources[key];
+    }
+}

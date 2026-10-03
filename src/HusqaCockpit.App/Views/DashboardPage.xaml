@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HusqaCockpit.App.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HusqaCockpit.App.Views"
+    xmlns:vm="using:HusqaCockpit.App.ViewModels"
+    NavigationCacheMode="Required">
+
+    <Grid Padding="32,16,32,0" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <TextBlock x:Uid="Dashboard_Title" Style="{StaticResource TitleTextBlockStyle}" />
+                <ProgressRing
+                    Width="20"
+                    Height="20"
+                    IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+            </StackPanel>
+            <CommandBar
+                Grid.Column="1"
+                Background="Transparent"
+                DefaultLabelPosition="Right"
+                IsOpen="False">
+                <AppBarButton x:Uid="Dashboard_ResumeAll" Command="{x:Bind ViewModel.ResumeAllCommand}">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE787;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Uid="Dashboard_ParkAll" Command="{x:Bind ViewModel.ParkAllCommand}">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Uid="Dashboard_Refresh" Command="{x:Bind ViewModel.RefreshCommand}" Icon="Refresh" />
+            </CommandBar>
+        </Grid>
+
+        <!-- Connection status -->
+        <InfoBar
+            Grid.Row="1"
+            IsClosable="False"
+            IsOpen="{x:Bind ViewModel.IsStatusVisible, Mode=OneWay}"
+            Message="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+            Severity="{x:Bind ViewModel.StatusSeverity, Mode=OneWay}"
+            Title="{x:Bind ViewModel.StatusTitle, Mode=OneWay}">
+            <InfoBar.ActionButton>
+                <Button
+                    x:Uid="Banner_OpenSettings"
+                    Click="OpenSettings_Click"
+                    Visibility="{x:Bind ViewModel.StatusNeedsSettings, Mode=OneWay}" />
+            </InfoBar.ActionButton>
+        </InfoBar>
+
+        <!-- Result of fleet-wide commands -->
+        <InfoBar
+            Grid.Row="2"
+            IsOpen="{x:Bind ViewModel.HasCommandMessage, Mode=OneWay}"
+            Message="{x:Bind ViewModel.CommandMessage, Mode=OneWay}"
+            Severity="Informational"
+            Closed="CommandInfo_Closed" />
+
+        <!-- Mower cards -->
+        <ScrollViewer Grid.Row="3" Padding="0,0,0,32">
+            <Grid>
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Mowers}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout
+                            ItemsStretch="Fill"
+                            MinColumnSpacing="16"
+                            MinItemHeight="300"
+                            MinItemWidth="440"
+                            MinRowSpacing="16" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MowerViewModel">
+                            <Border Style="{StaticResource CardStyle}">
+                                <Grid RowSpacing="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Name, model, battery -->
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse
+                                            Width="12"
+                                            Height="12"
+                                            Margin="0,8,0,0"
+                                            VerticalAlignment="Top"
+                                            Fill="{x:Bind SeverityBrush, Mode=OneWay}" />
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock
+                                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                                Text="{x:Bind Name, Mode=OneWay}"
+                                                TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Style="{StaticResource CaptionSecondaryStyle}" Text="{x:Bind Model, Mode=OneWay}" />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Grid.Column="2"
+                                            Margin="0,6,0,0"
+                                            VerticalAlignment="Top"
+                                            Orientation="Horizontal"
+                                            Spacing="6">
+                                            <FontIcon FontSize="16" Glyph="{x:Bind BatteryGlyph, Mode=OneWay}" />
+                                            <TextBlock Text="{x:Bind BatteryText, Mode=OneWay}" />
+                                        </StackPanel>
+                                        <Button
+                                            x:Uid="Card_Details"
+                                            Grid.Column="3"
+                                            VerticalAlignment="Top"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Click="OpenDetails_Click"
+                                            Tag="{x:Bind Id}">
+                                            <FontIcon FontSize="14" Glyph="&#xE76C;" />
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Status -->
+                                    <StackPanel Grid.Row="1" Spacing="2">
+                                        <TextBlock
+                                            FontSize="18"
+                                            FontWeight="SemiBold"
+                                            MaxLines="2"
+                                            Text="{x:Bind StatusTitle, Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
+                                        <TextBlock
+                                            MaxLines="2"
+                                            Style="{StaticResource SecondaryTextStyle}"
+                                            Text="{x:Bind StatusDetail, Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+
+                                    <!-- Facts -->
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal"
+                                        Spacing="16">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" x:Uid="Card_CuttingHeight">
+                                            <FontIcon FontSize="14" Glyph="&#xE8C6;" />
+                                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind CuttingHeightText, Mode=OneWay}" />
+                                        </StackPanel>
+                                        <StackPanel
+                                            x:Uid="Card_Headlights"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            Visibility="{x:Bind HasHeadlights, Mode=OneWay}">
+                                            <FontIcon FontSize="14" Glyph="&#xE781;" />
+                                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind HeadlightText, Mode=OneWay}" />
+                                        </StackPanel>
+                                        <TextBlock Style="{StaticResource CaptionSecondaryStyle}" Text="{x:Bind LastSeenText, Mode=OneWay}" />
+                                    </StackPanel>
+
+                                    <!-- Command feedback -->
+                                    <Grid Grid.Row="3" ColumnSpacing="8" Visibility="{x:Bind HasCommandMessage, Mode=OneWay}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <InfoBadge
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource SuccessIconInfoBadgeStyle}"
+                                            Visibility="{x:Bind local:BindingHelpers.VisibleWhenFalse(CommandFailed), Mode=OneWay}" />
+                                        <InfoBadge
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource CriticalIconInfoBadgeStyle}"
+                                            Visibility="{x:Bind CommandFailed, Mode=OneWay}" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind CommandMessage, Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap"
+                                            MaxLines="2" />
+                                    </Grid>
+
+                                    <!-- Actions -->
+                                    <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="6">
+                                        <DropDownButton x:Uid="Action_StartButton" Padding="10,5">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon FontSize="14" Glyph="&#xE768;" />
+                                                <TextBlock x:Uid="Action_Start" />
+                                            </StackPanel>
+                                            <DropDownButton.Flyout>
+                                                <MenuFlyout Placement="Bottom">
+                                                    <MenuFlyoutItem x:Uid="Action_Start30" Command="{x:Bind StartCommand}" CommandParameter="30" />
+                                                    <MenuFlyoutItem x:Uid="Action_Start60" Command="{x:Bind StartCommand}" CommandParameter="60" />
+                                                    <MenuFlyoutItem x:Uid="Action_Start120" Command="{x:Bind StartCommand}" CommandParameter="120" />
+                                                    <MenuFlyoutItem x:Uid="Action_Start180" Command="{x:Bind StartCommand}" CommandParameter="180" />
+                                                    <MenuFlyoutItem x:Uid="Action_Start360" Command="{x:Bind StartCommand}" CommandParameter="360" />
+                                                </MenuFlyout>
+                                            </DropDownButton.Flyout>
+                                        </DropDownButton>
+                                        <Button x:Uid="Action_PauseButton" Padding="10,5" Command="{x:Bind PauseCommand}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon FontSize="14" Glyph="&#xE769;" />
+                                                <TextBlock x:Uid="Action_Pause" />
+                                            </StackPanel>
+                                        </Button>
+                                        <DropDownButton x:Uid="Action_ParkButton" Padding="10,5">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon FontSize="14" Glyph="&#xE80F;" />
+                                                <TextBlock x:Uid="Action_Park" />
+                                            </StackPanel>
+                                            <DropDownButton.Flyout>
+                                                <MenuFlyout Placement="Bottom">
+                                                    <MenuFlyoutItem x:Uid="Action_ParkNextSchedule" Command="{x:Bind ParkUntilNextScheduleCommand}" />
+                                                    <MenuFlyoutItem x:Uid="Action_ParkFurtherNotice" Command="{x:Bind ParkUntilFurtherNoticeCommand}" />
+                                                    <MenuFlyoutSeparator />
+                                                    <MenuFlyoutItem x:Uid="Action_Park180" Command="{x:Bind ParkForCommand}" CommandParameter="180" />
+                                                    <MenuFlyoutItem x:Uid="Action_Park360" Command="{x:Bind ParkForCommand}" CommandParameter="360" />
+                                                    <MenuFlyoutItem x:Uid="Action_Park1440" Command="{x:Bind ParkForCommand}" CommandParameter="1440" />
+                                                </MenuFlyout>
+                                            </DropDownButton.Flyout>
+                                        </DropDownButton>
+                                        <Button x:Uid="Action_ResumeButton" Padding="10,5" Command="{x:Bind ResumeScheduleCommand}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon FontSize="14" Glyph="&#xE787;" />
+                                                <TextBlock x:Uid="Action_Resume" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+
+                <!-- Empty state -->
+                <StackPanel
+                    MaxWidth="420"
+                    Margin="0,64,0,0"
+                    HorizontalAlignment="Center"
+                    Spacing="8"
+                    Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
+                    <FontIcon FontSize="48" Glyph="&#xE81D;" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <TextBlock x:Uid="Dashboard_EmptyTitle" HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock
+                        x:Uid="Dashboard_EmptyText"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource SecondaryTextStyle}"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

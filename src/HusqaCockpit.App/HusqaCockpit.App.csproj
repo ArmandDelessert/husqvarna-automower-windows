@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>HusqaCockpit.App</RootNamespace>
+    <AssemblyName>HusqaCockpit</AssemblyName>
+    <AssemblyTitle>HusqA Cockpit</AssemblyTitle>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <!-- Build for the current machine's architecture unless told otherwise (dotnet build -r win-x64). -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <!-- Unpackaged app that carries the Windows App SDK runtime with it: no installer needed. -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <!-- Program.cs provides Main to enforce a single instance. -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <WindowsAppSdkVersion>2.5.1</WindowsAppSdkVersion>
+  </PropertyGroup>
+
+  <!--
+    Only the Windows App SDK components the app uses (the versions shipped in Windows App SDK 2.5.1).
+    The Microsoft.WindowsAppSDK metapackage would also bundle the AI/ML runtimes (onnxruntime, DirectML…),
+    roughly doubling the size of the self-contained output.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.12" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.9" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="$(WindowsAppSdkVersion)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HusqaCockpit.Core\HusqaCockpit.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    Workaround: self-contained builds of Windows App SDK 2.5 omit Microsoft.WindowsAppRuntime.Insights.Resource.dll
+    (it only ships inside the runtime MSIX), and AppNotificationManager.Register then fails with 0x8007007E.
+    Extract it from the MSIX matching the target architecture and deploy it next to the executable.
+  -->
+  <Target Name="AddWindowsAppRuntimeInsightsResource" BeforeTargets="AssignTargetPaths">
+    <PropertyGroup>
+      <_InsightsArch>$(RuntimeIdentifier.Replace('win-', ''))</_InsightsArch>
+      <_InsightsMsix>$(NuGetPackageRoot)microsoft.windowsappsdk.runtime\$(WindowsAppSdkVersion)\tools\MSIX\win10-$(_InsightsArch)\Microsoft.WindowsAppRuntime.2.msix</_InsightsMsix>
+      <_InsightsFolder>$(IntermediateOutputPath)WindowsAppRuntimeInsights\</_InsightsFolder>
+    </PropertyGroup>
+    <Unzip Condition="Exists('$(_InsightsMsix)')" SourceFiles="$(_InsightsMsix)" DestinationFolder="$(_InsightsFolder)" Include="Microsoft.WindowsAppRuntime.Insights.Resource.dll" SkipUnchangedFiles="true" />
+    <Warning Condition="!Exists('$(_InsightsMsix)')" Text="Windows App SDK runtime MSIX not found at $(_InsightsMsix); notifications may not work." />
+    <ItemGroup Condition="Exists('$(_InsightsFolder)Microsoft.WindowsAppRuntime.Insights.Resource.dll')">
+      <None Include="$(_InsightsFolder)Microsoft.WindowsAppRuntime.Insights.Resource.dll" Link="Microsoft.WindowsAppRuntime.Insights.Resource.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+</Project>
