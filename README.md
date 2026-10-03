@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="src\HusqaCockpit.App\Assets\AppIcon.svg" alt="Logo de HusqA Cockpit" width="160">
+</p>
+
 # HusqA Cockpit
 
 An unofficial Windows client for Husqvarna Automower® robotic lawnmowers, developed in C# / .NET.
