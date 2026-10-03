@@ -12,8 +12,12 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   headlights and time of the last update.
 - **Commands**: mow for a given duration, pause, park (until the next schedule, until further notice or for a duration),
   resume the schedule — per mower or for all mowers at once.
-- **Mower details**: cutting height and headlight settings, weekly schedule, lifetime statistics, last GPS position
-  (opens OpenStreetMap), event history, blade-usage counter reset, error acknowledgement.
+- **Mower details**: cutting height and headlight settings, lifetime statistics, event history, blade-usage counter
+  reset, error acknowledgement.
+- **Schedule editor**: add, change and remove the weekly time slots of a mower (start, end, days). Overlapping slots,
+  empty days and slots running past midnight are rejected before anything is sent.
+- **Map**: an OpenStreetMap map with the GPS track of a mower on its detail page, and a *Map* page showing the tracks
+  of all mowers together.
 - **Windows notifications** for errors, theft alarms, recoveries, stops requiring a manual action and connectivity changes
   (each category can be turned off).
 - **Notification area icon**: the app keeps watching the mowers when its window is closed; the icon gets a red badge when
@@ -30,7 +34,8 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
 
 ### 2. Run the app
 
-Requirements: Windows 10 (19041) or later, and the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+Requirements: Windows 10 (19041) or later, the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+and the Microsoft Edge WebView2 runtime (preinstalled on Windows 11; used for the map).
 Visual Studio is not required.
 
 ```bash
@@ -57,6 +62,7 @@ and only requires the [.NET 10 Runtime](https://dotnet.microsoft.com/download/do
 | Live updates | WebSocket `wss://ws.openapi.husqvarna.dev/v1` (v2 events), with keep-alive and reconnection before the server's 2-hour limit. |
 | Fallback | If the WebSocket is unavailable (e.g. HTTP 403), the app polls `GET /mowers` periodically (10 minutes by default). |
 | Rate limits | Requests are serialized and spaced by ≥ 1.1 s (limit: 1 request/second). The Settings page shows this month's request count (limit: 10,000 per month and per key). |
+| Map | [Leaflet](https://leafletjs.com/) (bundled, BSD-2-Clause) in a WebView2; only the OpenStreetMap tiles are loaded from the Internet. The track is made of the last 50 positions reported by the mower. |
 | Time stamps | Next start, error and message times are sent in the mower's local time; they are interpreted in the PC's time zone. |
 
 ## Project structure
@@ -84,7 +90,8 @@ python tools/strings/generate_resw.py
 - **Real-time events may be refused (HTTP 403)** for some application keys whose token lacks the `amc:api` scope.
   The app then falls back to periodic refreshes. Renewing the key or reconnecting the Automower Connect API to the
   application on the developer portal usually fixes it.
-- The weekly schedule can be viewed but not yet edited.
+- The schedule of mowers with work areas (EPOS / NERA models) cannot be edited yet.
+- The map shows the last 50 positions reported by the mower, not the full history of the day.
 - Work areas and stay-out zones (EPOS / NERA models) are not displayed yet.
 - Mowers are assumed to be in the same time zone as the PC.
 
