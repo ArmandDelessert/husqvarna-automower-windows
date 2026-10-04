@@ -73,7 +73,11 @@
                         x:Uid="Settings_RestartRequired"
                         IsClosable="False"
                         IsOpen="{x:Bind ViewModel.IsRestartRequired, Mode=OneWay}"
-                        Severity="Informational" />
+                        Severity="Informational">
+                        <InfoBar.ActionButton>
+                            <Button x:Uid="Settings_RestartNow" Command="{x:Bind ViewModel.RestartCommand}" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
                 </StackPanel>
             </Border>
 

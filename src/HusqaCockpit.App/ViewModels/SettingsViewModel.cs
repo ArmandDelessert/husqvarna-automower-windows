@@ -165,6 +165,9 @@ public sealed partial class SettingsViewModel : ObservableObject
         IsRestartRequired = _settings.Language != _initialLanguage;
     }
 
+    [RelayCommand]
+    private static void Restart() => App.Current.Restart();
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PollingHelpText))]
     public partial int PollingIntervalIndex { get; set; }

@@ -279,7 +279,8 @@
   <data name="Settings_Language.Header" xml:space="preserve"><value>Display language</value></data>
   <data name="Settings_LanguageSystem.Content" xml:space="preserve"><value>Windows language</value></data>
   <data name="Settings_RestartRequired.Title" xml:space="preserve"><value>Restart required</value></data>
-  <data name="Settings_RestartRequired.Message" xml:space="preserve"><value>Quit HusqA Cockpit (right-click its icon › Quit) and start it again to apply the new language.</value></data>
+  <data name="Settings_RestartRequired.Message" xml:space="preserve"><value>HusqA Cockpit must restart to apply the new language.</value></data>
+  <data name="Settings_RestartNow.Content" xml:space="preserve"><value>Restart now</value></data>
   <data name="Settings_AboutHeader.Text" xml:space="preserve"><value>About</value></data>
   <data name="Settings_Disclaimer.Text" xml:space="preserve"><value>Unofficial application, not affiliated with Husqvarna. Automower® is a trademark of Husqvarna AB.</value></data>
   <data name="Settings_SourceCode.Content" xml:space="preserve"><value>Source code</value></data>

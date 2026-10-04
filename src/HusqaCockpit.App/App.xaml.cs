@@ -119,6 +119,22 @@ public partial class App : Application
         Exit();
     }
 
+    /// <summary>Starts a new instance of the app, then quits this one (e.g. to apply a new language).</summary>
+    public void Restart()
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(
+                Environment.ProcessPath!, $"{Program.WaitForExitArgument}={Environment.ProcessId}") { UseShellExecute = false });
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            _logger.LogError(ex, "Could not restart");
+            return;
+        }
+        Quit();
+    }
+
     /// <summary>Called when the main window is closed while the app keeps running in the tray.</summary>
     public void OnWindowHiddenToTray()
     {

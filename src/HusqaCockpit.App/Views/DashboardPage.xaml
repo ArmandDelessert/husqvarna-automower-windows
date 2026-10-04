@@ -95,47 +95,55 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <!-- Name, model, battery -->
-                                    <Grid ColumnSpacing="10">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Ellipse
-                                            Width="12"
-                                            Height="12"
-                                            Margin="0,8,0,0"
-                                            VerticalAlignment="Top"
-                                            Fill="{x:Bind SeverityBrush, Mode=OneWay}" />
-                                        <StackPanel Grid.Column="1">
-                                            <TextBlock
-                                                Style="{StaticResource SubtitleTextBlockStyle}"
-                                                Text="{x:Bind Name, Mode=OneWay}"
-                                                TextTrimming="CharacterEllipsis" />
-                                            <TextBlock Style="{StaticResource CaptionSecondaryStyle}" Text="{x:Bind Model, Mode=OneWay}" />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Grid.Column="2"
-                                            Margin="0,6,0,0"
-                                            VerticalAlignment="Top"
-                                            Orientation="Horizontal"
-                                            Spacing="6">
-                                            <FontIcon FontSize="16" Glyph="{x:Bind BatteryGlyph, Mode=OneWay}" />
-                                            <TextBlock Text="{x:Bind BatteryText, Mode=OneWay}" />
-                                        </StackPanel>
-                                        <Button
-                                            x:Uid="Card_Details"
-                                            Grid.Column="3"
-                                            VerticalAlignment="Top"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Click="OpenDetails_Click"
-                                            Tag="{x:Bind Id}">
-                                            <FontIcon FontSize="14" Glyph="&#xE76C;" />
-                                        </Button>
-                                    </Grid>
+                                    <!-- Name, model, battery: the whole header opens the details -->
+                                    <Button
+                                        x:Uid="Card_Details"
+                                        Margin="-10,-6,-10,0"
+                                        Padding="10,6"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="OpenDetails_Click"
+                                        Tag="{x:Bind Id}">
+                                        <Grid ColumnSpacing="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse
+                                                Width="12"
+                                                Height="12"
+                                                Margin="0,8,0,0"
+                                                VerticalAlignment="Top"
+                                                Fill="{x:Bind SeverityBrush, Mode=OneWay}" />
+                                            <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                                                <TextBlock
+                                                    Style="{StaticResource SubtitleTextBlockStyle}"
+                                                    Text="{x:Bind Name, Mode=OneWay}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Style="{StaticResource CaptionSecondaryStyle}" Text="{x:Bind Model, Mode=OneWay}" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Grid.Column="2"
+                                                Margin="0,6,0,0"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal"
+                                                Spacing="6">
+                                                <FontIcon FontSize="16" Glyph="{x:Bind BatteryGlyph, Mode=OneWay}" />
+                                                <TextBlock Text="{x:Bind BatteryText, Mode=OneWay}" />
+                                            </StackPanel>
+                                            <FontIcon
+                                                Grid.Column="3"
+                                                Margin="0,8,0,0"
+                                                VerticalAlignment="Top"
+                                                FontSize="14"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Glyph="&#xE76C;" />
+                                        </Grid>
+                                    </Button>
 
                                     <!-- Status -->
                                     <StackPanel Grid.Row="1" Spacing="2">
