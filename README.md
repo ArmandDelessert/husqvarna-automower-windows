@@ -10,6 +10,8 @@ HusqA Cockpit (**Husq**varna **A**utomower) shows all the mowers of a Husqvarna 
 control them from the desktop and raises Windows notifications when one of them needs attention.
 It uses the official [Automower Connect API](https://developer.husqvarnagroup.cloud/apis/automower-connect-api).
 
+> This README, like most of the code in this repository, was written by Claude (Claude Code, Anthropic), under the supervision of Armand Delessert.
+
 ## Features
 
 - **Dashboard** with one card per mower: activity, battery, next scheduled start, current error, cutting height,
