@@ -237,7 +237,9 @@ public sealed class AutomowerEventFeedTests : IAsyncDisposable
         Assert.True(first.ClosedByClient);
         Assert.True(first.Disposed);
         second.Receive(Ready);
-        await NextStatusAsync(EventStreamState.Connected);
+        // Events may have been lost while it was silent: the new connection says so, and the
+        // fleet is refreshed at once instead of at the next safety-net refresh.
+        Assert.True((await NextStatusAsync(EventStreamState.Connected)).AfterOutage);
         Assert.DoesNotContain(_statuses, s => s.State == EventStreamState.Disconnected);
     }
 

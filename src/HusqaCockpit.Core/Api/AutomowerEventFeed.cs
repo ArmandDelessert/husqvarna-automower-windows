@@ -107,11 +107,13 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
             TimeSpan retryDelay;
             try
             {
-                var receivedAnything = await RunConnectionAsync(onEvent, onStatus, outage, cancellationToken).ConfigureAwait(false);
+                var (receivedAnything, wentSilent) = await RunConnectionAsync(onEvent, onStatus, outage, cancellationToken).ConfigureAwait(false);
                 // Clean end (proactive renewal or server close): reconnect immediately.
                 failures = receivedAnything ? 0 : failures + 1;
                 retriedWithFreshToken &= !receivedAnything;
-                outage = !receivedAnything;
+                // A connection that went silent may have lost events before it was given up on:
+                // the next one reports an outage, so the fleet is refreshed at once.
+                outage = !receivedAnything || wentSilent;
                 retryDelay = receivedAnything ? TimeSpan.Zero : Backoff(failures);
                 if (retryDelay > TimeSpan.Zero)
                 {
@@ -164,8 +166,11 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
 
     private static TimeSpan Backoff(int failures) => s_backoff[Math.Clamp(failures - 1, 0, s_backoff.Length - 1)];
 
-    /// <returns>True if the connection was established and received at least one message.</returns>
-    private async Task<bool> RunConnectionAsync(
+    /// <returns>
+    /// Whether the connection was established and received at least one message, and whether it
+    /// was given up on because nothing arrived for <see cref="ReceiveTimeout"/>.
+    /// </returns>
+    private async Task<(bool ReceivedAnything, bool WentSilent)> RunConnectionAsync(
         Func<AutomowerEvent, ValueTask> onEvent,
         Action<EventStreamStatus> onStatus,
         bool afterOutage,
@@ -190,6 +195,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
         LogConnected(_logger);
         var connectedAt = _time.GetUtcNow();
         var receivedAnything = false;
+        var wentSilent = false;
         var announced = false;
 
         using var connectionCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -216,6 +222,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
                 catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
                 {
                     LogReceiveTimeout(_logger, ReceiveTimeout);
+                    wentSilent = true;
                     break;
                 }
 
@@ -266,7 +273,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
             }
         }
 
-        return receivedAnything;
+        return (receivedAnything, wentSilent);
     }
 
     private async Task KeepAliveLoopAsync(IWebSocketConnection socket, CancellationToken cancellationToken)
