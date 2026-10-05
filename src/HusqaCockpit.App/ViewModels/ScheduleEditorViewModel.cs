@@ -21,8 +21,7 @@ public sealed partial class ScheduleRowViewModel : ObservableObject
 
     public ScheduleRowViewModel(CalendarTask task)
     {
-        Start = TimeSpan.FromMinutes(task.Start);
-        End = TimeSpan.FromMinutes(task.Start + task.Duration);
+        (Start, End) = ScheduleSlotTimes.ToClockTimes(task.Start, task.Duration);
         Monday = task.Monday;
         Tuesday = task.Tuesday;
         Wednesday = task.Wednesday;
@@ -79,18 +78,22 @@ public sealed partial class ScheduleRowViewModel : ObservableObject
     public string SaturdayName => FullName(5);
     public string SundayName => FullName(6);
 
-    public CalendarTask ToTask() => new()
+    public CalendarTask ToTask()
     {
-        Start = (int)Start.TotalMinutes,
-        Duration = (int)(End - Start).TotalMinutes,
-        Monday = Monday,
-        Tuesday = Tuesday,
-        Wednesday = Wednesday,
-        Thursday = Thursday,
-        Friday = Friday,
-        Saturday = Saturday,
-        Sunday = Sunday,
-    };
+        var (start, duration) = ScheduleSlotTimes.FromClockTimes(Start, End);
+        return new()
+        {
+            Start = start,
+            Duration = duration,
+            Monday = Monday,
+            Tuesday = Tuesday,
+            Wednesday = Wednesday,
+            Thursday = Thursday,
+            Friday = Friday,
+            Saturday = Saturday,
+            Sunday = Sunday,
+        };
+    }
 
     private static string Label(int index) =>
         CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int)s_days[index]].TrimEnd('.');
@@ -131,6 +134,7 @@ public sealed partial class ScheduleEditorViewModel : ObservableObject
     private void AddRow()
     {
         // Default: starts at the next full hour after the last slot, lasts 2 hours, on weekdays.
+        // A slot ending at midnight has End = 00:00, so it does not push the new slot to the end of the day (there is no room after it).
         var last = Rows.Count > 0 ? Rows.Max(r => r.End) : TimeSpan.FromHours(7);
         var start = TimeSpan.FromHours(Math.Min(Math.Ceiling(last.TotalHours), 21));
         Rows.Add(Track(new ScheduleRowViewModel(new CalendarTask

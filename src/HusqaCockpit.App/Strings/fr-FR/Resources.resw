@@ -226,7 +226,7 @@
   <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Planning hebdomadaire</value></data>
   <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Envoyer à la tondeuse</value></data>
   <data name="ScheduleEditorDialog.CloseButtonText" xml:space="preserve"><value>Annuler</value></data>
-  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>La tondeuse tond pendant ces créneaux, aux jours sélectionnés. La modification est envoyée à la tondeuse quand vous confirmez.</value></data>
+  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>La tondeuse tond pendant ces créneaux, aux jours sélectionnés. Un créneau peut finir à minuit ; de minuit à minuit, il dure toute la journée. La modification est envoyée à la tondeuse quand vous confirmez.</value></data>
   <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>Début</value></data>
   <data name="ScheduleEditor_End.Header" xml:space="preserve"><value>Fin</value></data>
   <data name="ScheduleEditor_Add.Content" xml:space="preserve"><value>Ajouter un créneau</value></data>

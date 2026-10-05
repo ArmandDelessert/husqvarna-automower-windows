@@ -249,7 +249,7 @@ STRINGS = {
     "ScheduleEditorDialog.Title": ("Weekly schedule", "Planning hebdomadaire"),
     "ScheduleEditorDialog.PrimaryButtonText": ("Send to the mower", "Envoyer à la tondeuse"),
     "ScheduleEditorDialog.CloseButtonText": ("Cancel", "Annuler"),
-    "ScheduleEditor_Hint.Text": ("The mower mows during these time slots, on the selected days. The change is sent to the mower when you confirm.", "La tondeuse tond pendant ces créneaux, aux jours sélectionnés. La modification est envoyée à la tondeuse quand vous confirmez."),
+    "ScheduleEditor_Hint.Text": ("The mower mows during these time slots, on the selected days. A slot can end at midnight; from midnight to midnight, it lasts all day. The change is sent to the mower when you confirm.", "La tondeuse tond pendant ces créneaux, aux jours sélectionnés. Un créneau peut finir à minuit ; de minuit à minuit, il dure toute la journée. La modification est envoyée à la tondeuse quand vous confirmez."),
     "ScheduleEditor_Start.Header": ("Start", "Début"),
     "ScheduleEditor_End.Header": ("End", "Fin"),
     "ScheduleEditor_Add.Content": ("Add a time slot", "Ajouter un créneau"),

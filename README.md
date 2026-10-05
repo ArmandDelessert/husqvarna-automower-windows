@@ -18,8 +18,9 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   resume the schedule — per mower or for all mowers at once.
 - **Mower details**: cutting height and headlight settings, lifetime statistics, event history, blade-usage counter
   reset, error acknowledgement.
-- **Schedule editor**: add, change and remove the weekly time slots of a mower (start, end, days). Overlapping slots,
-  empty days and slots running past midnight are rejected before anything is sent.
+- **Schedule editor**: add, change and remove the weekly time slots of a mower (start, end, days). An end of 00:00 means
+  midnight, so 00:00–00:00 is the whole day. Overlapping slots, empty days and slots running past midnight are rejected
+  before anything is sent.
 - **Map**: an OpenStreetMap map with the GPS track of a mower on its detail page, and a *Map* page showing the tracks
   of all mowers together.
 - **Windows notifications** for errors, theft alarms, recoveries, stops requiring a manual action and connectivity changes

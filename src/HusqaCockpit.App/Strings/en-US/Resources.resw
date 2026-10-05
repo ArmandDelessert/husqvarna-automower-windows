@@ -226,7 +226,7 @@
   <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Weekly schedule</value></data>
   <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Send to the mower</value></data>
   <data name="ScheduleEditorDialog.CloseButtonText" xml:space="preserve"><value>Cancel</value></data>
-  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>The mower mows during these time slots, on the selected days. The change is sent to the mower when you confirm.</value></data>
+  <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>The mower mows during these time slots, on the selected days. A slot can end at midnight; from midnight to midnight, it lasts all day. The change is sent to the mower when you confirm.</value></data>
   <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>Start</value></data>
   <data name="ScheduleEditor_End.Header" xml:space="preserve"><value>End</value></data>
   <data name="ScheduleEditor_Add.Content" xml:space="preserve"><value>Add a time slot</value></data>
