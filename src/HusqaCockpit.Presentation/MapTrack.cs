@@ -1,6 +1,6 @@
 using HusqaCockpit.Core.Models;
 
-namespace HusqaCockpit.App.Services;
+namespace HusqaCockpit.Presentation;
 
 /// <summary>The GPS track of one mower, ready to be drawn on the map.</summary>
 /// <param name="Points">Positions as [latitude, longitude], oldest first, newest (current) last.</param>

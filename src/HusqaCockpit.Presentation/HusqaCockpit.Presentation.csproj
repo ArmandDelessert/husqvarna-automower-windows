@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- View models and formatting, without WinUI: unit-tested in tests/HusqaCockpit.Presentation.Tests. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>HusqaCockpit.Presentation</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HusqaCockpit.Core\HusqaCockpit.Core.csproj" />
+  </ItemGroup>
+
+</Project>

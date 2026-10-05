@@ -52,6 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HusqaCockpit.Core\HusqaCockpit.Core.csproj" />
+    <ProjectReference Include="..\HusqaCockpit.Presentation\HusqaCockpit.Presentation.csproj" />
   </ItemGroup>
 
   <!--
