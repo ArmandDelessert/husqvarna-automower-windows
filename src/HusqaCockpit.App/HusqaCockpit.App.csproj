@@ -11,8 +11,6 @@
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
-    <!-- Build for the current machine's architecture unless told otherwise (dotnet build -r win-x64). -->
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
     <!-- Unpackaged app that carries the Windows App SDK runtime with it: no installer needed. -->
     <WindowsPackageType>None</WindowsPackageType>
@@ -21,6 +19,15 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <!-- Program.cs provides Main to enforce a single instance. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+
+  <!--
+    Build for the machine's architecture unless told otherwise (dotnet build -r win-x64). The OS architecture, not the
+    SDK's: an x64 SDK on an ARM64 PC would otherwise give win-x64, and a non-Windows SDK a non-Windows identifier.
+  -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
+    <RuntimeIdentifier Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">win-arm64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
