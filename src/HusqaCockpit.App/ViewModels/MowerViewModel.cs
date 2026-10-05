@@ -24,12 +24,14 @@ public sealed partial class MowerViewModel : ObservableObject
     private readonly CockpitHost _host;
     private readonly IStrings _strings;
     private readonly MowerFormatter _formatter;
+    private readonly TimeProvider _time;
     private Mower _mower;
 
-    public MowerViewModel(Mower mower, CockpitHost host, IStrings strings)
+    public MowerViewModel(Mower mower, CockpitHost host, IStrings strings, TimeProvider time)
     {
         _host = host;
         _strings = strings;
+        _time = time;
         _formatter = new MowerFormatter(strings);
         _mower = mower;
         Id = mower.Id;
@@ -46,7 +48,7 @@ public sealed partial class MowerViewModel : ObservableObject
     public string SerialNumber => _mower.Attributes.System.SerialNumber.ToString(CultureInfo.InvariantCulture);
 
     // ----- Status -----
-    private StatusSummary Summary => _formatter.Summarize(_mower, DateTimeOffset.Now);
+    private StatusSummary Summary => _formatter.Summarize(_mower, _time.GetLocalNow());
     public string StatusTitle => Summary.Title;
     public string StatusDetail => Summary.Detail;
     public StatusSeverity Severity => Summary.Severity;
@@ -59,7 +61,7 @@ public sealed partial class MowerViewModel : ObservableObject
     public string ModeText => _strings.EnumText(_mower.Mode);
 
     public string LastSeenText => _mower.LastStatusTime is { } seen
-        ? _strings.Format("Mower_Updated", _formatter.Relative(seen, DateTimeOffset.Now))
+        ? _strings.Format("Mower_Updated", _formatter.Relative(seen, _time.GetLocalNow()))
         : "";
 
     // ----- Battery -----

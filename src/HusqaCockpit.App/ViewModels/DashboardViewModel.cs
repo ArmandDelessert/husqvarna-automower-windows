@@ -7,39 +7,32 @@ using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
 using HusqaCockpit.Presentation;
-using Microsoft.UI.Dispatching;
 
 namespace HusqaCockpit.App.ViewModels;
 
 /// <summary>State of the whole fleet and of the connection. Lives as long as the app.</summary>
-public sealed partial class DashboardViewModel : ObservableObject
+public sealed partial class DashboardViewModel : ObservableObject, IDisposable
 {
-    private readonly CockpitHost _host;
-    private readonly DispatcherQueue _dispatcher;
-    private readonly IStrings _strings;
-    private readonly DispatcherQueueTimer _ticker;
+    private static readonly TimeSpan s_tickInterval = TimeSpan.FromSeconds(30);
 
-    public DashboardViewModel(CockpitHost host, DispatcherQueue dispatcher, IStrings strings)
+    private readonly CockpitHost _host;
+    private readonly IUiDispatcher _dispatcher;
+    private readonly IStrings _strings;
+    private readonly TimeProvider _time;
+    private readonly ITimer _ticker;
+
+    public DashboardViewModel(CockpitHost host, IUiDispatcher dispatcher, IStrings strings, TimeProvider time)
     {
         _host = host;
         _dispatcher = dispatcher;
         _strings = strings;
-        _host.Fleet.MowerChanged += (_, e) => _dispatcher.TryEnqueue(() => OnMowerChanged(e.Current));
-        _host.Fleet.MowerRemoved += (_, e) => _dispatcher.TryEnqueue(() => OnMowerRemoved(e.Mower));
-        _host.StatusChanged += (_, _) => _dispatcher.TryEnqueue(UpdateStatus);
+        _time = time;
+        _host.Fleet.MowerChanged += (_, e) => OnUiThread(() => OnMowerChanged(e.Current));
+        _host.Fleet.MowerRemoved += (_, e) => OnUiThread(() => OnMowerRemoved(e.Mower));
+        _host.StatusChanged += (_, _) => OnUiThread(UpdateStatus);
 
         // Keeps "updated 3 min ago" texts current.
-        _ticker = dispatcher.CreateTimer();
-        _ticker.Interval = TimeSpan.FromSeconds(30);
-        _ticker.Tick += (_, _) =>
-        {
-            foreach (var mower in Mowers)
-            {
-                mower.Tick();
-            }
-            UpdateStatus();
-        };
-        _ticker.Start();
+        _ticker = time.CreateTimer(_ => OnUiThread(Tick), null, s_tickInterval, s_tickInterval);
         UpdateStatus();
     }
 
@@ -86,6 +79,8 @@ public sealed partial class DashboardViewModel : ObservableObject
     public int ErrorCount => Mowers.Count(m => m.HasError);
 
     public MowerViewModel? Find(string id) => Mowers.FirstOrDefault(m => m.Id == id);
+
+    public void Dispose() => _ticker.Dispose();
 
     /// <summary>One-line summary for the tray tooltip, e.g. "3 mowers · 1 mowing · 1 error".</summary>
     public string TraySummary
@@ -163,7 +158,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         }
         else
         {
-            var viewModel = new MowerViewModel(mower, _host, _strings);
+            var viewModel = new MowerViewModel(mower, _host, _strings, _time);
             var index = 0;
             while (index < Mowers.Count && StringComparer.CurrentCultureIgnoreCase.Compare(Mowers[index].Name, mower.Name) < 0)
             {
@@ -230,6 +225,28 @@ public sealed partial class DashboardViewModel : ObservableObject
                 var retry = status.NextRefresh is { } at ? _strings.Format("Banner_RetryAt", Time(at)) : "";
                 Show(StatusSeverity.Error, _strings.Text("Banner_OfflineTitle"), $"{status.Detail} {retry}".Trim());
                 break;
+        }
+    }
+
+    private void Tick()
+    {
+        foreach (var mower in Mowers)
+        {
+            mower.Tick();
+        }
+        UpdateStatus();
+    }
+
+    /// <summary>Runs <paramref name="action"/> on the UI thread: at once when already there, queued otherwise.</summary>
+    private void OnUiThread(Action action)
+    {
+        if (_dispatcher.CheckAccess())
+        {
+            action();
+        }
+        else
+        {
+            _dispatcher.Post(action);
         }
     }
 
