@@ -2,51 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <!-- No inline script or style (see map.js, map.css). data: is the blank image Leaflet puts in discarded tiles. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="leaflet.css" />
-  <style>
-    html, body, #map { height: 100%; margin: 0; background: #e8efe4; }
-    .leaflet-tooltip.mower-label { font: 600 12px "Segoe UI Variable", "Segoe UI", sans-serif; }
-  </style>
+  <link rel="stylesheet" href="map.css" />
 </head>
 <body>
   <div id="map"></div>
   <script src="leaflet.js"></script>
-  <script>
-    // Receives { tracks: [{ id, name, color, points: [[lat, lon], ...oldest first] }], labels, fit } from the host app.
-    const map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([46.8, 8.2], 7);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    const layer = L.layerGroup().addTo(map);
-    let fitted = false;
-
-    function render(msg) {
-      layer.clearLayers();
-      const all = [];
-      for (const track of msg.tracks) {
-        const pts = track.points;
-        if (!pts.length) continue;
-        L.polyline(pts, { color: track.color, weight: 4, opacity: 0.8 }).addTo(layer);
-        L.circleMarker(pts[0], { radius: 4, color: track.color, weight: 2, fillColor: '#fff', fillOpacity: 1 }).addTo(layer);
-        const marker = L.circleMarker(pts[pts.length - 1], {
-          radius: 9, color: '#fff', weight: 3, fillColor: track.color, fillOpacity: 1
-        }).addTo(layer);
-        if (msg.labels) {
-          marker.bindTooltip(track.name, { permanent: true, direction: 'right', offset: [10, 0], className: 'mower-label' });
-        }
-        all.push(...pts);
-      }
-      if (all.length && (msg.fit || !fitted)) {
-        map.fitBounds(L.latLngBounds(all).pad(0.25), { maxZoom: 18 });
-        fitted = true;
-      }
-    }
-
-    window.chrome.webview.addEventListener('message', e => render(e.data));
-    window.chrome.webview.postMessage('ready');
-  </script>
+  <script src="map.js"></script>
 </body>
 </html>

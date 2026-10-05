@@ -1,0 +1,2 @@
+html, body, #map { height: 100%; margin: 0; background: #e8efe4; }
+.leaflet-tooltip.mower-label { font: 600 12px "Segoe UI Variable", "Segoe UI", sans-serif; }
