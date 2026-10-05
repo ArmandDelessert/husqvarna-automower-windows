@@ -247,6 +247,7 @@
   <data name="Nav_Map.Content" xml:space="preserve"><value>Map</value></data>
   <data name="Map_Title.Text" xml:space="preserve"><value>Map</value></data>
   <data name="Map_RecenterText.Text" xml:space="preserve"><value>Recenter</value></data>
+  <data name="Map_Recenter.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Zoom back on the tracks of all mowers</value></data>
   <data name="Map_Empty.Text" xml:space="preserve"><value>No GPS position available yet.</value></data>
   <data name="Map_Unavailable" xml:space="preserve"><value>The map needs the Microsoft Edge WebView2 runtime, which could not be started.</value></data>
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Download WebView2</value></data>

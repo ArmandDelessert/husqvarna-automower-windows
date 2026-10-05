@@ -247,6 +247,7 @@
   <data name="Nav_Map.Content" xml:space="preserve"><value>Carte</value></data>
   <data name="Map_Title.Text" xml:space="preserve"><value>Carte</value></data>
   <data name="Map_RecenterText.Text" xml:space="preserve"><value>Recentrer</value></data>
+  <data name="Map_Recenter.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Recadrer la carte sur les tracés de toutes les tondeuses</value></data>
   <data name="Map_Empty.Text" xml:space="preserve"><value>Aucune position GPS disponible pour l'instant.</value></data>
   <data name="Map_Unavailable" xml:space="preserve"><value>La carte nécessite le runtime Microsoft Edge WebView2, qui n'a pas pu démarrer.</value></data>
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Télécharger WebView2</value></data>

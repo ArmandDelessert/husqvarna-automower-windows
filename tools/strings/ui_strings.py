@@ -270,6 +270,7 @@ STRINGS = {
     "Nav_Map.Content": ("Map", "Carte"),
     "Map_Title.Text": ("Map", "Carte"),
     "Map_RecenterText.Text": ("Recenter", "Recentrer"),
+    f"Map_Recenter.{TT}": ("Zoom back on the tracks of all mowers", "Recadrer la carte sur les tracés de toutes les tondeuses"),
     "Map_Empty.Text": ("No GPS position available yet.", "Aucune position GPS disponible pour l'instant."),
     "Map_Unavailable": ("The map needs the Microsoft Edge WebView2 runtime, which could not be started.", "La carte nécessite le runtime Microsoft Edge WebView2, qui n'a pas pu démarrer."),
     "Map_GetWebView2.Content": ("Download WebView2", "Télécharger WebView2"),
