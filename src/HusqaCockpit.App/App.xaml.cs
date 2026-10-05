@@ -75,7 +75,7 @@ public partial class App : Application
         Notifications.OpenRequested += (_, mowerId) => _dispatcher.TryEnqueue(() => ShowWindow(mowerId));
         Notifications.Initialize();
 
-        Dashboard = new DashboardViewModel(Host, _dispatcher);
+        Dashboard = new DashboardViewModel(Host, _dispatcher, Loc.Strings);
         Dashboard.SummaryChanged += (_, _) => UpdateTray();
 
         // A second launch of the exe is redirected here by Program.Main.

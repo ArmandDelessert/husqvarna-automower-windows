@@ -6,6 +6,7 @@ using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
+using HusqaCockpit.Presentation;
 using Microsoft.UI.Dispatching;
 
 namespace HusqaCockpit.App.ViewModels;
@@ -15,12 +16,14 @@ public sealed partial class DashboardViewModel : ObservableObject
 {
     private readonly CockpitHost _host;
     private readonly DispatcherQueue _dispatcher;
+    private readonly IStrings _strings;
     private readonly DispatcherQueueTimer _ticker;
 
-    public DashboardViewModel(CockpitHost host, DispatcherQueue dispatcher)
+    public DashboardViewModel(CockpitHost host, DispatcherQueue dispatcher, IStrings strings)
     {
         _host = host;
         _dispatcher = dispatcher;
+        _strings = strings;
         _host.Fleet.MowerChanged += (_, e) => _dispatcher.TryEnqueue(() => OnMowerChanged(e.Current));
         _host.Fleet.MowerRemoved += (_, e) => _dispatcher.TryEnqueue(() => OnMowerRemoved(e.Mower));
         _host.StatusChanged += (_, _) => _dispatcher.TryEnqueue(UpdateStatus);
@@ -91,11 +94,11 @@ public sealed partial class DashboardViewModel : ObservableObject
         {
             if (Mowers.Count == 0)
             {
-                return Loc.Get("AppName");
+                return _strings.Text("AppName");
             }
             var mowing = Mowers.Count(m => m.Mower.Activity == MowerActivity.Mowing);
-            var text = $"{Loc.Get("AppName")}\n{Loc.Format("Tray_Summary", Mowers.Count, mowing)}";
-            return ErrorCount > 0 ? $"{text}\n{Loc.Format("Tray_Errors", ErrorCount)}" : text;
+            var text = $"{_strings.Text("AppName")}\n{_strings.Format("Tray_Summary", Mowers.Count, mowing)}";
+            return ErrorCount > 0 ? $"{text}\n{_strings.Format("Tray_Errors", ErrorCount)}" : text;
         }
     }
 
@@ -110,7 +113,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            CommandMessage = Loc.Format("Command_Failed", ex.Message);
+            CommandMessage = _strings.Format("Command_Failed", ex.Message);
         }
         finally
         {
@@ -142,8 +145,8 @@ public sealed partial class DashboardViewModel : ObservableObject
                 }
             }
             CommandMessage = failures.Count == 0
-                ? Loc.Get(successKey)
-                : Loc.Format("Command_FailedFor", string.Join(", ", failures));
+                ? _strings.Text(successKey)
+                : _strings.Format("Command_FailedFor", string.Join(", ", failures));
         }
         finally
         {
@@ -160,7 +163,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         }
         else
         {
-            var viewModel = new MowerViewModel(mower, _host);
+            var viewModel = new MowerViewModel(mower, _host, _strings);
             var index = 0;
             while (index < Mowers.Count && StringComparer.CurrentCultureIgnoreCase.Compare(Mowers[index].Name, mower.Name) < 0)
             {
@@ -188,44 +191,44 @@ public sealed partial class DashboardViewModel : ObservableObject
         StatusNeedsSettings = false;
         (ConnectionGlyph, ConnectionLabel) = status.State switch
         {
-            MonitorState.Live => ("", Loc.Get("Connection_Live")),
-            MonitorState.Polling => ("", Loc.Get("Connection_Polling")),
-            MonitorState.Starting => ("", Loc.Get("Connection_Starting")),
-            MonitorState.Stopped when !_host.HasCredentials => ("", Loc.Get("Connection_NotConfigured")),
-            _ => ("", Loc.Get("Connection_Offline")),
+            MonitorState.Live => ("", _strings.Text("Connection_Live")),
+            MonitorState.Polling => ("", _strings.Text("Connection_Polling")),
+            MonitorState.Starting => ("", _strings.Text("Connection_Starting")),
+            MonitorState.Stopped when !_host.HasCredentials => ("", _strings.Text("Connection_NotConfigured")),
+            _ => ("", _strings.Text("Connection_Offline")),
         };
 
         switch (status.State)
         {
             case MonitorState.Stopped when !_host.HasCredentials:
-                Show(StatusSeverity.Warning, Loc.Get("Banner_NoCredentialsTitle"), Loc.Get("Banner_NoCredentials"), needsSettings: true);
+                Show(StatusSeverity.Warning, _strings.Text("Banner_NoCredentialsTitle"), _strings.Text("Banner_NoCredentials"), needsSettings: true);
                 break;
             case MonitorState.Stopped:
             case MonitorState.Live:
                 IsStatusVisible = false;
                 break;
             case MonitorState.Starting:
-                Show(StatusSeverity.Info, Loc.Get("Banner_StartingTitle"), "");
+                Show(StatusSeverity.Info, _strings.Text("Banner_StartingTitle"), "");
                 break;
             case MonitorState.Polling:
                 var interval = status.NextRefresh is { } next && status.LastRefresh is { } last
-                    ? Loc.Format("Banner_PollingTimes", Time(last), Time(next))
+                    ? _strings.Format("Banner_PollingTimes", Time(last), Time(next))
                     : "";
                 if (status.StreamState == EventStreamState.Forbidden)
                 {
-                    Show(StatusSeverity.Warning, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Forbidden")} {interval}".Trim());
+                    Show(StatusSeverity.Warning, _strings.Text("Banner_PollingTitle"), $"{_strings.Text("Banner_Forbidden")} {interval}".Trim());
                 }
                 else
                 {
-                    Show(StatusSeverity.Info, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Polling")} {interval}".Trim());
+                    Show(StatusSeverity.Info, _strings.Text("Banner_PollingTitle"), $"{_strings.Text("Banner_Polling")} {interval}".Trim());
                 }
                 break;
             case MonitorState.AuthenticationFailed:
-                Show(StatusSeverity.Error, Loc.Get("Banner_AuthFailedTitle"), Loc.Get("Banner_AuthFailed"), needsSettings: true);
+                Show(StatusSeverity.Error, _strings.Text("Banner_AuthFailedTitle"), _strings.Text("Banner_AuthFailed"), needsSettings: true);
                 break;
             case MonitorState.Offline:
-                var retry = status.NextRefresh is { } at ? Loc.Format("Banner_RetryAt", Time(at)) : "";
-                Show(StatusSeverity.Error, Loc.Get("Banner_OfflineTitle"), $"{status.Detail} {retry}".Trim());
+                var retry = status.NextRefresh is { } at ? _strings.Format("Banner_RetryAt", Time(at)) : "";
+                Show(StatusSeverity.Error, _strings.Text("Banner_OfflineTitle"), $"{status.Detail} {retry}".Trim());
                 break;
         }
     }

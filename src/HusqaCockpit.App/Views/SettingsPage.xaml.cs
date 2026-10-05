@@ -1,3 +1,4 @@
+using HusqaCockpit.App.Services;
 using HusqaCockpit.App.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -9,7 +10,7 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         var app = App.Current;
-        ViewModel = new SettingsViewModel(app.Settings, app.Credentials, app.Host);
+        ViewModel = new SettingsViewModel(app.Settings, app.Credentials, app.Host, Loc.Strings);
         InitializeComponent();
     }
 

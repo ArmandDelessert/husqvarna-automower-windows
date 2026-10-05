@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Models;
+using HusqaCockpit.Presentation;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -21,13 +22,18 @@ public sealed partial class MowerViewModel : ObservableObject
         [HeadlightMode.AlwaysOn, HeadlightMode.AlwaysOff, HeadlightMode.EveningOnly, HeadlightMode.EveningAndNight];
 
     private readonly CockpitHost _host;
+    private readonly IStrings _strings;
+    private readonly MowerFormatter _formatter;
     private Mower _mower;
 
-    public MowerViewModel(Mower mower, CockpitHost host)
+    public MowerViewModel(Mower mower, CockpitHost host, IStrings strings)
     {
         _host = host;
+        _strings = strings;
+        _formatter = new MowerFormatter(strings);
         _mower = mower;
         Id = mower.Id;
+        HeadlightModeNames = HeadlightModes.Select(m => strings.EnumText(m)).ToList();
         ResetDrafts();
     }
 
@@ -40,20 +46,20 @@ public sealed partial class MowerViewModel : ObservableObject
     public string SerialNumber => _mower.Attributes.System.SerialNumber.ToString(CultureInfo.InvariantCulture);
 
     // ----- Status -----
-    private StatusSummary Summary => MowerFormatter.Summarize(_mower, DateTimeOffset.Now);
+    private StatusSummary Summary => _formatter.Summarize(_mower, DateTimeOffset.Now);
     public string StatusTitle => Summary.Title;
     public string StatusDetail => Summary.Detail;
     public StatusSeverity Severity => Summary.Severity;
     public bool HasError => _mower.HasError;
     public bool IsConnected => _mower.IsConnected;
     public bool CanConfirmError => _mower.CanConfirmError;
-    public string ErrorText => _mower.ErrorCode != 0 ? Loc.Format("Mower_ErrorCode", _mower.ErrorCode, Loc.ErrorCode(_mower.ErrorCode)) : "";
-    public string ActivityText => Loc.Enum(_mower.Activity);
-    public string StateText => Loc.Enum(_mower.State);
-    public string ModeText => Loc.Enum(_mower.Mode);
+    public string ErrorText => _mower.ErrorCode != 0 ? _strings.Format("Mower_ErrorCode", _mower.ErrorCode, _strings.ErrorCode(_mower.ErrorCode)) : "";
+    public string ActivityText => _strings.EnumText(_mower.Activity);
+    public string StateText => _strings.EnumText(_mower.State);
+    public string ModeText => _strings.EnumText(_mower.Mode);
 
     public string LastSeenText => _mower.LastStatusTime is { } seen
-        ? Loc.Format("Mower_Updated", MowerFormatter.Relative(seen, DateTimeOffset.Now))
+        ? _strings.Format("Mower_Updated", _formatter.Relative(seen, DateTimeOffset.Now))
         : "";
 
     // ----- Battery -----
@@ -64,8 +70,8 @@ public sealed partial class MowerViewModel : ObservableObject
     // ----- Settings -----
     public bool HasHeadlights => _mower.Attributes.Capabilities.Headlights;
     public string CuttingHeightText => _mower.Attributes.Settings.CuttingHeight?.ToString(CultureInfo.CurrentCulture) ?? "—";
-    public string HeadlightText => Loc.Enum(_mower.Attributes.Settings.Headlight.Mode);
-    public IReadOnlyList<string> HeadlightModeNames { get; } = HeadlightModes.Select(m => Loc.Enum(m)).ToList();
+    public string HeadlightText => _strings.EnumText(_mower.Attributes.Settings.Headlight.Mode);
+    public IReadOnlyList<string> HeadlightModeNames { get; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsCuttingHeightChanged))]
@@ -80,7 +86,7 @@ public sealed partial class MowerViewModel : ObservableObject
 
     // ----- Schedule, statistics, position -----
     public IReadOnlyList<ScheduleItem> Schedule => _mower.Attributes.Calendar.Tasks
-        .Select(t => new ScheduleItem(MowerFormatter.Days(t), MowerFormatter.TimeRange(t)))
+        .Select(t => new ScheduleItem(_formatter.Days(t), MowerFormatter.TimeRange(t)))
         .ToList();
 
     public bool HasSchedule => _mower.Attributes.Calendar.Tasks.Count > 0;
@@ -102,17 +108,17 @@ public sealed partial class MowerViewModel : ObservableObject
             var s = _mower.Attributes.Statistics;
             var items = new List<StatisticItem>
             {
-                new(Loc.Get("Stats_CuttingTime"), MowerFormatter.Hours(s.TotalCuttingTime)),
-                new(Loc.Get("Stats_RunningTime"), MowerFormatter.Hours(s.TotalRunningTime)),
-                new(Loc.Get("Stats_ChargingTime"), MowerFormatter.Hours(s.TotalChargingTime)),
-                new(Loc.Get("Stats_SearchingTime"), MowerFormatter.Hours(s.TotalSearchingTime)),
-                new(Loc.Get("Stats_ChargingCycles"), MowerFormatter.Count(s.NumberOfChargingCycles)),
-                new(Loc.Get("Stats_Collisions"), MowerFormatter.Count(s.NumberOfCollisions)),
-                new(Loc.Get("Stats_Distance"), MowerFormatter.Kilometers(s.TotalDriveDistance)),
+                new(_strings.Text("Stats_CuttingTime"), _formatter.Hours(s.TotalCuttingTime)),
+                new(_strings.Text("Stats_RunningTime"), _formatter.Hours(s.TotalRunningTime)),
+                new(_strings.Text("Stats_ChargingTime"), _formatter.Hours(s.TotalChargingTime)),
+                new(_strings.Text("Stats_SearchingTime"), _formatter.Hours(s.TotalSearchingTime)),
+                new(_strings.Text("Stats_ChargingCycles"), MowerFormatter.Count(s.NumberOfChargingCycles)),
+                new(_strings.Text("Stats_Collisions"), MowerFormatter.Count(s.NumberOfCollisions)),
+                new(_strings.Text("Stats_Distance"), _formatter.Kilometers(s.TotalDriveDistance)),
             };
             if (s.CuttingBladeUsageTime is not null)
             {
-                items.Add(new(Loc.Get("Stats_BladeUsage"), MowerFormatter.Hours(s.CuttingBladeUsageTime)));
+                items.Add(new(_strings.Text("Stats_BladeUsage"), _formatter.Hours(s.CuttingBladeUsageTime)));
             }
             return items;
         }
@@ -122,7 +128,7 @@ public sealed partial class MowerViewModel : ObservableObject
 
     public string PositionText => _mower.LastPosition is { } p
         ? string.Format(CultureInfo.CurrentCulture, "{0:F6}, {1:F6}", p.Latitude, p.Longitude)
-        : Loc.Get("Mower_NoPosition");
+        : _strings.Text("Mower_NoPosition");
 
     public Uri? MapUri => _mower.LastPosition is { } p
         ? new Uri(string.Format(CultureInfo.InvariantCulture,
@@ -229,8 +235,8 @@ public sealed partial class MowerViewModel : ObservableObject
                 var when = MowerTime.FromMowerLocal(message.Time, _mower.TimeZone);
                 Messages.Add(new MessageItem(
                     when?.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) ?? "",
-                    Loc.ErrorCode(message.Code),
-                    Loc.Enum(message.Severity),
+                    _strings.ErrorCode(message.Code),
+                    _strings.EnumText(message.Severity),
                     message.Severity is MessageSeverity.Error or MessageSeverity.Fatal ? "" : ""));
             }
             MessagesLoaded = true;
@@ -239,7 +245,7 @@ public sealed partial class MowerViewModel : ObservableObject
         catch (Exception ex)
         {
             CommandFailed = true;
-            CommandMessage = Loc.Format("Command_Failed", ex.Message);
+            CommandMessage = _strings.Format("Command_Failed", ex.Message);
         }
         finally
         {
@@ -255,12 +261,12 @@ public sealed partial class MowerViewModel : ObservableObject
         {
             await action();
             CommandFailed = false;
-            CommandMessage = Loc.Get(successKey);
+            CommandMessage = _strings.Text(successKey);
         }
         catch (Exception ex)
         {
             CommandFailed = true;
-            CommandMessage = Loc.Format("Command_Failed", ex.Message);
+            CommandMessage = _strings.Format("Command_Failed", ex.Message);
         }
         finally
         {

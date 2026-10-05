@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Models;
+using HusqaCockpit.Presentation;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -106,8 +107,11 @@ public sealed partial class ScheduleRowViewModel : ObservableObject
 /// <summary>Edits a copy of a mower's schedule and validates it before it is sent.</summary>
 public sealed partial class ScheduleEditorViewModel : ObservableObject
 {
-    public ScheduleEditorViewModel(IEnumerable<CalendarTask> tasks)
+    private readonly IStrings _strings;
+
+    public ScheduleEditorViewModel(IEnumerable<CalendarTask> tasks, IStrings strings)
     {
+        _strings = strings;
         foreach (var task in tasks.OrderBy(t => t.Start))
         {
             Rows.Add(Track(new ScheduleRowViewModel(task)));
@@ -182,17 +186,17 @@ public sealed partial class ScheduleEditorViewModel : ObservableObject
         ErrorText = issues.Count == 0 ? "" : Describe(issues[0]);
     }
 
-    private static string Describe(ScheduleIssue issue)
+    private string Describe(ScheduleIssue issue)
     {
         var slot = issue.Index + 1;
         return issue.Kind switch
         {
-            ScheduleIssueKind.NoDays => Loc.Format("Issue_NoDays", slot),
-            ScheduleIssueKind.Overlap => Loc.Format(
+            ScheduleIssueKind.NoDays => _strings.Format("Issue_NoDays", slot),
+            ScheduleIssueKind.Overlap => _strings.Format(
                 "Issue_Overlap", slot, issue.OtherIndex!.Value + 1,
                 CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int)issue.Day!.Value]),
-            ScheduleIssueKind.CrossesMidnight => Loc.Format("Issue_CrossesMidnight", slot),
-            _ => Loc.Format("Issue_EndBeforeStart", slot),
+            ScheduleIssueKind.CrossesMidnight => _strings.Format("Issue_CrossesMidnight", slot),
+            _ => _strings.Format("Issue_EndBeforeStart", slot),
         };
     }
 }

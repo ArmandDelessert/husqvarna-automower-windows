@@ -1,30 +1,19 @@
-using System.Globalization;
-using Microsoft.Windows.ApplicationModel.Resources;
+using HusqaCockpit.Presentation;
 
 namespace HusqaCockpit.App.Services;
 
-/// <summary>Access to the localized strings (Strings\{language}\Resources.resw and ErrorCodes.resw).</summary>
+/// <summary>Access to the localized strings from the WinUI code; the view models receive <see cref="Strings"/> instead.</summary>
 public static class Loc
 {
-    private static readonly ResourceLoader s_strings = new();
-    private static readonly ResourceLoader s_errorCodes = new(ResourceLoader.GetDefaultResourceFilePath(), "ErrorCodes");
+    public static IStrings Strings { get; } = new ResourceStrings();
 
-    public static string Get(string key)
-    {
-        var value = s_strings.GetString(key);
-        return string.IsNullOrEmpty(value) ? key : value;
-    }
+    public static string Get(string key) => Strings.Text(key);
 
-    public static string Format(string key, params object?[] args) =>
-        string.Format(CultureInfo.CurrentCulture, Get(key), args);
+    public static string Format(string key, params object?[] args) => Strings.Format(key, args);
 
     /// <summary>Human-readable description of an Automower error code.</summary>
-    public static string ErrorCode(int code)
-    {
-        var value = s_errorCodes.GetString($"E{code}");
-        return string.IsNullOrEmpty(value) ? Format("ErrorCode_Unknown", code) : value;
-    }
+    public static string ErrorCode(int code) => Strings.ErrorCode(code);
 
     /// <summary>Localized name of an enum value, from the key "{EnumType}_{Value}".</summary>
-    public static string Enum<TEnum>(TEnum value) where TEnum : struct, System.Enum => Get($"{typeof(TEnum).Name}_{value}");
+    public static string Enum<TEnum>(TEnum value) where TEnum : struct, System.Enum => Strings.EnumText(value);
 }

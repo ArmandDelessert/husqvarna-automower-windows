@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
+using HusqaCockpit.Presentation;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -17,15 +18,20 @@ public sealed partial class SettingsViewModel : ObservableObject
     private readonly AppSettings _settings;
     private readonly CredentialStore _credentials;
     private readonly CockpitHost _host;
+    private readonly IStrings _strings;
     private readonly string _initialLanguage;
     private readonly bool _initialized;
 
-    public SettingsViewModel(AppSettings settings, CredentialStore credentials, CockpitHost host)
+    public SettingsViewModel(AppSettings settings, CredentialStore credentials, CockpitHost host, IStrings strings)
     {
         _settings = settings;
         _credentials = credentials;
         _host = host;
+        _strings = strings;
         _initialLanguage = settings.Language;
+        PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
+        VersionText = strings.Format("Settings_Version",
+            Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "?");
 
         var stored = credentials.LoadCredentials();
         ApplicationKey = stored?.ApplicationKey ?? "";
@@ -76,7 +82,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     {
         _credentials.SaveCredentials(Credentials);
         HasStoredCredentials = true;
-        ShowResult(StatusSeverity.Ok, Loc.Get("Settings_Saved"));
+        ShowResult(StatusSeverity.Ok, _strings.Text("Settings_Saved"));
         await _host.RestartAsync();
     }
 
@@ -87,7 +93,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         ApplicationKey = "";
         ApplicationSecret = "";
         HasStoredCredentials = false;
-        ShowResult(StatusSeverity.Info, Loc.Get("Settings_Deleted"));
+        ShowResult(StatusSeverity.Info, _strings.Text("Settings_Deleted"));
         await _host.RestartAsync();
     }
 
@@ -125,8 +131,8 @@ public sealed partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void SendTestNotification() =>
-        App.Current.Notifications.ShowInfo(Loc.Get("Notification_TestTitle"), Loc.Get("Notification_TestBody"));
+    private void SendTestNotification() =>
+        App.Current.Notifications.ShowInfo(_strings.Text("Notification_TestTitle"), _strings.Text("Notification_TestBody"));
 
     // ----- Behavior -----
 
@@ -178,15 +184,14 @@ public sealed partial class SettingsViewModel : ObservableObject
         {
             var minutes = s_pollingIntervals[Math.Clamp(PollingIntervalIndex, 0, s_pollingIntervals.Length - 1)];
             var perMonth = 30 * 24 * 60 / minutes;
-            return Loc.Format("Settings_PollingHelp",
+            return _strings.Format("Settings_PollingHelp",
                 MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture),
                 minutes,
                 perMonth.ToString("N0", CultureInfo.CurrentCulture));
         }
     }
 
-    public IReadOnlyList<string> PollingIntervalNames { get; } =
-        s_pollingIntervals.Select(m => Loc.Format("Settings_EveryMinutes", m)).ToList();
+    public IReadOnlyList<string> PollingIntervalNames { get; }
 
     partial void OnPollingIntervalIndexChanged(int value)
     {
@@ -202,11 +207,10 @@ public sealed partial class SettingsViewModel : ObservableObject
     // ----- Usage & about -----
 
     public string QuotaText => _settings.QuotaMonth == DateTime.Now.ToString("yyyy-MM", CultureInfo.InvariantCulture)
-        ? Loc.Format("Settings_Quota", _settings.QuotaRequests.ToString("N0", CultureInfo.CurrentCulture), MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture))
-        : Loc.Format("Settings_Quota", 0, MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture));
+        ? _strings.Format("Settings_Quota", _settings.QuotaRequests.ToString("N0", CultureInfo.CurrentCulture), MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture))
+        : _strings.Format("Settings_Quota", 0, MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture));
 
-    public string VersionText { get; } = Loc.Format("Settings_Version",
-        Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "?");
+    public string VersionText { get; }
 
     public void RefreshQuota() => OnPropertyChanged(nameof(QuotaText));
 

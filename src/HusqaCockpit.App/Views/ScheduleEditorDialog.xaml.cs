@@ -1,3 +1,4 @@
+using HusqaCockpit.App.Services;
 using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.Core.Models;
 using Microsoft.UI.Xaml;
@@ -9,7 +10,7 @@ public sealed partial class ScheduleEditorDialog : ContentDialog
 {
     public ScheduleEditorDialog(IEnumerable<CalendarTask> tasks)
     {
-        ViewModel = new ScheduleEditorViewModel(tasks);
+        ViewModel = new ScheduleEditorViewModel(tasks, Loc.Strings);
         InitializeComponent();
     }
 
