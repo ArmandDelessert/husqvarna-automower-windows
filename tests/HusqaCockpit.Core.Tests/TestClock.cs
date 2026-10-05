@@ -13,6 +13,7 @@ internal sealed class TestClock(DateTimeOffset start) : TimeProvider
 
     private readonly FakeTimeProvider _fake = new(start);
     private readonly List<TimeSpan> _startedTimers = [];
+    private readonly List<TimeSpan> _allTimers = [];
 
     public override TimeZoneInfo LocalTimeZone => _fake.LocalTimeZone;
 
@@ -28,8 +29,18 @@ internal sealed class TestClock(DateTimeOffset start) : TimeProvider
         lock (_startedTimers)
         {
             _startedTimers.Add(dueTime);
+            _allTimers.Add(dueTime);
         }
         return timer;
+    }
+
+    /// <summary>How many timers of <paramref name="dueTime"/> have been started since the beginning.</summary>
+    public int StartedTimers(TimeSpan dueTime)
+    {
+        lock (_startedTimers)
+        {
+            return _allTimers.Count(t => t == dueTime);
+        }
     }
 
     public void Advance(TimeSpan delta) => _fake.Advance(delta);

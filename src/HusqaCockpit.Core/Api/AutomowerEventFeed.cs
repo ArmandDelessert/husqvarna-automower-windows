@@ -52,6 +52,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
     ];
 
     private readonly IAccessTokenProvider _tokens;
+    private readonly Func<IWebSocketConnection> _createSocket;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly Uri _uri;
@@ -61,8 +62,20 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
         TimeProvider? time = null,
         ILogger<AutomowerEventFeed>? logger = null,
         string uri = DefaultUri)
+        : this(tokens, () => new ClientWebSocketConnection(), time, logger, uri)
+    {
+    }
+
+    /// <param name="createSocket">Creates the socket of each connection attempt (a fake one in the tests).</param>
+    internal AutomowerEventFeed(
+        IAccessTokenProvider tokens,
+        Func<IWebSocketConnection> createSocket,
+        TimeProvider? time = null,
+        ILogger<AutomowerEventFeed>? logger = null,
+        string uri = DefaultUri)
     {
         _tokens = tokens;
+        _createSocket = createSocket;
         _time = time ?? TimeProvider.System;
         _logger = logger ?? NullLogger<AutomowerEventFeed>.Instance;
         _uri = new Uri(uri);
@@ -159,14 +172,10 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
         CancellationToken cancellationToken)
     {
         var token = await _tokens.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
-        using var socket = new ClientWebSocket();
-        socket.Options.SetRequestHeader("Authorization", $"Bearer {token}");
-        socket.Options.CollectHttpResponseDetails = true;
-        socket.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-
+        using var socket = _createSocket();
         try
         {
-            await socket.ConnectAsync(_uri, cancellationToken).ConfigureAwait(false);
+            await socket.ConnectAsync(_uri, token, cancellationToken).ConfigureAwait(false);
         }
         catch (WebSocketException) when (socket.HttpStatusCode == HttpStatusCode.Unauthorized)
         {
@@ -197,8 +206,8 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
                     break;
                 }
 
-                using var receiveCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                receiveCts.CancelAfter(ReceiveTimeout);
+                using var timeout = new CancellationTokenSource(ReceiveTimeout, _time);
+                using var receiveCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
                 WebSocketReceiveResult result;
                 try
                 {
@@ -245,7 +254,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
             await keepAlive.ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
             if (socket.State == WebSocketState.Open)
             {
-                using var closeCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                using var closeCts = new CancellationTokenSource(TimeSpan.FromSeconds(5), _time);
                 try
                 {
                     await socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, closeCts.Token).ConfigureAwait(false);
@@ -260,7 +269,7 @@ public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
         return receivedAnything;
     }
 
-    private async Task KeepAliveLoopAsync(ClientWebSocket socket, CancellationToken cancellationToken)
+    private async Task KeepAliveLoopAsync(IWebSocketConnection socket, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested && socket.State == WebSocketState.Open)
         {
