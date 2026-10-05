@@ -10,11 +10,18 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HusqaCockpit.Core.Api;
 
+/// <summary>Where <see cref="Fleet.FleetMonitor"/> reads the full state of the mowers (GET /mowers).</summary>
+public interface IMowerSnapshotSource
+{
+    /// <summary>Returns the raw JSON:API resources ({ id, type, attributes }) of all mowers on the account.</summary>
+    Task<IReadOnlyList<JsonObject>> GetMowerResourcesAsync(CancellationToken cancellationToken = default);
+}
+
 /// <summary>
 /// REST client for the Automower Connect API v1.
 /// Requests are serialized and spaced by at least one second to respect the API rate limit.
 /// </summary>
-public sealed partial class AutomowerClient : IDisposable
+public sealed partial class AutomowerClient : IMowerSnapshotSource, IDisposable
 {
     public const string DefaultBaseAddress = "https://api.amc.husqvarna.dev/v1/";
     private const string JsonApiMediaType = "application/vnd.api+json";

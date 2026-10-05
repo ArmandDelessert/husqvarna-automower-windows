@@ -53,7 +53,8 @@ public sealed partial class FleetMonitor : IAsyncDisposable
         TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(5),
     ];
 
-    private readonly AutomowerEventFeed _feed;
+    private readonly IMowerSnapshotSource _snapshots;
+    private readonly IAutomowerEventFeed _feed;
     private readonly FleetMonitorOptions _options;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
@@ -71,22 +72,21 @@ public sealed partial class FleetMonitor : IAsyncDisposable
     private MonitorStatus _status = new(MonitorState.Stopped);
 
     public FleetMonitor(
-        AutomowerClient api,
-        AutomowerEventFeed feed,
+        IMowerSnapshotSource snapshots,
+        IAutomowerEventFeed feed,
         MowerFleet fleet,
         FleetMonitorOptions? options = null,
         TimeProvider? time = null,
         ILogger<FleetMonitor>? logger = null)
     {
-        Api = api;
         Fleet = fleet;
+        _snapshots = snapshots;
         _feed = feed;
         _options = options ?? new FleetMonitorOptions();
         _time = time ?? TimeProvider.System;
         _logger = logger ?? NullLogger<FleetMonitor>.Instance;
     }
 
-    public AutomowerClient Api { get; }
     public MowerFleet Fleet { get; }
 
     public MonitorStatus Status
@@ -146,7 +146,7 @@ public sealed partial class FleetMonitor : IAsyncDisposable
         await _refreshGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            var resources = await Api.GetMowerResourcesAsync(cancellationToken).ConfigureAwait(false);
+            var resources = await _snapshots.GetMowerResourcesAsync(cancellationToken).ConfigureAwait(false);
             Fleet.ApplySnapshot(resources);
             lock (_statusLock)
             {

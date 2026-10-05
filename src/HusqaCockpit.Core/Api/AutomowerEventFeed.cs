@@ -28,12 +28,19 @@ public enum EventStreamState
 /// <param name="RetryAt">For disconnected states: when the next attempt will be made.</param>
 public sealed record EventStreamStatus(EventStreamState State, bool AfterOutage = false, DateTimeOffset? RetryAt = null, string? Detail = null);
 
+/// <summary>The real-time events, as <see cref="Fleet.FleetMonitor"/> consumes them.</summary>
+public interface IAutomowerEventFeed
+{
+    /// <summary>Runs until <paramref name="cancellationToken"/> is cancelled, reconnecting as needed.</summary>
+    Task RunAsync(Func<AutomowerEvent, ValueTask> onEvent, Action<EventStreamStatus> onStatus, CancellationToken cancellationToken);
+}
+
 /// <summary>
 /// Maintains the WebSocket connection to the Automower event service.
 /// The server closes connections after two hours and after ten idle minutes, so the
 /// stream sends a keep-alive every minute and reconnects proactively before the limit.
 /// </summary>
-public sealed partial class AutomowerEventFeed
+public sealed partial class AutomowerEventFeed : IAutomowerEventFeed
 {
     public const string DefaultUri = "wss://ws.openapi.husqvarna.dev/v1";
     internal const string InvalidMowerId = "0-0";
