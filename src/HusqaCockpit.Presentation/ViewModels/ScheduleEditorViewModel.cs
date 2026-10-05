@@ -5,9 +5,8 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.Core.Models;
-using HusqaCockpit.Presentation;
 
-namespace HusqaCockpit.App.ViewModels;
+namespace HusqaCockpit.Presentation.ViewModels;
 
 /// <summary>One editable time slot of the weekly schedule.</summary>
 public sealed partial class ScheduleRowViewModel : ObservableObject

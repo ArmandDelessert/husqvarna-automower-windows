@@ -5,9 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
-using HusqaCockpit.Presentation;
 
-namespace HusqaCockpit.App.ViewModels;
+namespace HusqaCockpit.Presentation.ViewModels;
 
 /// <summary>State of the whole fleet and of the connection. Lives as long as the app.</summary>
 public sealed partial class DashboardViewModel : ObservableObject, IDisposable

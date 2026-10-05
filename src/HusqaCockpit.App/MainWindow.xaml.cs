@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
 using HusqaCockpit.App.Services;
-using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.App.Views;
 using HusqaCockpit.Presentation;
+using HusqaCockpit.Presentation.ViewModels;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;

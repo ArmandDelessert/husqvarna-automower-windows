@@ -3,9 +3,8 @@ using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.Core.Api;
-using HusqaCockpit.Presentation;
 
-namespace HusqaCockpit.App.ViewModels;
+namespace HusqaCockpit.Presentation.ViewModels;
 
 public sealed partial class SettingsViewModel : ObservableObject
 {

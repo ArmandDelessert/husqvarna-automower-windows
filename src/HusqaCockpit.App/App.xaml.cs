@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using HusqaCockpit.App.Services;
-using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Presentation;
+using HusqaCockpit.Presentation.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.UI.Dispatching;
