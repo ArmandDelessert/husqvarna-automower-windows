@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src\HusqaCockpit.App\Assets\AppIcon.svg" alt="Logo de HusqA Cockpit" width="160">
+  <img src="src/HusqaCockpit.App/Assets/AppIcon.svg" alt="Logo de HusqA Cockpit" width="160">
 </p>
 
 # HusqA Cockpit
@@ -9,6 +9,10 @@ An unofficial Windows client for Husqvarna Automower® robotic lawnmowers, devel
 HusqA Cockpit (**Husq**varna **A**utomower) shows all the mowers of a Husqvarna account side by side, lets you
 control them from the desktop and raises Windows notifications when one of them needs attention.
 It uses the official [Automower Connect API](https://developer.husqvarnagroup.cloud/apis/automower-connect-api).
+
+> **Independent project, not affiliated with, endorsed by or supported by Husqvarna AB.** It uses the public Automower
+> Connect API with your own application key, under Husqvarna's terms for that API. Automower® is a trademark of
+> Husqvarna AB, named here only to designate the mowers this software talks to.
 
 > This README, like most of the code in this repository, was written by Claude (Claude Code, Anthropic), under the supervision of Armand Delessert.
 
@@ -39,27 +43,22 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
 2. Create an application, then connect it to the **Authentication API** and the **Automower Connect API**.
 3. Copy the application key and the application secret.
 
-### 2. Run the app
+### 2. Install the app
 
-Requirements: Windows 10 (19041) or later, the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-and the Microsoft Edge WebView2 runtime (preinstalled on Windows 11; used for the map).
-Visual Studio is not required.
+1. Download the zip of the [latest release](https://github.com/ArmandDelessert/husqvarna-automower-windows/releases/latest)
+   for x64 or ARM64.
+2. Unzip it and start `HusqaCockpit.exe` in the folder. Nothing else to install: .NET and the Windows App SDK are
+   included.
+3. Open **Settings**, paste the key and secret, then click **Save and connect**. They are stored in the Windows
+   Credential Manager of the current user, never in plain text.
 
-```bash
-dotnet run --project src/HusqaCockpit.App
-```
+The executable is not signed: on first launch, Windows SmartScreen asks for a confirmation ("More info", then
+"Run anyway").
 
-On first launch, open **Settings**, paste the key and secret, then click **Save and connect**.
-They are stored in the Windows Credential Manager of the current user, never in plain text.
+Requirements: Windows 10 version 2004 (build 19041) or later, or Windows 11, and the Microsoft Edge WebView2 runtime
+(preinstalled on Windows 11; used for the map).
 
-### Build a distributable folder
-
-```bash
-dotnet publish src/HusqaCockpit.App -c Release -r win-x64 -o artifacts/publish/win-x64
-```
-
-Use `-r win-arm64` for ARM devices. The output folder carries the Windows App SDK (no runtime installer needed)
-and only requires the [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0). Start `HusqaCockpit.exe`.
+Preferences, the WebView2 cache and the logs (one file a day, kept a week) are stored in `%LOCALAPPDATA%\HusqA Cockpit`.
 
 ## How it works
 
@@ -72,17 +71,58 @@ and only requires the [.NET 10 Runtime](https://dotnet.microsoft.com/download/do
 | Map | [Leaflet](https://leafletjs.com/) (bundled, BSD-2-Clause) in a WebView2; only the OpenStreetMap tiles are loaded from the Internet. The track is made of the last 50 positions reported by the mower. |
 | Time stamps | Next start, error and message times are sent in the mower's local time; they are interpreted in the PC's time zone. |
 
-## Project structure
+## Development
+
+Requirements: Windows 10 version 2004 or later, or Windows 11, and the
+[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (version pinned by `global.json`).
+Visual Studio is not required.
+
+```bash
+dotnet build
+dotnet test
+dotnet run --project src/HusqaCockpit.App
+```
+
+The tests use xUnit v3 on Microsoft.Testing.Platform, enabled in `global.json`; `dotnet test --coverage` also
+measures code coverage.
+
+### Project structure
 
 ```
-src/HusqaCockpit.Core          API client, WebSocket stream, fleet state and alert detection (no UI, unit-tested)
-src/HusqaCockpit.App           WinUI 3 application (unpackaged): views, view models, tray icon, notifications
-tests/HusqaCockpit.Core.Tests  xUnit tests for the Core library
-tools/strings                  Source of the UI strings and error-code texts (generates the .resw files)
-tools/icons                    Script that draws the application icons
+src/HusqaCockpit.Core                  API client, WebSocket event feed, fleet state and alert detection (no UI)
+src/HusqaCockpit.Presentation          View models, status sentences and the abstractions they need (no UI framework)
+src/HusqaCockpit.App                   WinUI 3 application (unpackaged): views, tray icon, notifications, settings storage
+tests/HusqaCockpit.Core.Tests          xUnit tests for the Core library, including the monitor and the reconnection loop
+tests/HusqaCockpit.Presentation.Tests  xUnit tests for the view models and the status sentences
+tools/strings                          Source of the UI strings and error-code texts (generates the .resw files)
+tools/icons                            Script that draws the application icons
 ```
 
-Run the tests with `dotnet test`.
+Only the App project depends on WinUI: the view models reach the UI thread, the strings and the settings through
+interfaces, so their tests run without a desktop. Time-dependent code (refresh intervals, back-off, keep-alive) runs
+on a `TimeProvider`, simulated in the tests.
+
+### Tooling
+
+- `global.json` pins the SDK. `Directory.Build.props` enables the .NET analyzers (`latest-recommended`) and treats every
+  warning as an error; it also holds the product name and the version. `Directory.Packages.props` keeps all package
+  versions in one place.
+- `.github/workflows/ci.yml` builds and runs the tests on every push, on any branch, and checks that the `.resw` files
+  match their Python sources.
+- `.github/workflows/release.yml` publishes a release for every `vX.Y.Z` tag.
+
+### Publishing a release
+
+The version number comes from the Git tag. Pushing a tag `vX.Y.Z` (or `vX.Y.Z-beta.1` for a pre-release) builds that
+version, runs the tests, then creates the GitHub release with the self-contained application for x64 and ARM64, each in
+a zip, and their SHA-256 checksums:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+A local build has the version `0.0.0-dev`.
 
 ### Translations
 
@@ -104,7 +144,11 @@ python tools/strings/generate_resw.py
 
 ## Disclaimer
 
-This project is not affiliated with, endorsed by or supported by Husqvarna AB. Automower® is a trademark of Husqvarna AB.
+- This project is not affiliated with, endorsed by or supported by Husqvarna AB. Automower® is a trademark of
+  Husqvarna AB.
+- Using the Automower Connect API requires your own application key from the Husqvarna developer portal and is subject
+  to Husqvarna's terms for that API, including its request quotas.
+- No warranty: commands are sent to real mowers. Check what you send, especially schedules.
 
 ## License
 
