@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Presentation;
 
@@ -16,18 +14,31 @@ public sealed partial class SettingsViewModel : ObservableObject
     private static readonly int[] s_pollingIntervals = [5, 10, 15, 30, 60];
 
     private readonly AppSettings _settings;
-    private readonly CredentialStore _credentials;
-    private readonly CockpitHost _host;
+    private readonly ISettingsStore _store;
+    private readonly ICredentialStore _credentials;
+    private readonly ICockpitHost _host;
+    private readonly IAppShell _shell;
     private readonly IStrings _strings;
+    private readonly TimeProvider _time;
     private readonly string _initialLanguage;
     private readonly bool _initialized;
 
-    public SettingsViewModel(AppSettings settings, CredentialStore credentials, CockpitHost host, IStrings strings)
+    public SettingsViewModel(
+        AppSettings settings,
+        ISettingsStore store,
+        ICredentialStore credentials,
+        ICockpitHost host,
+        IAppShell shell,
+        IStrings strings,
+        TimeProvider time)
     {
         _settings = settings;
+        _store = store;
         _credentials = credentials;
         _host = host;
+        _shell = shell;
         _strings = strings;
+        _time = time;
         _initialLanguage = settings.Language;
         PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
         VersionText = strings.Format("Settings_Version",
@@ -39,7 +50,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         HasStoredCredentials = stored is not null;
         LanguageIndex = Math.Max(0, Array.IndexOf(s_languages, settings.Language));
         PollingIntervalIndex = Math.Max(0, Array.IndexOf(s_pollingIntervals, settings.PollingIntervalMinutes));
-        StartWithWindows = StartupRegistration.IsEnabled;
+        StartWithWindows = shell.StartsWithWindows;
         _initialized = true;
     }
 
@@ -132,7 +143,7 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     [RelayCommand]
     private void SendTestNotification() =>
-        App.Current.Notifications.ShowInfo(_strings.Text("Notification_TestTitle"), _strings.Text("Notification_TestBody"));
+        _shell.ShowNotification(_strings.Text("Notification_TestTitle"), _strings.Text("Notification_TestBody"));
 
     // ----- Behavior -----
 
@@ -147,9 +158,9 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     partial void OnStartWithWindowsChanged(bool value)
     {
-        if (_initialized && value != StartupRegistration.IsEnabled)
+        if (_initialized && value != _shell.StartsWithWindows)
         {
-            StartupRegistration.SetEnabled(value);
+            _shell.StartsWithWindows = value;
         }
     }
 
@@ -166,12 +177,12 @@ public sealed partial class SettingsViewModel : ObservableObject
             return;
         }
         _settings.Language = s_languages[value];
-        AppSettingsStore.Save(_settings);
+        _store.Save(_settings);
         IsRestartRequired = _settings.Language != _initialLanguage;
     }
 
     [RelayCommand]
-    private static void Restart() => App.Current.Restart();
+    private void Restart() => _shell.Restart();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PollingHelpText))]
@@ -200,13 +211,13 @@ public sealed partial class SettingsViewModel : ObservableObject
             return;
         }
         _settings.PollingIntervalMinutes = s_pollingIntervals[value];
-        AppSettingsStore.Save(_settings);
+        _store.Save(_settings);
         _ = _host.RestartAsync();
     }
 
     // ----- Usage & about -----
 
-    public string QuotaText => _settings.QuotaMonth == DateTime.Now.ToString("yyyy-MM", CultureInfo.InvariantCulture)
+    public string QuotaText => _settings.QuotaMonth == _time.GetLocalNow().ToString("yyyy-MM", CultureInfo.InvariantCulture)
         ? _strings.Format("Settings_Quota", _settings.QuotaRequests.ToString("N0", CultureInfo.CurrentCulture), MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture))
         : _strings.Format("Settings_Quota", 0, MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture));
 
@@ -215,11 +226,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     public void RefreshQuota() => OnPropertyChanged(nameof(QuotaText));
 
     [RelayCommand]
-    private static void OpenLogsFolder()
-    {
-        Directory.CreateDirectory(AppPaths.LogsFolder);
-        Process.Start(new ProcessStartInfo(AppPaths.LogsFolder) { UseShellExecute = true });
-    }
+    private void OpenLogsFolder() => _shell.OpenLogsFolder();
 
     private void Update(bool current, bool value, Action<bool> apply, [System.Runtime.CompilerServices.CallerMemberName] string? property = null)
     {
@@ -228,7 +235,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             return;
         }
         apply(value);
-        AppSettingsStore.Save(_settings);
+        _store.Save(_settings);
         OnPropertyChanged(property);
     }
 }

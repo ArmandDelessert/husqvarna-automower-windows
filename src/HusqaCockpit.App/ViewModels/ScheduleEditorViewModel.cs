@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Models;
 using HusqaCockpit.Presentation;
 

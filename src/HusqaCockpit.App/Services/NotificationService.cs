@@ -1,4 +1,5 @@
 using HusqaCockpit.Core.Fleet;
+using HusqaCockpit.Presentation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;

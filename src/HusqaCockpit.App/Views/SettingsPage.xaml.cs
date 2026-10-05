@@ -10,7 +10,7 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         var app = App.Current;
-        ViewModel = new SettingsViewModel(app.Settings, app.Credentials, app.Host, Loc.Strings);
+        ViewModel = new SettingsViewModel(app.Settings, AppSettingsStore.Default, app.Credentials, app.Host, app.Shell, Loc.Strings, TimeProvider.System);
         InitializeComponent();
     }
 

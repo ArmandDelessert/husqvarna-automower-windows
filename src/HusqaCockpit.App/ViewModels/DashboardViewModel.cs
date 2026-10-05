@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
@@ -15,13 +14,13 @@ public sealed partial class DashboardViewModel : ObservableObject, IDisposable
 {
     private static readonly TimeSpan s_tickInterval = TimeSpan.FromSeconds(30);
 
-    private readonly CockpitHost _host;
+    private readonly ICockpitHost _host;
     private readonly IUiDispatcher _dispatcher;
     private readonly IStrings _strings;
     private readonly TimeProvider _time;
     private readonly ITimer _ticker;
 
-    public DashboardViewModel(CockpitHost host, IUiDispatcher dispatcher, IStrings strings, TimeProvider time)
+    public DashboardViewModel(ICockpitHost host, IUiDispatcher dispatcher, IStrings strings, TimeProvider time)
     {
         _host = host;
         _dispatcher = dispatcher;

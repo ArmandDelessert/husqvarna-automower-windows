@@ -3,6 +3,7 @@ using System.Globalization;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.Core.Fleet;
+using HusqaCockpit.Presentation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.UI.Dispatching;
@@ -45,6 +46,7 @@ public partial class App : Application
     public AppSettings Settings { get; private set; } = null!;
     public CredentialStore Credentials { get; private set; } = null!;
     public CockpitHost Host { get; private set; } = null!;
+    public IAppShell Shell { get; private set; } = null!;
     public NotificationService Notifications { get; private set; } = null!;
     public DashboardViewModel Dashboard { get; private set; } = null!;
     public MainWindow Window { get; private set; } = null!;
@@ -65,7 +67,7 @@ public partial class App : Application
         _quotaSaveTimer = _dispatcher.CreateTimer();
         _quotaSaveTimer.Interval = s_quotaSaveDelay;
         _quotaSaveTimer.IsRepeating = false;
-        _quotaSaveTimer.Tick += (_, _) => AppSettingsStore.Save(Settings);
+        _quotaSaveTimer.Tick += (_, _) => AppSettingsStore.Default.Save(Settings);
         Credentials = new CredentialStore();
         Host = new CockpitHost(Credentials, Settings, _loggers);
         Host.RequestSent += (_, _) => _dispatcher.TryEnqueue(CountRequest);
@@ -74,6 +76,7 @@ public partial class App : Application
         Notifications = new NotificationService(_loggers.CreateLogger<NotificationService>());
         Notifications.OpenRequested += (_, mowerId) => _dispatcher.TryEnqueue(() => ShowWindow(mowerId));
         Notifications.Initialize();
+        Shell = new AppShell(this);
 
         Dashboard = new DashboardViewModel(Host, new DispatcherQueueUiDispatcher(_dispatcher), Loc.Strings, TimeProvider.System);
         Dashboard.SummaryChanged += (_, _) => UpdateTray();
@@ -156,7 +159,7 @@ public partial class App : Application
             return;
         }
         Settings.TrayHintShown = true;
-        AppSettingsStore.Save(Settings);
+        AppSettingsStore.Default.Save(Settings);
         Notifications.ShowInfo(Loc.Get("Notification_TrayHintTitle"), Loc.Get("Notification_TrayHintBody"));
     }
 
@@ -216,7 +219,7 @@ public partial class App : Application
         if (_quotaSaveTimer.IsRunning)
         {
             _quotaSaveTimer.Stop();
-            AppSettingsStore.Save(Settings);
+            AppSettingsStore.Default.Save(Settings);
         }
     }
 

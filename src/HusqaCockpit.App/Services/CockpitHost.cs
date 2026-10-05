@@ -1,14 +1,13 @@
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
+using HusqaCockpit.Presentation;
 using Microsoft.Extensions.Logging;
 
 namespace HusqaCockpit.App.Services;
 
-public sealed record CredentialTestResult(bool Success, string Message);
-
 /// <summary>Owns the connection to Husqvarna: creates, restarts and stops the <see cref="FleetMonitor"/>.</summary>
-public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, ILoggerFactory loggers) : IAsyncDisposable
+public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, ILoggerFactory loggers) : ICockpitHost, IAsyncDisposable
 {
     private static readonly TimeSpan s_refreshAfterCommand = TimeSpan.FromSeconds(15);
 

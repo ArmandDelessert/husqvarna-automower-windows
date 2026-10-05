@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.App.Views;
+using HusqaCockpit.Presentation;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -159,7 +160,7 @@ public sealed partial class MainWindow : Window
         App.Current.Settings.Window = maximized && previous is not null
             ? previous with { Maximized = true }
             : new WindowBounds(position.X, position.Y, size.Width, size.Height, maximized);
-        AppSettingsStore.Save(App.Current.Settings);
+        AppSettingsStore.Default.Save(App.Current.Settings);
     }
 
     private static bool IsOnScreen(WindowBounds bounds)

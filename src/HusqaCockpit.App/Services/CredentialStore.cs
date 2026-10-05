@@ -1,5 +1,6 @@
 using System.Globalization;
 using HusqaCockpit.Core.Api;
+using HusqaCockpit.Presentation;
 using Windows.Security.Credentials;
 
 namespace HusqaCockpit.App.Services;
@@ -8,7 +9,7 @@ namespace HusqaCockpit.App.Services;
 /// Stores the API key/secret and the current access token in the Windows Credential Manager
 /// (Control Panel › Credential Manager › Web Credentials), never in plain files.
 /// </summary>
-public sealed class CredentialStore : ITokenCache
+public sealed class CredentialStore : ICredentialStore, ITokenCache
 {
     private const string CredentialsResource = "HusqA Cockpit – API";
     private const string TokenResource = "HusqA Cockpit – Access token";

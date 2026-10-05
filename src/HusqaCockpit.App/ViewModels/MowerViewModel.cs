@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Models;
 using HusqaCockpit.Presentation;
@@ -21,13 +20,13 @@ public sealed partial class MowerViewModel : ObservableObject
     public static readonly IReadOnlyList<HeadlightMode> HeadlightModes =
         [HeadlightMode.AlwaysOn, HeadlightMode.AlwaysOff, HeadlightMode.EveningOnly, HeadlightMode.EveningAndNight];
 
-    private readonly CockpitHost _host;
+    private readonly ICockpitHost _host;
     private readonly IStrings _strings;
     private readonly MowerFormatter _formatter;
     private readonly TimeProvider _time;
     private Mower _mower;
 
-    public MowerViewModel(Mower mower, CockpitHost host, IStrings strings, TimeProvider time)
+    public MowerViewModel(Mower mower, ICockpitHost host, IStrings strings, TimeProvider time)
     {
         _host = host;
         _strings = strings;
