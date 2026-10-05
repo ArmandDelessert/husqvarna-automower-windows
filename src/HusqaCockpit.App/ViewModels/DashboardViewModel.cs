@@ -7,7 +7,6 @@ using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Core.Models;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -56,7 +55,7 @@ public sealed partial class DashboardViewModel : ObservableObject
     public partial string StatusMessage { get; set; } = "";
 
     [ObservableProperty]
-    public partial InfoBarSeverity StatusSeverity { get; set; }
+    public partial StatusSeverity StatusSeverity { get; set; }
 
     /// <summary>The status bar offers a button to open the settings.</summary>
     [ObservableProperty]
@@ -199,14 +198,14 @@ public sealed partial class DashboardViewModel : ObservableObject
         switch (status.State)
         {
             case MonitorState.Stopped when !_host.HasCredentials:
-                Show(InfoBarSeverity.Warning, Loc.Get("Banner_NoCredentialsTitle"), Loc.Get("Banner_NoCredentials"), needsSettings: true);
+                Show(StatusSeverity.Warning, Loc.Get("Banner_NoCredentialsTitle"), Loc.Get("Banner_NoCredentials"), needsSettings: true);
                 break;
             case MonitorState.Stopped:
             case MonitorState.Live:
                 IsStatusVisible = false;
                 break;
             case MonitorState.Starting:
-                Show(InfoBarSeverity.Informational, Loc.Get("Banner_StartingTitle"), "");
+                Show(StatusSeverity.Info, Loc.Get("Banner_StartingTitle"), "");
                 break;
             case MonitorState.Polling:
                 var interval = status.NextRefresh is { } next && status.LastRefresh is { } last
@@ -214,24 +213,24 @@ public sealed partial class DashboardViewModel : ObservableObject
                     : "";
                 if (status.StreamState == EventStreamState.Forbidden)
                 {
-                    Show(InfoBarSeverity.Warning, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Forbidden")} {interval}".Trim());
+                    Show(StatusSeverity.Warning, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Forbidden")} {interval}".Trim());
                 }
                 else
                 {
-                    Show(InfoBarSeverity.Informational, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Polling")} {interval}".Trim());
+                    Show(StatusSeverity.Info, Loc.Get("Banner_PollingTitle"), $"{Loc.Get("Banner_Polling")} {interval}".Trim());
                 }
                 break;
             case MonitorState.AuthenticationFailed:
-                Show(InfoBarSeverity.Error, Loc.Get("Banner_AuthFailedTitle"), Loc.Get("Banner_AuthFailed"), needsSettings: true);
+                Show(StatusSeverity.Error, Loc.Get("Banner_AuthFailedTitle"), Loc.Get("Banner_AuthFailed"), needsSettings: true);
                 break;
             case MonitorState.Offline:
                 var retry = status.NextRefresh is { } at ? Loc.Format("Banner_RetryAt", Time(at)) : "";
-                Show(InfoBarSeverity.Error, Loc.Get("Banner_OfflineTitle"), $"{status.Detail} {retry}".Trim());
+                Show(StatusSeverity.Error, Loc.Get("Banner_OfflineTitle"), $"{status.Detail} {retry}".Trim());
                 break;
         }
     }
 
-    private void Show(InfoBarSeverity severity, string title, string message, bool needsSettings = false)
+    private void Show(StatusSeverity severity, string title, string message, bool needsSettings = false)
     {
         StatusSeverity = severity;
         StatusTitle = title;

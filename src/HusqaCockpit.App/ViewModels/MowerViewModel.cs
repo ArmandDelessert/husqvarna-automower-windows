@@ -5,8 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
 using HusqaCockpit.Core.Models;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -46,7 +44,6 @@ public sealed partial class MowerViewModel : ObservableObject
     public string StatusTitle => Summary.Title;
     public string StatusDetail => Summary.Detail;
     public StatusSeverity Severity => Summary.Severity;
-    public Brush SeverityBrush => SeverityBrushes.For(Severity);
     public bool HasError => _mower.HasError;
     public bool IsConnected => _mower.IsConnected;
     public bool CanConfirmError => _mower.CanConfirmError;
@@ -294,21 +291,5 @@ public sealed partial class MowerViewModel : ObservableObject
             return charging ? "" : "";
         }
         return ((char)((charging ? 0xE85A : 0xE850) + level)).ToString();
-    }
-}
-
-internal static class SeverityBrushes
-{
-    public static Brush For(StatusSeverity severity)
-    {
-        var key = severity switch
-        {
-            StatusSeverity.Ok => "SystemFillColorSuccessBrush",
-            StatusSeverity.Info => "AccentFillColorDefaultBrush",
-            StatusSeverity.Warning => "SystemFillColorCautionBrush",
-            StatusSeverity.Error => "SystemFillColorCriticalBrush",
-            _ => "SystemFillColorNeutralBrush",
-        };
-        return (Brush)Application.Current.Resources[key];
     }
 }

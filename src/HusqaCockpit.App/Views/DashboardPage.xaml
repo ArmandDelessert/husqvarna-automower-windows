@@ -53,7 +53,7 @@
             IsClosable="False"
             IsOpen="{x:Bind ViewModel.IsStatusVisible, Mode=OneWay}"
             Message="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
-            Severity="{x:Bind ViewModel.StatusSeverity, Mode=OneWay}"
+            Severity="{x:Bind local:BindingHelpers.InfoBarSeverityFor(ViewModel.StatusSeverity), Mode=OneWay}"
             Title="{x:Bind ViewModel.StatusTitle, Mode=OneWay}">
             <InfoBar.ActionButton>
                 <Button
@@ -118,7 +118,7 @@
                                                 Height="12"
                                                 Margin="0,8,0,0"
                                                 VerticalAlignment="Top"
-                                                Fill="{x:Bind SeverityBrush, Mode=OneWay}" />
+                                                Fill="{x:Bind local:BindingHelpers.SeverityBrush(Severity), Mode=OneWay}" />
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Left">
                                                 <TextBlock
                                                     Style="{StaticResource SubtitleTextBlockStyle}"

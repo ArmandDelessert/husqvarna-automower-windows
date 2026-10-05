@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.Core.Api;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HusqaCockpit.App.ViewModels;
 
@@ -58,7 +57,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     public partial string CredentialResult { get; set; } = "";
 
     [ObservableProperty]
-    public partial InfoBarSeverity CredentialResultSeverity { get; set; }
+    public partial StatusSeverity CredentialResultSeverity { get; set; }
 
     private bool CanUseCredentials() =>
         !string.IsNullOrWhiteSpace(ApplicationKey) && !string.IsNullOrWhiteSpace(ApplicationSecret);
@@ -69,7 +68,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     private async Task TestCredentialsAsync()
     {
         var result = await _host.TestCredentialsAsync(Credentials);
-        ShowResult(result.Success ? InfoBarSeverity.Success : InfoBarSeverity.Error, result.Message);
+        ShowResult(result.Success ? StatusSeverity.Ok : StatusSeverity.Error, result.Message);
     }
 
     [RelayCommand(CanExecute = nameof(CanUseCredentials))]
@@ -77,7 +76,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     {
         _credentials.SaveCredentials(Credentials);
         HasStoredCredentials = true;
-        ShowResult(InfoBarSeverity.Success, Loc.Get("Settings_Saved"));
+        ShowResult(StatusSeverity.Ok, Loc.Get("Settings_Saved"));
         await _host.RestartAsync();
     }
 
@@ -88,11 +87,11 @@ public sealed partial class SettingsViewModel : ObservableObject
         ApplicationKey = "";
         ApplicationSecret = "";
         HasStoredCredentials = false;
-        ShowResult(InfoBarSeverity.Informational, Loc.Get("Settings_Deleted"));
+        ShowResult(StatusSeverity.Info, Loc.Get("Settings_Deleted"));
         await _host.RestartAsync();
     }
 
-    private void ShowResult(InfoBarSeverity severity, string message)
+    private void ShowResult(StatusSeverity severity, string message)
     {
         CredentialResultSeverity = severity;
         CredentialResult = message;
