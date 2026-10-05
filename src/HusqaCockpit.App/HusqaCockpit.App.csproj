@@ -67,8 +67,10 @@
     </PropertyGroup>
     <Unzip Condition="Exists('$(_InsightsMsix)')" SourceFiles="$(_InsightsMsix)" DestinationFolder="$(_InsightsFolder)" Include="Microsoft.WindowsAppRuntime.Insights.Resource.dll" SkipUnchangedFiles="true" />
     <Warning Condition="!Exists('$(_InsightsMsix)')" Text="Windows App SDK runtime MSIX not found at $(_InsightsMsix); notifications may not work." />
+    <!-- Copied when it differs rather than when it is newer: the file keeps its date from the
+         package, and another version of the runtime can carry an older one. -->
     <ItemGroup Condition="Exists('$(_InsightsFolder)Microsoft.WindowsAppRuntime.Insights.Resource.dll')">
-      <None Include="$(_InsightsFolder)Microsoft.WindowsAppRuntime.Insights.Resource.dll" Link="Microsoft.WindowsAppRuntime.Insights.Resource.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <None Include="$(_InsightsFolder)Microsoft.WindowsAppRuntime.Insights.Resource.dll" Link="Microsoft.WindowsAppRuntime.Insights.Resource.dll" CopyToOutputDirectory="IfDifferent" CopyToPublishDirectory="IfDifferent" />
     </ItemGroup>
   </Target>
 
