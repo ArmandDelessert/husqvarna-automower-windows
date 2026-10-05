@@ -133,13 +133,13 @@ public class MowerFleetTests
     [InlineData("not json")]
     public void Non_event_frames_are_ignored(string frame)
     {
-        Assert.Null(AutomowerEventStream.ParseEvent(frame));
+        Assert.Null(AutomowerEventFeed.ParseEvent(frame));
     }
 
     [Fact]
     public void Event_frames_are_parsed()
     {
-        var evt = AutomowerEventStream.ParseEvent("""{"id":"abc","type":"battery-event-v2","attributes":{"battery":{"batteryPercent":50}}}""");
+        var evt = AutomowerEventFeed.ParseEvent("""{"id":"abc","type":"battery-event-v2","attributes":{"battery":{"batteryPercent":50}}}""");
 
         Assert.NotNull(evt);
         Assert.Equal("battery-event-v2", evt.Type);

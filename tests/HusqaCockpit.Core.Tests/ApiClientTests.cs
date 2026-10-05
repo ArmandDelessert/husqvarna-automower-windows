@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -48,7 +49,7 @@ public class TokenProviderTests
     {
         var handler = new FakeHandler((_, _) => FakeHandler.Json(HttpStatusCode.OK, TokenJson));
         var cache = new MemoryTokenCache();
-        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z"));
+        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z", CultureInfo.InvariantCulture));
         var provider = new ClientCredentialsTokenProvider(new HttpClient(handler), s_credentials, cache, time);
 
         Assert.Equal("abc", await provider.GetAccessTokenAsync(TestContext.Current.CancellationToken));
@@ -64,7 +65,7 @@ public class TokenProviderTests
     public async Task Reuses_a_persisted_token_after_restart()
     {
         var handler = new FakeHandler((_, _) => throw new InvalidOperationException("Should not log in"));
-        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z"));
+        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z", CultureInfo.InvariantCulture));
         var cache = new MemoryTokenCache { Token = new AccessToken("app-key", "persisted", time.GetUtcNow().AddHours(5)) };
         var provider = new ClientCredentialsTokenProvider(new HttpClient(handler), s_credentials, cache, time);
 
@@ -75,7 +76,7 @@ public class TokenProviderTests
     public async Task Ignores_a_persisted_token_from_another_application_key()
     {
         var handler = new FakeHandler((_, _) => FakeHandler.Json(HttpStatusCode.OK, TokenJson));
-        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z"));
+        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z", CultureInfo.InvariantCulture));
         var cache = new MemoryTokenCache { Token = new AccessToken("other-key", "persisted", time.GetUtcNow().AddHours(5)) };
         var provider = new ClientCredentialsTokenProvider(new HttpClient(handler), s_credentials, cache, time);
 
@@ -87,7 +88,7 @@ public class TokenProviderTests
     {
         var count = 0;
         var handler = new FakeHandler((_, _) => FakeHandler.Json(HttpStatusCode.OK, $$"""{ "access_token": "t{{++count}}", "expires_in": 3600 }"""));
-        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z"));
+        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-10-03T10:00:00Z", CultureInfo.InvariantCulture));
         var provider = new ClientCredentialsTokenProvider(new HttpClient(handler), s_credentials, null, time);
 
         Assert.Equal("t1", await provider.GetAccessTokenAsync(TestContext.Current.CancellationToken));

@@ -163,7 +163,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         {
             var viewModel = new MowerViewModel(mower, _host);
             var index = 0;
-            while (index < Mowers.Count && string.Compare(Mowers[index].Name, mower.Name, StringComparison.CurrentCultureIgnoreCase) < 0)
+            while (index < Mowers.Count && StringComparer.CurrentCultureIgnoreCase.Compare(Mowers[index].Name, mower.Name) < 0)
             {
                 index++;
             }

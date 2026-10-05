@@ -1,0 +1,6 @@
+# Settings for the test projects only (the root .editorconfig applies as well).
+
+[*.cs]
+# Test names are sentences describing the expected behavior (Same_error_is_not_reported_twice):
+# the underscores keep them readable in test reports, so CA1707 does not apply to them.
+dotnet_diagnostic.CA1707.severity = none

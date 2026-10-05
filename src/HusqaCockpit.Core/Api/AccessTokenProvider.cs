@@ -32,7 +32,7 @@ public interface IAccessTokenProvider
 /// Tokens live 24 h; they are reused until shortly before expiry because the server
 /// rejects logins that are too frequent ("simultaneous.logins").
 /// </summary>
-public sealed class ClientCredentialsTokenProvider : IAccessTokenProvider
+public sealed partial class ClientCredentialsTokenProvider : IAccessTokenProvider, IDisposable
 {
     public const string DefaultTokenEndpoint = "https://api.authentication.husqvarnagroup.dev/v1/oauth2/token";
     private static readonly TimeSpan s_renewalMargin = TimeSpan.FromMinutes(10);
@@ -82,7 +82,7 @@ public sealed class ClientCredentialsTokenProvider : IAccessTokenProvider
             var cached = _cache?.Load();
             if (cached is not null && cached.ApplicationKey == _credentials.ApplicationKey && IsUsable(cached))
             {
-                _logger.LogDebug("Reusing cached access token valid until {ExpiresAt}", cached.ExpiresAt);
+                LogReusingCachedToken(_logger, cached.ExpiresAt);
                 _token = cached;
                 return cached.Value;
             }
@@ -103,12 +103,14 @@ public sealed class ClientCredentialsTokenProvider : IAccessTokenProvider
         _cache?.Clear();
     }
 
+    public void Dispose() => _gate.Dispose();
+
     private bool IsUsable(AccessToken? token) =>
         token is not null && token.ExpiresAt - s_renewalMargin > _time.GetUtcNow();
 
     private async Task<AccessToken> RequestTokenAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Requesting a new access token");
+        LogRequestingToken(_logger);
         using var content = new FormUrlEncodedContent(new Dictionary<string, string>
         {
             ["grant_type"] = "client_credentials",
@@ -132,8 +134,7 @@ public sealed class ClientCredentialsTokenProvider : IAccessTokenProvider
             if (!response.IsSuccessStatusCode)
             {
                 var error = TryParse<TokenError>(body);
-                _logger.LogWarning(
-                    "Token request failed: {Status} {Error} {ErrorCode}", (int)response.StatusCode, error?.Error, error?.ErrorCode);
+                LogTokenRequestFailed(_logger, (int)response.StatusCode, error?.Error, error?.ErrorCode);
                 throw new AuthenticationException(
                     response.StatusCode,
                     error?.Error,
@@ -163,6 +164,15 @@ public sealed class ClientCredentialsTokenProvider : IAccessTokenProvider
             return default;
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Reusing cached access token valid until {ExpiresAt}")]
+    private static partial void LogReusingCachedToken(ILogger logger, DateTimeOffset expiresAt);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Requesting a new access token")]
+    private static partial void LogRequestingToken(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Token request failed: {Status} {Error} {ErrorCode}")]
+    private static partial void LogTokenRequestFailed(ILogger logger, int status, string? error, string? errorCode);
 
     private sealed record TokenResponse(
         [property: JsonPropertyName("access_token")] string? AccessToken,

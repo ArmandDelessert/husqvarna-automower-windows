@@ -11,7 +11,7 @@ public sealed partial class DashboardPage : Page
         InitializeComponent();
     }
 
-    public DashboardViewModel ViewModel => App.Current.Dashboard;
+    public DashboardViewModel ViewModel { get; } = App.Current.Dashboard;
 
     private void OpenDetails_Click(object sender, RoutedEventArgs e)
     {

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using HusqaCockpit.Core.Json;
 using HusqaCockpit.Core.Models;
@@ -91,7 +92,7 @@ public class ModelTests
     {
         var result = MowerTime.FromMowerLocal(timestamp, TestData.Zurich);
 
-        Assert.Equal(expected is null ? null : DateTimeOffset.Parse(expected), result);
+        Assert.Equal(expected is null ? null : DateTimeOffset.Parse(expected, CultureInfo.InvariantCulture), result);
     }
 
     [Fact]

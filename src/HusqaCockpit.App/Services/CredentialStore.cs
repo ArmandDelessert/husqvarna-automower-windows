@@ -70,7 +70,8 @@ public sealed class CredentialStore : ITokenCache
     {
         try
         {
-            return _vault.FindAllByResource(resource).FirstOrDefault();
+            var credentials = _vault.FindAllByResource(resource);
+            return credentials.Count > 0 ? credentials[0] : null;
         }
         catch (Exception)
         {

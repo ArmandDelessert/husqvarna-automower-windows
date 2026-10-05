@@ -8,7 +8,7 @@ namespace HusqaCockpit.App.Services;
 public sealed record CredentialTestResult(bool Success, string Message);
 
 /// <summary>Owns the connection to Husqvarna: creates, restarts and stops the <see cref="FleetMonitor"/>.</summary>
-public sealed class CockpitHost(CredentialStore credentialStore, AppSettings settings, ILoggerFactory loggers) : IAsyncDisposable
+public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, ILoggerFactory loggers) : IAsyncDisposable
 {
     private static readonly TimeSpan s_refreshAfterCommand = TimeSpan.FromSeconds(15);
 
@@ -16,6 +16,7 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
     private readonly ILogger _logger = loggers.CreateLogger<CockpitHost>();
     private readonly SemaphoreSlim _lifecycle = new(1, 1);
     private FleetMonitor? _monitor;
+    private ClientCredentialsTokenProvider? _tokens;
 
     /// <summary>Mower states; kept across restarts so the UI keeps its view models.</summary>
     public MowerFleet Fleet { get; } = new();
@@ -46,19 +47,19 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
                 return;
             }
 
-            var tokens = new ClientCredentialsTokenProvider(_http, credentials, credentialStore, logger: loggers.CreateLogger<ClientCredentialsTokenProvider>());
-            var api = new AutomowerClient(_http, tokens, logger: loggers.CreateLogger<AutomowerClient>());
+            _tokens = new ClientCredentialsTokenProvider(_http, credentials, credentialStore, logger: loggers.CreateLogger<ClientCredentialsTokenProvider>());
+            var api = new AutomowerClient(_http, _tokens, logger: loggers.CreateLogger<AutomowerClient>());
             api.RequestSent += (_, _) => RequestSent?.Invoke(this, EventArgs.Empty);
-            var stream = new AutomowerEventStream(tokens, logger: loggers.CreateLogger<AutomowerEventStream>());
+            var feed = new AutomowerEventFeed(_tokens, logger: loggers.CreateLogger<AutomowerEventFeed>());
             var options = new FleetMonitorOptions
             {
                 RefreshIntervalWhenPolling = TimeSpan.FromMinutes(Math.Clamp(settings.PollingIntervalMinutes, 5, 60)),
             };
 
-            _monitor = new FleetMonitor(api, stream, Fleet, options, logger: loggers.CreateLogger<FleetMonitor>());
+            _monitor = new FleetMonitor(api, feed, Fleet, options, logger: loggers.CreateLogger<FleetMonitor>());
             _monitor.StatusChanged += OnMonitorStatusChanged;
             _monitor.Start();
-            _logger.LogInformation("Monitoring started");
+            LogMonitoringStarted(_logger);
         }
         finally
         {
@@ -113,8 +114,8 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
     {
         try
         {
-            var tokens = new ClientCredentialsTokenProvider(_http, credentials);
-            var api = new AutomowerClient(_http, tokens);
+            using var tokens = new ClientCredentialsTokenProvider(_http, credentials);
+            using var api = new AutomowerClient(_http, tokens);
             var mowers = await api.GetMowerResourcesAsync().ConfigureAwait(false);
             RequestSent?.Invoke(this, EventArgs.Empty);
             return new CredentialTestResult(true, Loc.Format("Settings_TestSuccess", mowers.Count));
@@ -133,7 +134,7 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Credential test failed");
+            LogCredentialTestFailed(_logger, ex);
             return new CredentialTestResult(false, Loc.Format("Settings_TestError", ex.Message));
         }
     }
@@ -164,7 +165,17 @@ public sealed class CockpitHost(CredentialStore credentialStore, AppSettings set
 
         _monitor.StatusChanged -= OnMonitorStatusChanged;
         await _monitor.StopAsync().ConfigureAwait(false);
+        // The client and the token provider were created for this monitor only.
+        _monitor.Api.Dispose();
+        _tokens?.Dispose();
         _monitor = null;
+        _tokens = null;
         StatusChanged?.Invoke(this, Status);
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Monitoring started")]
+    private static partial void LogMonitoringStarted(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Credential test failed")]
+    private static partial void LogCredentialTestFailed(ILogger logger, Exception exception);
 }

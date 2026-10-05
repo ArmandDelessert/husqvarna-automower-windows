@@ -14,7 +14,7 @@ namespace HusqaCockpit.Core.Api;
 /// REST client for the Automower Connect API v1.
 /// Requests are serialized and spaced by at least one second to respect the API rate limit.
 /// </summary>
-public sealed class AutomowerClient
+public sealed partial class AutomowerClient : IDisposable
 {
     public const string DefaultBaseAddress = "https://api.amc.husqvarna.dev/v1/";
     private const string JsonApiMediaType = "application/vnd.api+json";
@@ -45,6 +45,8 @@ public sealed class AutomowerClient
 
     /// <summary>Raised once per HTTP request actually sent (useful to track the monthly quota).</summary>
     public event EventHandler? RequestSent;
+
+    public void Dispose() => _throttle.Dispose();
 
     /// <summary>Returns the raw JSON:API resources ({ id, type, attributes }) of all mowers on the account.</summary>
     public async Task<IReadOnlyList<JsonObject>> GetMowerResourcesAsync(CancellationToken cancellationToken = default)
@@ -98,7 +100,7 @@ public sealed class AutomowerClient
     public Task ConfirmErrorAsync(string mowerId, CancellationToken cancellationToken = default) =>
         SendAsync(HttpMethod.Post, $"mowers/{Escape(mowerId)}/errors/confirm", body: null, cancellationToken);
 
-    private Task SendSettingsAsync(string mowerId, JsonObject attributes, CancellationToken cancellationToken)
+    private Task<JsonNode?> SendSettingsAsync(string mowerId, JsonObject attributes, CancellationToken cancellationToken)
     {
         var data = new JsonObject { ["type"] = "settings", ["attributes"] = attributes };
         return SendAsync(HttpMethod.Post, $"mowers/{Escape(mowerId)}/settings", Wrap(data), cancellationToken);
@@ -127,7 +129,7 @@ public sealed class AutomowerClient
             HttpResponseMessage response;
             using (await _throttle.AcquireAsync(cancellationToken).ConfigureAwait(false))
             {
-                _logger.LogDebug("{Method} {Path}", method, path);
+                LogSending(_logger, method, path);
                 RequestSent?.Invoke(this, EventArgs.Empty);
                 response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
@@ -142,7 +144,7 @@ public sealed class AutomowerClient
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized && !refreshedToken)
                 {
-                    _logger.LogInformation("Access token rejected, requesting a new one");
+                    LogTokenRejected(_logger);
                     _tokens.Invalidate();
                     refreshedToken = true;
                     continue;
@@ -153,7 +155,7 @@ public sealed class AutomowerClient
                 if (retryable && attempt < MaxAttempts)
                 {
                     var delay = response.Headers.RetryAfter?.Delta ?? TimeSpan.FromSeconds(2 * attempt);
-                    _logger.LogWarning("{Method} {Path} returned {Status}, retrying in {Delay}", method, path, (int)response.StatusCode, delay);
+                    LogRetrying(_logger, method, path, (int)response.StatusCode, delay);
                     await Task.Delay(delay, _time, cancellationToken).ConfigureAwait(false);
                     continue;
                 }
@@ -162,6 +164,15 @@ public sealed class AutomowerClient
             }
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "{Method} {Path}")]
+    private static partial void LogSending(ILogger logger, HttpMethod method, string path);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Access token rejected, requesting a new one")]
+    private static partial void LogTokenRejected(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "{Method} {Path} returned {Status}, retrying in {Delay}")]
+    private static partial void LogRetrying(ILogger logger, HttpMethod method, string path, int status, TimeSpan delay);
 
     private static AutomowerApiException CreateException(HttpStatusCode status, string body)
     {

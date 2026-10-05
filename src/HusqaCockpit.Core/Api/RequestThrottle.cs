@@ -1,7 +1,7 @@
 namespace HusqaCockpit.Core.Api;
 
 /// <summary>Serializes requests and keeps a minimum interval between them (the API allows 1 request/second).</summary>
-internal sealed class RequestThrottle(TimeSpan minimumInterval, TimeProvider time)
+internal sealed class RequestThrottle(TimeSpan minimumInterval, TimeProvider time) : IDisposable
 {
     private readonly SemaphoreSlim _gate = new(1, 1);
     private DateTimeOffset _lastRequest = DateTimeOffset.MinValue;
@@ -24,6 +24,8 @@ internal sealed class RequestThrottle(TimeSpan minimumInterval, TimeProvider tim
         }
         return new Lease(this);
     }
+
+    public void Dispose() => _gate.Dispose();
 
     private void Release()
     {

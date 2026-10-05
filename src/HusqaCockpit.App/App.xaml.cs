@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using HusqaCockpit.App.Services;
 using HusqaCockpit.App.ViewModels;
 using HusqaCockpit.Core.Fleet;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
@@ -10,11 +12,14 @@ using Microsoft.Windows.AppNotifications;
 
 namespace HusqaCockpit.App;
 
+[SuppressMessage("Reliability", "CA1001:Types that own disposable fields should be disposable",
+    Justification = "The application object lives as long as the process; Quit() disposes the tray icon before exiting.")]
 public partial class App : Application
 {
     private readonly bool _startMinimized;
     private ILoggerFactory _loggers = null!;
-    private ILogger _logger = null!;
+    // Exceptions raised before OnLaunched sets up the log file are not recorded.
+    private ILogger _logger = NullLogger.Instance;
     private DispatcherQueue _dispatcher = null!;
     private TrayIcon? _tray;
     private bool _trayShowsAlert;
@@ -23,11 +28,11 @@ public partial class App : Application
     {
         _startMinimized = startMinimized;
         InitializeComponent();
-        UnhandledException += (_, e) => _logger?.LogError(e.Exception, "Unhandled UI exception");
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => _logger?.LogCritical(e.ExceptionObject as Exception, "Unhandled exception");
+        UnhandledException += (_, e) => LogUnhandledUiException(_logger, e.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => LogUnhandledException(_logger, e.ExceptionObject as Exception);
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
-            _logger?.LogWarning(e.Exception, "Unobserved task exception");
+            LogUnobservedTaskException(_logger, e.Exception);
             e.SetObserved();
         };
     }
@@ -51,7 +56,7 @@ public partial class App : Application
             .SetMinimumLevel(LogLevel.Debug)
             .AddProvider(new FileLoggerProvider(AppPaths.LogsFolder, LogLevel.Information)));
         _logger = _loggers.CreateLogger<App>();
-        _logger.LogInformation("HusqA Cockpit starting (culture {Culture})", CultureInfo.CurrentUICulture.Name);
+        LogStarting(_logger, CultureInfo.CurrentUICulture.Name);
 
         Settings = AppSettingsStore.Load();
         Credentials = new CredentialStore();
@@ -103,7 +108,7 @@ public partial class App : Application
             return;
         }
         IsExiting = true;
-        _logger.LogInformation("Exiting");
+        LogExiting(_logger);
         _tray?.Dispose();
         _tray = null;
         Window.AppWindow.Hide();
@@ -113,7 +118,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Clean shutdown failed");
+            LogShutdownFailed(_logger, ex);
         }
         _loggers.Dispose();
         Exit();
@@ -129,7 +134,7 @@ public partial class App : Application
         }
         catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
         {
-            _logger.LogError(ex, "Could not restart");
+            LogRestartFailed(_logger, ex);
             return;
         }
         Quit();
@@ -155,7 +160,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Could not start monitoring");
+            LogMonitoringStartFailed(_logger, ex);
         }
     }
 
@@ -175,7 +180,7 @@ public partial class App : Application
     {
         foreach (var alert in AlertDetector.Detect(e.Previous, e.Current))
         {
-            _logger.LogInformation("Alert {Kind} for {Mower} (code {Code})", alert.Kind, alert.Mower.Name, alert.ErrorCode);
+            LogAlert(_logger, alert.Kind, alert.Mower.Name, alert.ErrorCode);
             Notifications.Show(alert, Settings);
         }
     }
@@ -201,7 +206,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Tray icon unavailable");
+            LogTrayUnavailable(_logger, ex);
         }
     }
 
@@ -230,4 +235,34 @@ public partial class App : Application
         _tray.Update(alert != _trayShowsAlert ? (alert ? AppPaths.AlertIconPath : AppPaths.IconPath) : null, Dashboard.TraySummary);
         _trayShowsAlert = alert;
     }
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Unhandled UI exception")]
+    private static partial void LogUnhandledUiException(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Critical, Message = "Unhandled exception")]
+    private static partial void LogUnhandledException(ILogger logger, Exception? exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Unobserved task exception")]
+    private static partial void LogUnobservedTaskException(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "HusqA Cockpit starting (culture {Culture})")]
+    private static partial void LogStarting(ILogger logger, string culture);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Exiting")]
+    private static partial void LogExiting(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Clean shutdown failed")]
+    private static partial void LogShutdownFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Could not restart")]
+    private static partial void LogRestartFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Could not start monitoring")]
+    private static partial void LogMonitoringStartFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Alert {Kind} for {Mower} (code {Code})")]
+    private static partial void LogAlert(ILogger logger, MowerAlertKind kind, string mower, int code);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Tray icon unavailable")]
+    private static partial void LogTrayUnavailable(ILogger logger, Exception exception);
 }

@@ -206,7 +206,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         ? Loc.Format("Settings_Quota", _settings.QuotaRequests.ToString("N0", CultureInfo.CurrentCulture), MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture))
         : Loc.Format("Settings_Quota", 0, MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture));
 
-    public string VersionText => Loc.Format("Settings_Version",
+    public string VersionText { get; } = Loc.Format("Settings_Version",
         Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "?");
 
     public void RefreshQuota() => OnPropertyChanged(nameof(QuotaText));

@@ -74,7 +74,7 @@ public sealed class MowerFleet(TimeZoneInfo? mowerTimeZone = null)
             foreach (var resource in resources)
             {
                 if (resource["id"]?.GetValue<string>() is not { } id
-                    || id == AutomowerEventStream.InvalidMowerId
+                    || id == AutomowerEventFeed.InvalidMowerId
                     || resource["attributes"] is not JsonObject attributes)
                 {
                     continue;

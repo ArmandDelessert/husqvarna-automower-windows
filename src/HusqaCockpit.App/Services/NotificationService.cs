@@ -6,7 +6,7 @@ using Microsoft.Windows.AppNotifications.Builder;
 namespace HusqaCockpit.App.Services;
 
 /// <summary>Windows toast notifications for mower alerts.</summary>
-public sealed class NotificationService(ILogger<NotificationService> logger)
+public sealed partial class NotificationService(ILogger<NotificationService> logger)
 {
     private const string ActionKey = "action";
     private const string MowerKey = "mower";
@@ -28,7 +28,7 @@ public sealed class NotificationService(ILogger<NotificationService> logger)
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Notifications unavailable");
+            LogUnavailable(logger, ex);
         }
     }
 
@@ -93,11 +93,11 @@ public sealed class NotificationService(ILogger<NotificationService> logger)
             notification.Tag = tag.Length > 64 ? tag[..64] : tag;
             notification.Group = "mowers";
             AppNotificationManager.Default.Show(notification);
-            logger.LogInformation("Notification shown (id {Id}, tag {Tag})", notification.Id, notification.Tag);
+            LogShown(logger, notification.Id, notification.Tag);
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Could not show notification");
+            LogShowFailed(logger, ex);
         }
     }
 
@@ -108,4 +108,13 @@ public sealed class NotificationService(ILogger<NotificationService> logger)
             OpenRequested?.Invoke(this, arguments.TryGetValue(MowerKey, out var mowerId) ? mowerId : null);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Notifications unavailable")]
+    private static partial void LogUnavailable(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Notification shown (id {Id}, tag {Tag})")]
+    private static partial void LogShown(ILogger logger, uint id, string tag);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Could not show notification")]
+    private static partial void LogShowFailed(ILogger logger, Exception exception);
 }

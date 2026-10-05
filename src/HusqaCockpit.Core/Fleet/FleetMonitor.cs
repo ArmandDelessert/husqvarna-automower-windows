@@ -45,7 +45,7 @@ public sealed class FleetMonitorOptions
 /// Keeps <see cref="MowerFleet"/> up to date: an initial REST snapshot, real-time events,
 /// and periodic REST refreshes (frequent when events are unavailable).
 /// </summary>
-public sealed class FleetMonitor : IAsyncDisposable
+public sealed partial class FleetMonitor : IAsyncDisposable
 {
     private static readonly TimeSpan[] s_failureBackoff =
     [
@@ -53,7 +53,7 @@ public sealed class FleetMonitor : IAsyncDisposable
         TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(5),
     ];
 
-    private readonly AutomowerEventStream _stream;
+    private readonly AutomowerEventFeed _feed;
     private readonly FleetMonitorOptions _options;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
@@ -72,7 +72,7 @@ public sealed class FleetMonitor : IAsyncDisposable
 
     public FleetMonitor(
         AutomowerClient api,
-        AutomowerEventStream stream,
+        AutomowerEventFeed feed,
         MowerFleet fleet,
         FleetMonitorOptions? options = null,
         TimeProvider? time = null,
@@ -80,7 +80,7 @@ public sealed class FleetMonitor : IAsyncDisposable
     {
         Api = api;
         Fleet = fleet;
-        _stream = stream;
+        _feed = feed;
         _options = options ?? new FleetMonitorOptions();
         _time = time ?? TimeProvider.System;
         _logger = logger ?? NullLogger<FleetMonitor>.Instance;
@@ -114,7 +114,7 @@ public sealed class FleetMonitor : IAsyncDisposable
         PublishStatus();
         _loops = Task.WhenAll(
             Task.Run(() => RefreshLoopAsync(token), token),
-            Task.Run(() => _stream.RunAsync(OnEventAsync, OnStreamStatus, token), token));
+            Task.Run(() => _feed.RunAsync(OnEventAsync, OnStreamStatus, token), token));
     }
 
     public async Task StopAsync()
@@ -187,19 +187,19 @@ public sealed class FleetMonitor : IAsyncDisposable
             }
             catch (AuthenticationException ex) when (ex.IsInvalidCredentials)
             {
-                _logger.LogWarning("Credentials rejected: {Message}", ex.Message);
+                LogCredentialsRejected(_logger, ex.Message);
                 wait = TimeSpan.FromMinutes(30);
             }
             catch (AuthenticationException ex) when (ex.IsTooManyLogins)
             {
-                _logger.LogWarning("Too many logins, waiting before retrying");
+                LogTooManyLogins(_logger);
                 wait = TimeSpan.FromMinutes(1);
             }
             catch (Exception ex)
             {
                 failures++;
                 wait = s_failureBackoff[Math.Min(failures, s_failureBackoff.Length) - 1];
-                _logger.LogWarning(ex, "Refresh failed, retrying in {Delay}", wait);
+                LogRefreshFailed(_logger, ex, wait);
             }
 
             lock (_statusLock)
@@ -244,7 +244,7 @@ public sealed class FleetMonitor : IAsyncDisposable
     {
         if (!Fleet.ApplyEvent(evt))
         {
-            _logger.LogInformation("Event for unknown mower {MowerId}, refreshing", evt.MowerId);
+            LogUnknownMower(_logger, evt.MowerId);
             RequestRefresh();
         }
         return ValueTask.CompletedTask;
@@ -314,4 +314,16 @@ public sealed class FleetMonitor : IAsyncDisposable
         }
         StatusChanged?.Invoke(this, status);
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Credentials rejected: {Message}")]
+    private static partial void LogCredentialsRejected(ILogger logger, string message);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Too many logins, waiting before retrying")]
+    private static partial void LogTooManyLogins(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Refresh failed, retrying in {Delay}")]
+    private static partial void LogRefreshFailed(ILogger logger, Exception exception, TimeSpan delay);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Event for unknown mower {MowerId}, refreshing")]
+    private static partial void LogUnknownMower(ILogger logger, string mowerId);
 }

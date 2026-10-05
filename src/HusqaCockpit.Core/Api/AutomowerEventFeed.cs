@@ -33,7 +33,7 @@ public sealed record EventStreamStatus(EventStreamState State, bool AfterOutage 
 /// The server closes connections after two hours and after ten idle minutes, so the
 /// stream sends a keep-alive every minute and reconnects proactively before the limit.
 /// </summary>
-public sealed class AutomowerEventStream
+public sealed partial class AutomowerEventFeed
 {
     public const string DefaultUri = "wss://ws.openapi.husqvarna.dev/v1";
     internal const string InvalidMowerId = "0-0";
@@ -49,15 +49,15 @@ public sealed class AutomowerEventStream
     private readonly ILogger _logger;
     private readonly Uri _uri;
 
-    public AutomowerEventStream(
+    public AutomowerEventFeed(
         IAccessTokenProvider tokens,
         TimeProvider? time = null,
-        ILogger<AutomowerEventStream>? logger = null,
+        ILogger<AutomowerEventFeed>? logger = null,
         string uri = DefaultUri)
     {
         _tokens = tokens;
         _time = time ?? TimeProvider.System;
-        _logger = logger ?? NullLogger<AutomowerEventStream>.Instance;
+        _logger = logger ?? NullLogger<AutomowerEventFeed>.Instance;
         _uri = new Uri(uri);
     }
 
@@ -106,7 +106,7 @@ public sealed class AutomowerEventStream
             {
                 // A token issued before the application was connected to the Automower Connect API lacks
                 // the scope required here (REST still works with it): retry once with a new token.
-                _logger.LogInformation("Event stream refused (403), retrying with a new access token");
+                LogForbiddenRetryingWithNewToken(_logger);
                 _tokens.Invalidate();
                 retriedWithFreshToken = true;
                 outage = true;
@@ -114,7 +114,7 @@ public sealed class AutomowerEventStream
             }
             catch (ForbiddenException ex)
             {
-                _logger.LogWarning("Event stream refused (403); the application may lack access to the Automower Connect API events");
+                LogForbidden(_logger);
                 outage = true;
                 retryDelay = ForbiddenRetryDelay;
                 onStatus(new EventStreamStatus(EventStreamState.Forbidden, RetryAt: _time.GetUtcNow() + retryDelay, Detail: ex.Message));
@@ -124,7 +124,7 @@ public sealed class AutomowerEventStream
                 failures++;
                 outage = true;
                 retryDelay = Backoff(failures);
-                _logger.LogWarning(ex, "Event stream failed, retrying in {Delay}", retryDelay);
+                LogFailed(_logger, ex, retryDelay);
                 onStatus(new EventStreamStatus(EventStreamState.Disconnected, RetryAt: _time.GetUtcNow() + retryDelay, Detail: ex.Message));
             }
 
@@ -171,7 +171,7 @@ public sealed class AutomowerEventStream
             throw new ForbiddenException(ex);
         }
 
-        _logger.LogInformation("Event stream connected");
+        LogConnected(_logger);
         var connectedAt = _time.GetUtcNow();
         var receivedAnything = false;
         var announced = false;
@@ -186,7 +186,7 @@ public sealed class AutomowerEventStream
             {
                 if (_time.GetUtcNow() - connectedAt > MaxConnectionAge)
                 {
-                    _logger.LogDebug("Renewing event stream connection before the server limit");
+                    LogRenewing(_logger);
                     break;
                 }
 
@@ -199,13 +199,13 @@ public sealed class AutomowerEventStream
                 }
                 catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
                 {
-                    _logger.LogInformation("No data received for {Timeout}, reconnecting", ReceiveTimeout);
+                    LogReceiveTimeout(_logger, ReceiveTimeout);
                     break;
                 }
 
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    _logger.LogInformation("Event stream closed by server: {Status} {Description}", result.CloseStatus, result.CloseStatusDescription);
+                    LogClosedByServer(_logger, result.CloseStatus, result.CloseStatusDescription);
                     break;
                 }
 
@@ -291,6 +291,27 @@ public sealed class AutomowerEventStream
             return null;
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Event stream refused (403), retrying with a new access token")]
+    private static partial void LogForbiddenRetryingWithNewToken(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Event stream refused (403); the application may lack access to the Automower Connect API events")]
+    private static partial void LogForbidden(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Event stream failed, retrying in {Delay}")]
+    private static partial void LogFailed(ILogger logger, Exception exception, TimeSpan delay);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Event stream connected")]
+    private static partial void LogConnected(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Renewing event stream connection before the server limit")]
+    private static partial void LogRenewing(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "No data received for {Timeout}, reconnecting")]
+    private static partial void LogReceiveTimeout(ILogger logger, TimeSpan timeout);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Event stream closed by server: {Status} {Description}")]
+    private static partial void LogClosedByServer(ILogger logger, WebSocketCloseStatus? status, string? description);
 
     private sealed class ForbiddenException(Exception inner)
         : Exception("The event service refused the connection (HTTP 403).", inner);

@@ -58,25 +58,27 @@ public sealed partial class ScheduleRowViewModel : ObservableObject
     [ObservableProperty]
     public partial bool Sunday { get; set; }
 
+    // The labels below are instance properties because x:Bind only reaches instance members.
+
     /// <summary>"24HourClock" or "12HourClock", following the regional settings.</summary>
-    public string ClockIdentifier =>
+    public string ClockIdentifier { get; } =
         CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern.Contains('H', StringComparison.Ordinal) ? "24HourClock" : "12HourClock";
 
-    public string MondayLabel => Label(0);
-    public string TuesdayLabel => Label(1);
-    public string WednesdayLabel => Label(2);
-    public string ThursdayLabel => Label(3);
-    public string FridayLabel => Label(4);
-    public string SaturdayLabel => Label(5);
-    public string SundayLabel => Label(6);
+    public string MondayLabel { get; } = Label(0);
+    public string TuesdayLabel { get; } = Label(1);
+    public string WednesdayLabel { get; } = Label(2);
+    public string ThursdayLabel { get; } = Label(3);
+    public string FridayLabel { get; } = Label(4);
+    public string SaturdayLabel { get; } = Label(5);
+    public string SundayLabel { get; } = Label(6);
 
-    public string MondayName => FullName(0);
-    public string TuesdayName => FullName(1);
-    public string WednesdayName => FullName(2);
-    public string ThursdayName => FullName(3);
-    public string FridayName => FullName(4);
-    public string SaturdayName => FullName(5);
-    public string SundayName => FullName(6);
+    public string MondayName { get; } = FullName(0);
+    public string TuesdayName { get; } = FullName(1);
+    public string WednesdayName { get; } = FullName(2);
+    public string ThursdayName { get; } = FullName(3);
+    public string FridayName { get; } = FullName(4);
+    public string SaturdayName { get; } = FullName(5);
+    public string SundayName { get; } = FullName(6);
 
     public CalendarTask ToTask()
     {

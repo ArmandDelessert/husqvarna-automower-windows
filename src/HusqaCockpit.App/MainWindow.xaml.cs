@@ -45,7 +45,7 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    public DashboardViewModel Dashboard => App.Current.Dashboard;
+    public DashboardViewModel Dashboard { get; } = App.Current.Dashboard;
 
     public void ShowAndActivate()
     {
