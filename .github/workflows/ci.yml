@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    # WinUI only builds on Windows.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore HusqaCockpit.slnx
+
+      - name: Build
+        run: dotnet build HusqaCockpit.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --solution HusqaCockpit.slnx --configuration Release --no-build --report-xunit-trx --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/**/*.trx
+
+  strings:
+    # The .resw files are generated from tools/strings/*.py: fail when someone edits one side only.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Regenerate the resource files
+        run: python tools/strings/generate_resw.py
+
+      - name: Check they are unchanged
+        run: git diff --exit-code -- src/HusqaCockpit.App/Strings
