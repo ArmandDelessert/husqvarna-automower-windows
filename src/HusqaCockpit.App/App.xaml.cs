@@ -16,11 +16,14 @@ namespace HusqaCockpit.App;
     Justification = "The application object lives as long as the process; Quit() disposes the tray icon before exiting.")]
 public partial class App : Application
 {
+    private static readonly TimeSpan s_quotaSaveDelay = TimeSpan.FromSeconds(5);
+
     private readonly bool _startMinimized;
     private ILoggerFactory _loggers = null!;
     // Exceptions raised before OnLaunched sets up the log file are not recorded.
     private ILogger _logger = NullLogger.Instance;
     private DispatcherQueue _dispatcher = null!;
+    private DispatcherQueueTimer _quotaSaveTimer = null!;
     private TrayIcon? _tray;
     private bool _trayShowsAlert;
 
@@ -59,6 +62,10 @@ public partial class App : Application
         LogStarting(_logger, CultureInfo.CurrentUICulture.Name);
 
         Settings = AppSettingsStore.Load();
+        _quotaSaveTimer = _dispatcher.CreateTimer();
+        _quotaSaveTimer.Interval = s_quotaSaveDelay;
+        _quotaSaveTimer.IsRepeating = false;
+        _quotaSaveTimer.Tick += (_, _) => AppSettingsStore.Save(Settings);
         Credentials = new CredentialStore();
         Host = new CockpitHost(Credentials, Settings, _loggers);
         Host.RequestSent += (_, _) => _dispatcher.TryEnqueue(CountRequest);
@@ -109,6 +116,7 @@ public partial class App : Application
         }
         IsExiting = true;
         LogExiting(_logger);
+        SavePendingQuota();
         _tray?.Dispose();
         _tray = null;
         Window.AppWindow.Hide();
@@ -194,7 +202,22 @@ public partial class App : Application
             Settings.QuotaRequests = 0;
         }
         Settings.QuotaRequests++;
-        AppSettingsStore.Save(Settings);
+
+        // Requests come in bursts (a refresh, a command for every mower): write the file once a burst is over,
+        // not on every request. Quit() writes what is still pending.
+        if (!_quotaSaveTimer.IsRunning)
+        {
+            _quotaSaveTimer.Start();
+        }
+    }
+
+    private void SavePendingQuota()
+    {
+        if (_quotaSaveTimer.IsRunning)
+        {
+            _quotaSaveTimer.Stop();
+            AppSettingsStore.Save(Settings);
+        }
     }
 
     private void CreateTrayIcon()
