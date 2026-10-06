@@ -3,7 +3,6 @@
   <!-- View models and formatting, without WinUI: unit-tested in tests/HusqaCockpit.Presentation.Tests. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>HusqaCockpit.Presentation</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
