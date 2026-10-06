@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/HusqaCockpit.App/Assets/AppIcon.svg" alt="Logo de HusqA Cockpit" width="160">
+  <img src="assets/logo.svg" alt="Logo de HusqA Cockpit" width="160">
 </p>
 
 # HusqA Cockpit
@@ -95,7 +95,7 @@ src/HusqaCockpit.App                   WinUI 3 application (unpackaged): views, 
 tests/HusqaCockpit.Core.Tests          xUnit tests for the Core library, including the monitor and the reconnection loop
 tests/HusqaCockpit.Presentation.Tests  xUnit tests for the view models and the status sentences
 tools/strings                          Source of the UI strings and error-code texts (generates the .resw files)
-tools/icons                            Script that draws the application icons
+assets                                 Vector sources of the logo and of the icons (not shipped with the app)
 ```
 
 Only the App project depends on WinUI: the view models reach the UI thread, the strings and the settings through
