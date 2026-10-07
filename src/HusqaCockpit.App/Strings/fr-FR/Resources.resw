@@ -276,7 +276,7 @@
   <data name="Settings_Test.Content" xml:space="preserve"><value>Tester</value></data>
   <data name="Settings_Delete.Content" xml:space="preserve"><value>Supprimer</value></data>
   <data name="Settings_ApiStorage.Text" xml:space="preserve"><value>La clé et le secret sont stockés dans le Gestionnaire d'identification Windows de votre compte, jamais en clair.</value></data>
-  <data name="Settings_NotificationsHeader.Text" xml:space="preserve"><value>Notifications Windows</value></data>
+  <data name="Settings_NotificationsHeader.Text" xml:space="preserve"><value>Notifications</value></data>
   <data name="Settings_NotifyErrors.Header" xml:space="preserve"><value>Quand une tondeuse signale une erreur ou une alarme</value></data>
   <data name="Settings_NotifyRecoveries.Header" xml:space="preserve"><value>Quand une tondeuse se remet d'une erreur</value></data>
   <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Quand une tondeuse s'arrête et demande une intervention</value></data>
@@ -290,7 +290,7 @@
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna autorise {0} requêtes par mois et par clé. Toutes les {1} minutes représente environ {2} requêtes par mois.</value></data>
   <data name="Settings_LanguageHeader.Text" xml:space="preserve"><value>Langue</value></data>
   <data name="Settings_Language.Header" xml:space="preserve"><value>Langue d'affichage</value></data>
-  <data name="Settings_LanguageSystem.Content" xml:space="preserve"><value>Langue de Windows</value></data>
+  <data name="Settings_LanguageSystem.Content" xml:space="preserve"><value>Automatique (langue de Windows)</value></data>
   <data name="Settings_RestartRequired.Title" xml:space="preserve"><value>Redémarrage nécessaire</value></data>
   <data name="Settings_RestartRequired.Message" xml:space="preserve"><value>HusqA Cockpit doit redémarrer pour appliquer la nouvelle langue.</value></data>
   <data name="Settings_RestartNow.Content" xml:space="preserve"><value>Redémarrer maintenant</value></data>

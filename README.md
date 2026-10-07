@@ -33,6 +33,9 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   (each category can be turned off), and, if you ask for them, when a mower **starts** and when it **finishes mowing**
   (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
   (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
+- **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Husqvarna API key, Notifications,
+  Behavior (notification area, start with Windows, refresh interval), Language (with a *Restart now* button) and About
+  (version, repository, logs folder, API request counter).
 - **Notification area icon**: the app keeps watching the mowers when its window is closed; the icon gets a red badge when
   a mower is in error. Optional start with Windows.
 - **French and English** user interface (follows Windows by default).

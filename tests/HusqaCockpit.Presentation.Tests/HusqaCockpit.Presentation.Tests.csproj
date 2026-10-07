@@ -16,6 +16,8 @@
     <Using Include="Xunit" />
     <!-- The app's own texts: the tests check what the user reads, and that no key is missing. -->
     <None Include="..\..\src\HusqaCockpit.App\Strings\**\*.resw" Link="Strings\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The Settings page, whose structure is checked against the twin application's. -->
+    <None Include="..\..\src\HusqaCockpit.App\Views\SettingsPage.xaml" Link="Views\SettingsPage.xaml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
