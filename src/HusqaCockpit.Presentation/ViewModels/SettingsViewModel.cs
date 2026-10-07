@@ -11,6 +11,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     public const int MonthlyQuota = 10_000;
     private static readonly string[] s_languages = ["", "fr-FR", "en-US"];
     private static readonly int[] s_pollingIntervals = [5, 10, 15, 30, 60];
+    private static readonly TaskNotificationMode[] s_taskNotificationModes = [.. Enum.GetValues<TaskNotificationMode>()];
 
     private readonly AppSettings _settings;
     private readonly ISettingsStore _store;
@@ -40,6 +41,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         _time = time;
         _initialLanguage = settings.Language;
         PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
+        TaskNotificationNames = s_taskNotificationModes.Select(strings.EnumText).ToList();
         VersionText = strings.Format("Settings_Version",
             Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "?");
 
@@ -49,6 +51,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         HasStoredCredentials = stored is not null;
         LanguageIndex = Math.Max(0, Array.IndexOf(s_languages, settings.Language));
         PollingIntervalIndex = Math.Max(0, Array.IndexOf(s_pollingIntervals, settings.PollingIntervalMinutes));
+        TaskNotificationsIndex = Math.Max(0, Array.IndexOf(s_taskNotificationModes, settings.TaskNotifications));
         StartWithWindows = shell.StartsWithWindows;
         _initialized = true;
     }
@@ -138,6 +141,23 @@ public sealed partial class SettingsViewModel : ObservableObject
     {
         get => _settings.NotifyConnectivity;
         set => Update(_settings.NotifyConnectivity, value, v => _settings.NotifyConnectivity = v);
+    }
+
+    /// <summary>The names of the choices of <see cref="TaskNotificationsIndex"/>: none, end only, start and end.</summary>
+    public IReadOnlyList<string> TaskNotificationNames { get; }
+
+    /// <summary>Index of the chosen <see cref="TaskNotificationMode"/> in <see cref="TaskNotificationNames"/>.</summary>
+    [ObservableProperty]
+    public partial int TaskNotificationsIndex { get; set; }
+
+    partial void OnTaskNotificationsIndexChanged(int value)
+    {
+        if (!_initialized || value < 0 || value >= s_taskNotificationModes.Length || s_taskNotificationModes[value] == _settings.TaskNotifications)
+        {
+            return;
+        }
+        _settings.TaskNotifications = s_taskNotificationModes[value];
+        _store.Save(_settings);
     }
 
     [RelayCommand]

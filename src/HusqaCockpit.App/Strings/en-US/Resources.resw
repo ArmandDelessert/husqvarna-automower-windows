@@ -86,6 +86,9 @@
   <data name="HeadlightMode_AlwaysOff" xml:space="preserve"><value>Always off</value></data>
   <data name="HeadlightMode_EveningOnly" xml:space="preserve"><value>Evening only</value></data>
   <data name="HeadlightMode_EveningAndNight" xml:space="preserve"><value>Evening and night</value></data>
+  <data name="TaskNotificationMode_None" xml:space="preserve"><value>None</value></data>
+  <data name="TaskNotificationMode_EndOnly" xml:space="preserve"><value>Mowing end only</value></data>
+  <data name="TaskNotificationMode_StartAndEnd" xml:space="preserve"><value>Mowing start and end</value></data>
   <data name="MessageSeverity_Unknown" xml:space="preserve"><value>Unknown</value></data>
   <data name="MessageSeverity_Fatal" xml:space="preserve"><value>Fatal</value></data>
   <data name="MessageSeverity_Error" xml:space="preserve"><value>Error</value></data>
@@ -158,6 +161,14 @@
   <data name="Notification_DisconnectedBody" xml:space="preserve"><value>The mower no longer communicates with the Husqvarna cloud.</value></data>
   <data name="Notification_ReconnectedTitle" xml:space="preserve"><value>{0} is connected again</value></data>
   <data name="Notification_ReconnectedBody" xml:space="preserve"><value>Communication with the mower is restored.</value></data>
+  <data name="Notification_TaskStartedTitle" xml:space="preserve"><value>{0} starts mowing</value></data>
+  <data name="Notification_TaskStartedSchedule" xml:space="preserve"><value>Following its schedule.</value></data>
+  <data name="Notification_TaskStartedApplication" xml:space="preserve"><value>Started from HusqA Cockpit.</value></data>
+  <data name="Notification_TaskStartedManual" xml:space="preserve"><value>Started manually, outside its schedule.</value></data>
+  <data name="Notification_TaskStartedUnknown" xml:space="preserve"><value>Mowing has started.</value></data>
+  <data name="Notification_TaskFinishedTitle" xml:space="preserve"><value>{0} has finished mowing</value></data>
+  <data name="Notification_TaskFinishedDuration" xml:space="preserve"><value>Duration: {0}, recharges included.</value></data>
+  <data name="Notification_TaskFinishedUnknown" xml:space="preserve"><value>Mowing is over.</value></data>
   <data name="Notification_Open" xml:space="preserve"><value>Open</value></data>
   <data name="Notification_TestTitle" xml:space="preserve"><value>Test notification</value></data>
   <data name="Notification_TestBody" xml:space="preserve"><value>This is how HusqA Cockpit will warn you when a mower needs attention.</value></data>
@@ -270,6 +281,7 @@
   <data name="Settings_NotifyRecoveries.Header" xml:space="preserve"><value>When a mower recovers from an error</value></data>
   <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>When a mower stops and needs a manual action</value></data>
   <data name="Settings_NotifyConnectivity.Header" xml:space="preserve"><value>When a mower loses or regains its connection</value></data>
+  <data name="Settings_TaskNotifications.Header" xml:space="preserve"><value>Notifications when a mower starts or finishes mowing</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Send a test notification</value></data>
   <data name="Settings_BehaviorHeader.Text" xml:space="preserve"><value>Behavior</value></data>
   <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Keep running in the notification area when the window is closed</value></data>

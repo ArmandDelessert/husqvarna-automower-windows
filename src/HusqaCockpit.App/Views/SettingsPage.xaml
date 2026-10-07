@@ -42,6 +42,12 @@
                     <ToggleSwitch x:Uid="Settings_NotifyRecoveries" IsOn="{x:Bind ViewModel.NotifyRecoveries, Mode=TwoWay}" />
                     <ToggleSwitch x:Uid="Settings_NotifyStopped" IsOn="{x:Bind ViewModel.NotifyStopped, Mode=TwoWay}" />
                     <ToggleSwitch x:Uid="Settings_NotifyConnectivity" IsOn="{x:Bind ViewModel.NotifyConnectivity, Mode=TwoWay}" />
+                    <ComboBox
+                        x:Uid="Settings_TaskNotifications"
+                        Margin="0,8,0,0"
+                        MinWidth="220"
+                        ItemsSource="{x:Bind ViewModel.TaskNotificationNames}"
+                        SelectedIndex="{x:Bind ViewModel.TaskNotificationsIndex, Mode=TwoWay}" />
                     <Button x:Uid="Settings_TestNotification" Margin="0,8,0,0" Command="{x:Bind ViewModel.SendTestNotificationCommand}" />
                 </StackPanel>
             </Border>

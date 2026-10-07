@@ -31,7 +31,11 @@ internal static class TestData
         MowerState? state = null,
         int? errorCode = null,
         bool? connected = null,
-        MowerActivity? activity = null)
+        MowerActivity? activity = null,
+        int? battery = null,
+        RestrictedReason? restrictedReason = null,
+        OverrideAction? overrideAction = null,
+        IReadOnlyList<CalendarTask>? schedule = null)
     {
         var attributes = mower.Attributes with
         {
@@ -42,7 +46,18 @@ internal static class TestData
                 Activity = activity ?? mower.Activity,
             },
             Metadata = mower.Attributes.Metadata with { Connected = connected ?? mower.IsConnected },
+            Battery = mower.Attributes.Battery with { BatteryPercent = battery ?? mower.BatteryPercent },
+            Planner = mower.Attributes.Planner with
+            {
+                RestrictedReason = restrictedReason ?? mower.Attributes.Planner.RestrictedReason,
+                Override = new PlannerOverride { Action = overrideAction ?? mower.Attributes.Planner.Override.Action },
+            },
+            Calendar = schedule is null ? mower.Attributes.Calendar : new CalendarInfo { Tasks = schedule },
         };
         return mower with { Attributes = attributes };
     }
+
+    /// <summary>The alerts raised, in order, by each change of the sequence of states.</summary>
+    public static List<MowerAlertKind> AlertKinds(params Mower[] states) =>
+        states.Zip(states.Skip(1), AlertDetector.Detect).SelectMany(alerts => alerts.Select(a => a.Kind)).ToList();
 }

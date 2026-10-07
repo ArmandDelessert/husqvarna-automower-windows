@@ -45,6 +45,7 @@ public partial class App : Application
 
     public AppSettings Settings { get; private set; } = null!;
     public CredentialStore Credentials { get; private set; } = null!;
+    public TaskTracker Tasks { get; private set; } = null!;
     public CockpitHost Host { get; private set; } = null!;
     public IAppShell Shell { get; private set; } = null!;
     public NotificationService Notifications { get; private set; } = null!;
@@ -69,7 +70,8 @@ public partial class App : Application
         _quotaSaveTimer.IsRepeating = false;
         _quotaSaveTimer.Tick += (_, _) => AppSettingsStore.Default.Save(Settings);
         Credentials = new CredentialStore();
-        Host = new CockpitHost(Credentials, Settings, _loggers);
+        Tasks = new TaskTracker(TimeProvider.System);
+        Host = new CockpitHost(Credentials, Settings, Tasks, _loggers);
         Host.RequestSent += (_, _) => _dispatcher.TryEnqueue(CountRequest);
         Host.Fleet.MowerChanged += OnMowerChanged;
 
@@ -189,8 +191,9 @@ public partial class App : Application
 
     private void OnMowerChanged(object? sender, MowerChangedEventArgs e)
     {
-        foreach (var alert in AlertDetector.Detect(e.Previous, e.Current))
+        foreach (var detected in AlertDetector.Detect(e.Previous, e.Current))
         {
+            var alert = Tasks.Enrich(detected);
             LogAlert(_logger, alert.Kind, alert.Mower.Name, alert.ErrorCode);
             Notifications.Show(alert, Settings);
         }

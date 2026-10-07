@@ -203,6 +203,76 @@ public sealed class SettingsViewModelTests : IDisposable
         Assert.Equal(["Test notification"], _shell.Notifications);
     }
 
+    // ----- Notifications about the mowing tasks -----
+
+    [Fact]
+    public void Task_notifications_default_to_none_and_the_choices_are_named()
+    {
+        var page = Create();
+
+        Assert.Equal(0, page.TaskNotificationsIndex);
+        Assert.Equal(TaskNotificationMode.None, _settings.TaskNotifications);
+        Assert.Equal(["None", "Mowing end only", "Mowing start and end"], page.TaskNotificationNames);
+    }
+
+    [Fact]
+    public void The_task_choices_are_named_in_French()
+    {
+        using var french = TestCulture.Use(TestCulture.French);
+
+        var page = new SettingsViewModel(_settings, _store, _credentials, _host, _shell, ReswStrings.French, _time);
+
+        Assert.Equal(["Aucune", "Fin de tonte seulement", "Début et fin de tonte"], page.TaskNotificationNames);
+    }
+
+    [Fact]
+    public void Opening_the_page_shows_the_saved_task_choice_without_saving()
+    {
+        _settings.TaskNotifications = TaskNotificationMode.StartAndEnd;
+
+        var page = Create();
+
+        Assert.Equal(2, page.TaskNotificationsIndex);
+        Assert.Equal(0, _store.Saves);
+    }
+
+    [Theory]
+    [InlineData(1, TaskNotificationMode.EndOnly)]
+    [InlineData(2, TaskNotificationMode.StartAndEnd)]
+    public void Choosing_a_task_notification_saves_it(int index, TaskNotificationMode expected)
+    {
+        var page = Create();
+
+        page.TaskNotificationsIndex = index;
+
+        Assert.Equal(expected, _settings.TaskNotifications);
+        Assert.Equal(1, _store.Saves);
+        Assert.Equal(0, _host.Restarts);
+    }
+
+    [Fact]
+    public void Choosing_the_current_task_notification_again_saves_nothing()
+    {
+        var page = Create();
+
+        page.TaskNotificationsIndex = 0;
+
+        Assert.Equal(0, _store.Saves);
+    }
+
+    [Fact]
+    public void Clearing_the_task_choice_in_the_list_changes_nothing()
+    {
+        // A ComboBox reports -1 while its items are replaced.
+        var page = Create();
+        page.TaskNotificationsIndex = 2;
+
+        page.TaskNotificationsIndex = -1;
+
+        Assert.Equal(TaskNotificationMode.StartAndEnd, _settings.TaskNotifications);
+        Assert.Equal(1, _store.Saves);
+    }
+
     private SettingsViewModel Create() =>
         new(_settings, _store, _credentials, _host, _shell, ReswStrings.English, _time);
 }

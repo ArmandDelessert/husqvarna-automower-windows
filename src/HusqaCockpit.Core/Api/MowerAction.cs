@@ -12,6 +12,9 @@ public sealed record MowerAction
     public string Type { get; }
     public int? DurationMinutes { get; }
 
+    /// <summary>Whether the command can make a parked mower leave and mow: "Start", and "ResumeSchedule" inside a time slot.</summary>
+    public bool CanStartMowing => Type is "Start" or "ResumeSchedule";
+
     /// <summary>Mow for the given duration, overriding the schedule.</summary>
     public static MowerAction Start(TimeSpan duration) => new("Start", ToMinutes(duration));
 

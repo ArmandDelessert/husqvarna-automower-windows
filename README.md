@@ -30,7 +30,9 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
 - **Map**: an OpenStreetMap map with the GPS track of a mower on its detail page, and a *Map* page showing the tracks
   of all mowers together.
 - **Windows notifications** for errors, theft alarms, recoveries, stops requiring a manual action and connectivity changes
-  (each category can be turned off).
+  (each category can be turned off), and, if you ask for them, when a mower **starts** and when it **finishes mowing**
+  (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
+  (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
 - **Notification area icon**: the app keeps watching the mowers when its window is closed; the icon gets a red badge when
   a mower is in error. Optional start with Windows.
 - **French and English** user interface (follows Windows by default).
@@ -69,6 +71,7 @@ Preferences, the WebView2 cache and the logs (one file a day, kept a week) are s
 | Fallback | If the WebSocket is unavailable (e.g. HTTP 403), the app polls `GET /mowers` periodically (10 minutes by default). |
 | Rate limits | Requests are serialized and spaced by ≥ 1.1 s (limit: 1 request/second). The Settings page shows this month's request count (limit: 10,000 per month and per key). |
 | Map | [Leaflet](https://leafletjs.com/) (bundled, BSD-2-Clause) in a WebView2; only the OpenStreetMap tiles are loaded from the Internet. The track is made of the last 50 positions reported by the mower. |
+| Start and end of mowing | The API's `state` is `IN_OPERATION` while the mower works, recharging included (activity `CHARGING` "due to low battery"), and `RESTRICTED` when it may not mow (schedule, parking, daily limit, frost, sensor). A task starts on `RESTRICTED` → `IN_OPERATION` and ends on `IN_OPERATION` → `RESTRICTED`; the activity and the battery level cannot tell a recharge from the end. Pauses, stops and errors are not ends, and nothing is reported for a mower that was out of reach or already mowing when the app started. |
 | Time stamps | Next start, error and message times are sent in the mower's local time; they are interpreted in the PC's time zone. |
 
 ## Development
@@ -141,6 +144,9 @@ python tools/strings/generate_resw.py
 - The map shows the last 50 positions reported by the mower, not the full history of the day.
 - Work areas and stay-out zones (EPOS / NERA models) are not displayed yet.
 - Mowers are assumed to be in the same time zone as the PC.
+- The end of mowing notification also fires when a restriction interrupts the task (rain sensor, frost, a daily limit),
+  because the API only says the mower may no longer mow. The duration includes the recharges, and is missing when the
+  app did not see the start. In polling mode, a task shorter than the refresh interval is not seen at all.
 
 ## Disclaimer
 

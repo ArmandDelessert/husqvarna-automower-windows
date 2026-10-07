@@ -1,4 +1,19 @@
+using System.Text.Json.Serialization;
+
 namespace HusqaCockpit.Presentation;
+
+/// <summary>Which notifications the user wants about the mowing tasks of the mowers.</summary>
+public enum TaskNotificationMode
+{
+    /// <summary>No notification when a mower starts or finishes mowing.</summary>
+    None,
+
+    /// <summary>A notification when a mower finishes mowing.</summary>
+    EndOnly,
+
+    /// <summary>A notification when a mower starts mowing and another when it finishes.</summary>
+    StartAndEnd,
+}
 
 /// <summary>User preferences. The app stores them as JSON in %LOCALAPPDATA%\HusqA Cockpit\settings.json.</summary>
 public sealed class AppSettings
@@ -10,6 +25,10 @@ public sealed class AppSettings
     public bool NotifyRecoveries { get; set; } = true;
     public bool NotifyStopped { get; set; } = true;
     public bool NotifyConnectivity { get; set; } = true;
+
+    /// <summary>Start and end of mowing: off by default, so that an update does not add notifications nobody asked for.</summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<TaskNotificationMode>))]
+    public TaskNotificationMode TaskNotifications { get; set; } = TaskNotificationMode.None;
 
     /// <summary>Closing the window keeps the app running in the notification area.</summary>
     public bool CloseToTray { get; set; } = true;

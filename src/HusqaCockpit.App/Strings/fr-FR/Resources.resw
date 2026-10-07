@@ -86,6 +86,9 @@
   <data name="HeadlightMode_AlwaysOff" xml:space="preserve"><value>Toujours éteints</value></data>
   <data name="HeadlightMode_EveningOnly" xml:space="preserve"><value>Le soir uniquement</value></data>
   <data name="HeadlightMode_EveningAndNight" xml:space="preserve"><value>Soir et nuit</value></data>
+  <data name="TaskNotificationMode_None" xml:space="preserve"><value>Aucune</value></data>
+  <data name="TaskNotificationMode_EndOnly" xml:space="preserve"><value>Fin de tonte seulement</value></data>
+  <data name="TaskNotificationMode_StartAndEnd" xml:space="preserve"><value>Début et fin de tonte</value></data>
   <data name="MessageSeverity_Unknown" xml:space="preserve"><value>Inconnue</value></data>
   <data name="MessageSeverity_Fatal" xml:space="preserve"><value>Critique</value></data>
   <data name="MessageSeverity_Error" xml:space="preserve"><value>Erreur</value></data>
@@ -158,6 +161,14 @@
   <data name="Notification_DisconnectedBody" xml:space="preserve"><value>La tondeuse ne communique plus avec le cloud Husqvarna.</value></data>
   <data name="Notification_ReconnectedTitle" xml:space="preserve"><value>{0} est de nouveau connectée</value></data>
   <data name="Notification_ReconnectedBody" xml:space="preserve"><value>La communication avec la tondeuse est rétablie.</value></data>
+  <data name="Notification_TaskStartedTitle" xml:space="preserve"><value>{0} commence à tondre</value></data>
+  <data name="Notification_TaskStartedSchedule" xml:space="preserve"><value>Selon son planning.</value></data>
+  <data name="Notification_TaskStartedApplication" xml:space="preserve"><value>Lancée depuis HusqA Cockpit.</value></data>
+  <data name="Notification_TaskStartedManual" xml:space="preserve"><value>Démarrage manuel, hors planning.</value></data>
+  <data name="Notification_TaskStartedUnknown" xml:space="preserve"><value>La tonte a démarré.</value></data>
+  <data name="Notification_TaskFinishedTitle" xml:space="preserve"><value>{0} a terminé sa tonte</value></data>
+  <data name="Notification_TaskFinishedDuration" xml:space="preserve"><value>Durée : {0}, recharges comprises.</value></data>
+  <data name="Notification_TaskFinishedUnknown" xml:space="preserve"><value>La tonte est terminée.</value></data>
   <data name="Notification_Open" xml:space="preserve"><value>Ouvrir</value></data>
   <data name="Notification_TestTitle" xml:space="preserve"><value>Notification de test</value></data>
   <data name="Notification_TestBody" xml:space="preserve"><value>Voici comment HusqA Cockpit vous préviendra quand une tondeuse a besoin d'attention.</value></data>
@@ -270,6 +281,7 @@
   <data name="Settings_NotifyRecoveries.Header" xml:space="preserve"><value>Quand une tondeuse se remet d'une erreur</value></data>
   <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Quand une tondeuse s'arrête et demande une intervention</value></data>
   <data name="Settings_NotifyConnectivity.Header" xml:space="preserve"><value>Quand une tondeuse perd ou retrouve sa connexion</value></data>
+  <data name="Settings_TaskNotifications.Header" xml:space="preserve"><value>Notifications de début et de fin de tonte</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Envoyer une notification de test</value></data>
   <data name="Settings_BehaviorHeader.Text" xml:space="preserve"><value>Comportement</value></data>
   <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Rester actif dans la zone de notification quand la fenêtre est fermée</value></data>

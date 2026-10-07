@@ -13,6 +13,7 @@ public sealed partial class NotificationService(ILogger<NotificationService> log
     private const string MowerKey = "mower";
     private const string OpenAction = "open";
 
+    private readonly AlertMessages _messages = new(Loc.Strings);
     private bool _registered;
 
     /// <summary>The user clicked a notification. The argument is the mower id, if any. Raised on a background thread.</summary>
@@ -38,29 +39,12 @@ public sealed partial class NotificationService(ILogger<NotificationService> log
 
     public void Show(MowerAlert alert, AppSettings settings)
     {
-        var enabled = alert.Kind switch
-        {
-            MowerAlertKind.Error or MowerAlertKind.Alarm => settings.NotifyErrors,
-            MowerAlertKind.ErrorCleared => settings.NotifyRecoveries,
-            MowerAlertKind.Stopped => settings.NotifyStopped,
-            MowerAlertKind.Disconnected or MowerAlertKind.Reconnected => settings.NotifyConnectivity,
-            _ => false,
-        };
-        if (!enabled)
+        if (!AlertMessages.IsEnabled(alert.Kind, settings))
         {
             return;
         }
 
-        var name = alert.Mower.Name;
-        var (title, body) = alert.Kind switch
-        {
-            MowerAlertKind.Alarm => (Loc.Format("Notification_AlarmTitle", name), Loc.ErrorCode(alert.ErrorCode)),
-            MowerAlertKind.Error => (Loc.Format("Notification_ErrorTitle", name), Loc.ErrorCode(alert.ErrorCode)),
-            MowerAlertKind.ErrorCleared => (Loc.Format("Notification_ClearedTitle", name), Loc.Format("Notification_ClearedBody", Loc.ErrorCode(alert.ErrorCode))),
-            MowerAlertKind.Stopped => (Loc.Format("Notification_StoppedTitle", name), Loc.Get("Notification_StoppedBody")),
-            MowerAlertKind.Disconnected => (Loc.Format("Notification_DisconnectedTitle", name), Loc.Get("Notification_DisconnectedBody")),
-            _ => (Loc.Format("Notification_ReconnectedTitle", name), Loc.Get("Notification_ReconnectedBody")),
-        };
+        var (title, body) = _messages.Describe(alert);
 
         var builder = new AppNotificationBuilder()
             .AddArgument(ActionKey, OpenAction)

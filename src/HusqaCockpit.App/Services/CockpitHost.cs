@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace HusqaCockpit.App.Services;
 
 /// <summary>Owns the connection to Husqvarna: creates, restarts and stops the <see cref="FleetMonitor"/>.</summary>
-public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, ILoggerFactory loggers) : ICockpitHost, IAsyncDisposable
+public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, TaskTracker tasks, ILoggerFactory loggers) : ICockpitHost, IAsyncDisposable
 {
     private static readonly TimeSpan s_refreshAfterCommand = TimeSpan.FromSeconds(15);
 
@@ -87,8 +87,15 @@ public sealed partial class CockpitHost(CredentialStore credentialStore, AppSett
 
     public Task RefreshAsync() => _session?.Monitor.RefreshNowAsync() ?? Task.CompletedTask;
 
-    public Task SendActionAsync(string mowerId, MowerAction action) =>
-        RunCommandAsync(api => api.SendActionAsync(mowerId, action));
+    public Task SendActionAsync(string mowerId, MowerAction action)
+    {
+        if (action.CanStartMowing)
+        {
+            // Before the request: the first event of the new task can arrive before its answer.
+            tasks.NoteStartCommand(mowerId);
+        }
+        return RunCommandAsync(api => api.SendActionAsync(mowerId, action));
+    }
 
     public Task SetCuttingHeightAsync(string mowerId, int height) =>
         RunCommandAsync(api => api.SetCuttingHeightAsync(mowerId, height));
