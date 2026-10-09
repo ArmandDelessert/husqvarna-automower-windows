@@ -163,7 +163,7 @@ STRINGS = {
     "Settings_Saved": ("Key saved. Connecting…", "Clé enregistrée. Connexion en cours…"),
     "Settings_Deleted": ("Key deleted from this computer.", "Clé supprimée de cet ordinateur."),
     "Settings_EveryMinutes": ("Every {0} minutes", "Toutes les {0} minutes"),
-    "Settings_Quota": ("API requests sent this month from this computer: {0} (Husqvarna limit: {1} per month).", "Requêtes envoyées à l'API ce mois-ci depuis cet ordinateur : {0} (limite Husqvarna : {1} par mois)."),
+    "Settings_Quota": ("API requests sent this month from this computer: {0} (the API is limited to {1} requests per month).", "Requêtes envoyées à l'API ce mois-ci depuis cet ordinateur : {0} (l'API est limitée à {1} requêtes par mois)."),
     "Settings_Version": ("HusqA Cockpit {0}", "HusqA Cockpit {0}"),
 
     # ----- Notifications -----
@@ -279,6 +279,8 @@ STRINGS = {
     "Detail_Recenter.Content": ("Recenter", "Recentrer"),
     "Detail_TrackHint.Text": ("Line: the last positions reported by the mower (the large dot is the most recent one, the small one the oldest).", "Trait : les dernières positions signalées par la tondeuse (le grand point est la plus récente, le petit la plus ancienne)."),
     "Nav_Map.Content": ("Map", "Carte"),
+    "Nav_Quit.Content": ("Quit", "Quitter"),
+    f"Nav_Quit.{TT}": ("Quit HusqA Cockpit", "Quitter HusqA Cockpit"),
     "Map_Title.Text": ("Map", "Carte"),
     "Map_RecenterText.Text": ("Recenter", "Recentrer"),
     f"Map_Recenter.{TT}": ("Zoom back on the tracks of all mowers", "Recadrer la carte sur les tracés de toutes les tondeuses"),
@@ -290,7 +292,7 @@ STRINGS = {
     "Detail_NoMessages.Text": ("No events recorded.", "Aucun événement enregistré."),
 
     "Settings_Title.Text": ("Settings", "Paramètres"),
-    "Settings_ApiHeader.Text": ("Husqvarna API key", "Clé d'API Husqvarna"),
+    "Settings_ApiHeader.Text": ("Husqvarna API", "API Husqvarna"),
     "Settings_ApiHelp.Text": ("Create an application on the Husqvarna developer portal, connect it to the “Authentication API” and “Automower Connect API”, then copy its key and secret here.",
                               "Créez une application sur le portail développeur Husqvarna, connectez-la aux API « Authentication API » et « Automower Connect API », puis copiez ici sa clé et son secret."),
     "Settings_ApiPortal.Content": ("Open the Husqvarna developer portal", "Ouvrir le portail développeur Husqvarna"),

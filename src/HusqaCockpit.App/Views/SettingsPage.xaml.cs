@@ -16,9 +16,30 @@ public sealed partial class SettingsPage : Page
 
     public SettingsViewModel ViewModel { get; }
 
+    private void ScrollToApiKey()
+    {
+        var top = ApiHeader.TransformToVisual(Sections).TransformPoint(new Windows.Foundation.Point(0, 0)).Y;
+        Scroller.ChangeView(horizontalOffset: null, verticalOffset: top, zoomFactor: null, disableAnimation: true);
+    }
+
+    /// <summary>Navigation parameter: open the page on the section of the Husqvarna API key.</summary>
+    public const string ApiKeyTarget = "api-key";
+
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         ViewModel.RefreshQuota();
+        if (Equals(e.Parameter, ApiKeyTarget))
+        {
+            // The section is near the bottom of the page: scroll to it once the page has been laid out.
+            if (IsLoaded)
+            {
+                ScrollToApiKey();
+            }
+            else
+            {
+                Loaded += (_, _) => ScrollToApiKey();
+            }
+        }
         base.OnNavigatedTo(e);
     }
 }

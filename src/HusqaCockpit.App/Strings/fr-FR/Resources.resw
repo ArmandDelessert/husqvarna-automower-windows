@@ -149,7 +149,7 @@
   <data name="Settings_Saved" xml:space="preserve"><value>Clé enregistrée. Connexion en cours…</value></data>
   <data name="Settings_Deleted" xml:space="preserve"><value>Clé supprimée de cet ordinateur.</value></data>
   <data name="Settings_EveryMinutes" xml:space="preserve"><value>Toutes les {0} minutes</value></data>
-  <data name="Settings_Quota" xml:space="preserve"><value>Requêtes envoyées à l'API ce mois-ci depuis cet ordinateur : {0} (limite Husqvarna : {1} par mois).</value></data>
+  <data name="Settings_Quota" xml:space="preserve"><value>Requêtes envoyées à l'API ce mois-ci depuis cet ordinateur : {0} (l'API est limitée à {1} requêtes par mois).</value></data>
   <data name="Settings_Version" xml:space="preserve"><value>HusqA Cockpit {0}</value></data>
   <data name="Notification_ErrorTitle" xml:space="preserve"><value>{0} a un problème</value></data>
   <data name="Notification_AlarmTitle" xml:space="preserve"><value>⚠ Alarme sur {0}</value></data>
@@ -256,6 +256,8 @@
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Recentrer</value></data>
   <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Trait : les dernières positions signalées par la tondeuse (le grand point est la plus récente, le petit la plus ancienne).</value></data>
   <data name="Nav_Map.Content" xml:space="preserve"><value>Carte</value></data>
+  <data name="Nav_Quit.Content" xml:space="preserve"><value>Quitter</value></data>
+  <data name="Nav_Quit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Quitter HusqA Cockpit</value></data>
   <data name="Map_Title.Text" xml:space="preserve"><value>Carte</value></data>
   <data name="Map_RecenterText.Text" xml:space="preserve"><value>Recentrer</value></data>
   <data name="Map_Recenter.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Recadrer la carte sur les tracés de toutes les tondeuses</value></data>
@@ -266,7 +268,7 @@
   <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Charger l'historique</value></data>
   <data name="Detail_NoMessages.Text" xml:space="preserve"><value>Aucun événement enregistré.</value></data>
   <data name="Settings_Title.Text" xml:space="preserve"><value>Paramètres</value></data>
-  <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>Clé d'API Husqvarna</value></data>
+  <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>API Husqvarna</value></data>
   <data name="Settings_ApiHelp.Text" xml:space="preserve"><value>Créez une application sur le portail développeur Husqvarna, connectez-la aux API « Authentication API » et « Automower Connect API », puis copiez ici sa clé et son secret.</value></data>
   <data name="Settings_ApiPortal.Content" xml:space="preserve"><value>Ouvrir le portail développeur Husqvarna</value></data>
   <data name="Settings_ApplicationKey.Header" xml:space="preserve"><value>Clé d'application (Application key)</value></data>

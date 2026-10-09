@@ -42,8 +42,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         _initialLanguage = settings.Language;
         PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
         TaskNotificationNames = s_taskNotificationModes.Select(strings.EnumText).ToList();
-        VersionText = strings.Format("Settings_Version",
-            Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "?");
+        VersionText = VersionTextOf(strings, Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion);
 
         var stored = credentials.LoadCredentials();
         ApplicationKey = stored?.ApplicationKey ?? "";
@@ -240,7 +239,24 @@ public sealed partial class SettingsViewModel : ObservableObject
         ? _strings.Format("Settings_Quota", _settings.QuotaRequests.ToString("N0", CultureInfo.CurrentCulture), MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture))
         : _strings.Format("Settings_Quota", 0, MonthlyQuota.ToString("N0", CultureInfo.CurrentCulture));
 
+    /// <summary>"HusqA Cockpit 0.1.0 (a1b2c3d)": the version, then the commit the build was made from.</summary>
     public string VersionText { get; }
+
+    /// <summary>The version of the build, without the suffix naming its commit ("0.1.0+a1b2c3…" gives "0.1.0").</summary>
+    public static string VersionOf(string? informationalVersion) =>
+        string.IsNullOrWhiteSpace(informationalVersion) ? "?" : informationalVersion.Split('+')[0];
+
+    /// <summary>The first characters of the commit the build was made from, which the .NET SDK puts after a "+"; null when it says none.</summary>
+    public static string? CommitOf(string? informationalVersion)
+    {
+        var parts = informationalVersion?.Split('+', 2);
+        return parts is { Length: 2 } && parts[1].Trim() is { Length: > 0 } commit ? commit[..Math.Min(7, commit.Length)] : null;
+    }
+
+    /// <summary>The line of the About section: the version, and the commit when there is one.</summary>
+    public static string VersionTextOf(IStrings strings, string? informationalVersion) =>
+        strings.Format("Settings_Version", VersionOf(informationalVersion))
+        + (CommitOf(informationalVersion) is { } commit ? $" ({commit})" : "");
 
     public void RefreshQuota() => OnPropertyChanged(nameof(QuotaText));
 

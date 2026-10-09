@@ -5,34 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HusqaCockpit.App.Views">
 
-    <ScrollViewer Padding="32,16,32,32">
-        <StackPanel MaxWidth="860" HorizontalAlignment="Stretch" Spacing="4">
+    <ScrollViewer x:Name="Scroller" Padding="32,16,32,32">
+        <StackPanel x:Name="Sections" MaxWidth="860" HorizontalAlignment="Stretch" Spacing="4">
             <TextBlock x:Uid="Settings_Title" Style="{StaticResource TitleTextBlockStyle}" />
-
-            <!-- API credentials -->
-            <TextBlock x:Uid="Settings_ApiHeader" Style="{StaticResource SectionHeaderStyle}" />
-            <Border Style="{StaticResource CardStyle}">
-                <StackPanel Spacing="12">
-                    <TextBlock x:Uid="Settings_ApiHelp" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
-                    <HyperlinkButton x:Uid="Settings_ApiPortal" Padding="0" NavigateUri="https://developer.husqvarnagroup.cloud/applications" />
-                    <TextBox x:Uid="Settings_ApplicationKey" Text="{x:Bind ViewModel.ApplicationKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <PasswordBox x:Uid="Settings_ApplicationSecret" Password="{x:Bind ViewModel.ApplicationSecret, Mode=TwoWay}" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button x:Uid="Settings_Save" Command="{x:Bind ViewModel.SaveCredentialsCommand}" Style="{StaticResource AccentButtonStyle}" />
-                        <Button x:Uid="Settings_Test" Command="{x:Bind ViewModel.TestCredentialsCommand}" />
-                        <Button
-                            x:Uid="Settings_Delete"
-                            Command="{x:Bind ViewModel.DeleteCredentialsCommand}"
-                            Visibility="{x:Bind ViewModel.HasStoredCredentials, Mode=OneWay}" />
-                        <ProgressRing Width="20" Height="20" IsActive="{x:Bind ViewModel.TestCredentialsCommand.IsRunning, Mode=OneWay}" />
-                    </StackPanel>
-                    <InfoBar
-                        IsOpen="{x:Bind ViewModel.IsCredentialResultVisible, Mode=TwoWay}"
-                        Message="{x:Bind ViewModel.CredentialResult, Mode=OneWay}"
-                        Severity="{x:Bind local:BindingHelpers.InfoBarSeverityFor(ViewModel.CredentialResultSeverity), Mode=OneWay}" />
-                    <TextBlock x:Uid="Settings_ApiStorage" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
-                </StackPanel>
-            </Border>
 
             <!-- Notifications -->
             <TextBlock x:Uid="Settings_NotificationsHeader" Style="{StaticResource SectionHeaderStyle}" />
@@ -88,12 +63,37 @@
                 </StackPanel>
             </Border>
 
-            <!-- Usage and about -->
+            <!-- Husqvarna API: the key, and how much of the monthly quota this computer used -->
+            <TextBlock x:Name="ApiHeader" x:Uid="Settings_ApiHeader" Style="{StaticResource SectionHeaderStyle}" />
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Uid="Settings_ApiHelp" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+                    <HyperlinkButton x:Uid="Settings_ApiPortal" Padding="0" NavigateUri="https://developer.husqvarnagroup.cloud/applications" />
+                    <TextBox x:Uid="Settings_ApplicationKey" Text="{x:Bind ViewModel.ApplicationKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <PasswordBox x:Uid="Settings_ApplicationSecret" Password="{x:Bind ViewModel.ApplicationSecret, Mode=TwoWay}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Uid="Settings_Save" Command="{x:Bind ViewModel.SaveCredentialsCommand}" Style="{StaticResource AccentButtonStyle}" />
+                        <Button x:Uid="Settings_Test" Command="{x:Bind ViewModel.TestCredentialsCommand}" />
+                        <Button
+                            x:Uid="Settings_Delete"
+                            Command="{x:Bind ViewModel.DeleteCredentialsCommand}"
+                            Visibility="{x:Bind ViewModel.HasStoredCredentials, Mode=OneWay}" />
+                        <ProgressRing Width="20" Height="20" IsActive="{x:Bind ViewModel.TestCredentialsCommand.IsRunning, Mode=OneWay}" />
+                    </StackPanel>
+                    <InfoBar
+                        IsOpen="{x:Bind ViewModel.IsCredentialResultVisible, Mode=TwoWay}"
+                        Message="{x:Bind ViewModel.CredentialResult, Mode=OneWay}"
+                        Severity="{x:Bind local:BindingHelpers.InfoBarSeverityFor(ViewModel.CredentialResultSeverity), Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.QuotaText, Mode=OneWay}" TextWrapping="Wrap" />
+                    <TextBlock x:Uid="Settings_ApiStorage" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- About -->
             <TextBlock x:Uid="Settings_AboutHeader" Style="{StaticResource SectionHeaderStyle}" />
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="8">
-                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind ViewModel.VersionText}" />
-                    <TextBlock Text="{x:Bind ViewModel.QuotaText, Mode=OneWay}" TextWrapping="Wrap" />
+                    <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind ViewModel.VersionText}" />
                     <TextBlock x:Uid="Settings_Disclaimer" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <HyperlinkButton x:Uid="Settings_SourceCode" NavigateUri="https://github.com/ArmandDelessert/husqvarna-automower-windows" />

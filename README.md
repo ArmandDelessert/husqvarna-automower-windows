@@ -28,14 +28,18 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   midnight, so 00:00–00:00 is the whole day. Overlapping slots, empty days and slots running past midnight are rejected
   before anything is sent.
 - **Map**: an OpenStreetMap map with the GPS track of a mower on its detail page, and a *Map* page showing the tracks
-  of all mowers together.
+  of all mowers together, with what each mower is doing. A mower that is out of reach is flagged (its track is dashed
+  and its last position grey). The map zooms in to 22, beyond the 19 of the OpenStreetMap tiles, which are then enlarged.
 - **Windows notifications** for errors, theft alarms, recoveries, stops requiring a manual action and connectivity changes
   (each category can be turned off), and, if you ask for them, when a mower **starts** and when it **finishes mowing**
   (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
   (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
-- **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Husqvarna API key, Notifications,
-  Behavior (notification area, start with Windows, refresh interval), Language (with a *Restart now* button) and About
-  (version, repository, logs folder, API request counter).
+- **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Notifications, Behavior (notification
+  area, start with Windows, refresh interval), Language (with a *Restart now* button), Husqvarna API (the key and the
+  request counter, in the place of DySS's account section) and About (version and commit, repository, logs folder).
+- **Navigation**: the back button of the mouse, the browser-back key and Alt+Left go to the previous page, like the
+  back button of the title bar. A *Quit* button at the bottom of the navigation bar closes the application for good
+  (closing the window only sends it to the notification area).
 - **Notification area icon**: the app keeps watching the mowers when its window is closed; the icon gets a red badge when
   a mower is in error. Optional start with Windows.
 - **French and English** user interface (follows Windows by default).

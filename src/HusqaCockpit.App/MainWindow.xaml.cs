@@ -4,12 +4,17 @@ using HusqaCockpit.App.Views;
 using HusqaCockpit.Presentation;
 using HusqaCockpit.Presentation.ViewModels;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics;
+using Windows.System;
+using Windows.UI.Core;
 
 namespace HusqaCockpit.App;
 
@@ -39,10 +44,14 @@ public sealed partial class MainWindow : Window
             presenter.PreferredMinimumHeight = (int)(MinimumHeight * scale);
         }
 
+        // The mouse's back button, which a page that handles its clicks must not keep from us, and the keyboard's.
+        Root.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(OnPointerPressed), handledEventsToo: true);
+        Root.PreviewKeyDown += OnPreviewKeyDown;
+
         ContentFrame.Navigate(typeof(DashboardPage));
         if (!App.Current.Host.HasCredentials)
         {
-            ContentFrame.Navigate(typeof(SettingsPage));
+            ShowSettings(apiKey: true);
         }
     }
 
@@ -73,7 +82,9 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(MowerDetailPage), mowerId, new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
     }
 
-    public void ShowSettings() => ContentFrame.Navigate(typeof(SettingsPage));
+    /// <summary>Opens the Settings page, on the section of the API key when that is what is missing.</summary>
+    public void ShowSettings(bool apiKey = false) =>
+        ContentFrame.Navigate(typeof(SettingsPage), apiKey ? SettingsPage.ApiKeyTarget : null);
 
     private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
@@ -99,6 +110,12 @@ public sealed partial class MainWindow : Window
     // although that item is already selected there.
     private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
+        if (ReferenceEquals(args.InvokedItemContainer, QuitItem))
+        {
+            App.Current.Quit();
+            return;
+        }
+
         var target = args.IsSettingsInvoked ? typeof(SettingsPage)
             : ReferenceEquals(args.InvokedItemContainer, MapItem) ? typeof(MapPage)
             : typeof(DashboardPage);
@@ -116,11 +133,38 @@ public sealed partial class MainWindow : Window
             : DashboardItem;
     }
 
-    private void AppTitleBar_BackRequested(TitleBar sender, object args)
+    private void AppTitleBar_BackRequested(TitleBar sender, object args) => GoBack();
+
+    /// <summary>Back to the previous page; nothing when there is none, or while a dialog is open over the page.</summary>
+    private void GoBack()
     {
-        if (ContentFrame.CanGoBack)
+        if (ContentFrame.CanGoBack && !IsDialogOpen())
         {
             ContentFrame.GoBack();
+        }
+    }
+
+    private bool IsDialogOpen() =>
+        Root.XamlRoot is { } xamlRoot && VisualTreeHelper.GetOpenPopupsForXamlRoot(xamlRoot).Any(popup => popup.Child is ContentDialog);
+
+    private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        if (e.GetCurrentPoint(Root).Properties.IsXButton1Pressed)
+        {
+            GoBack();
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>The "browser back" key of keyboards that have one, and Alt+Left as in Explorer and the browsers.</summary>
+    private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        var altLeft = e.Key == VirtualKey.Left
+            && InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Menu).HasFlag(CoreVirtualKeyStates.Down);
+        if (e.Key == VirtualKey.GoBack || altLeft)
+        {
+            GoBack();
+            e.Handled = true;
         }
     }
 

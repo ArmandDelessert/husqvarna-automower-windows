@@ -21,7 +21,7 @@ public sealed partial class DashboardPage : Page
         }
     }
 
-    private void OpenSettings_Click(object sender, RoutedEventArgs e) => App.Current.Window.ShowSettings();
+    private void OpenSettings_Click(object sender, RoutedEventArgs e) => App.Current.Window.ShowSettings(apiKey: true);
 
     private void CommandInfo_Closed(InfoBar sender, InfoBarClosedEventArgs args) => ViewModel.CommandMessage = null;
 }

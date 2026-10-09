@@ -137,10 +137,10 @@ public sealed class SettingsViewModelTests : IDisposable
     {
         _settings.QuotaMonth = "2026-06";
         _settings.QuotaRequests = 1234;
-        Assert.Equal("API requests sent this month from this computer: 1,234 (Husqvarna limit: 10,000 per month).", Create().QuotaText);
+        Assert.Equal("API requests sent this month from this computer: 1,234 (the API is limited to 10,000 requests per month).", Create().QuotaText);
 
         _settings.QuotaMonth = "2026-05";
-        Assert.Equal("API requests sent this month from this computer: 0 (Husqvarna limit: 10,000 per month).", Create().QuotaText);
+        Assert.Equal("API requests sent this month from this computer: 0 (the API is limited to 10,000 requests per month).", Create().QuotaText);
     }
 
     [Fact]
@@ -271,6 +271,48 @@ public sealed class SettingsViewModelTests : IDisposable
 
         Assert.Equal(TaskNotificationMode.StartAndEnd, _settings.TaskNotifications);
         Assert.Equal(1, _store.Saves);
+    }
+
+    // ----- The version line -----
+
+    [Theory]
+    [InlineData("0.1.0+a1b2c3d4e5f60718293a4b5c6d7e8f9012345678", "0.1.0")]
+    [InlineData("0.1.0-beta.1+a1b2c3d", "0.1.0-beta.1")]
+    [InlineData("0.0.0-dev", "0.0.0-dev")]
+    [InlineData("1.2.3+", "1.2.3")]
+    [InlineData("", "?")]
+    [InlineData("  ", "?")]
+    [InlineData(null, "?")]
+    public void The_version_is_what_the_build_carries_without_the_commit(string? informational, string expected) =>
+        Assert.Equal(expected, SettingsViewModel.VersionOf(informational));
+
+    [Theory]
+    [InlineData("0.1.0+a1b2c3d4e5f60718293a4b5c6d7e8f9012345678", "a1b2c3d")]
+    [InlineData("0.1.0+abc", "abc")]
+    [InlineData("0.1.0+ a1b2c3d4 ", "a1b2c3d")]
+    [InlineData("0.1.0+", null)]
+    [InlineData("0.1.0+  ", null)]
+    [InlineData("0.1.0", null)]
+    [InlineData(null, null)]
+    public void The_commit_is_the_first_seven_characters_after_the_plus(string? informational, string? expected) =>
+        Assert.Equal(expected, SettingsViewModel.CommitOf(informational));
+
+    [Theory]
+    [InlineData("0.1.0+a1b2c3d4e5f60718293a4b5c6d7e8f9012345678", "HusqA Cockpit 0.1.0 (a1b2c3d)")]
+    [InlineData("0.1.0-beta.1+a1b2c3d", "HusqA Cockpit 0.1.0-beta.1 (a1b2c3d)")]
+    [InlineData("0.1.0", "HusqA Cockpit 0.1.0")]
+    [InlineData(null, "HusqA Cockpit ?")]
+    public void The_version_line_gives_the_version_then_its_commit_when_there_is_one(string? informational, string expected) =>
+        Assert.Equal(expected, SettingsViewModel.VersionTextOf(ReswStrings.English, informational));
+
+    [Fact]
+    public void The_page_shows_the_version_of_the_running_build()
+    {
+        // The test assembly is built by the same SDK, which puts the commit after the "+" of its version.
+        var page = Create();
+
+        Assert.StartsWith("HusqA Cockpit ", page.VersionText, StringComparison.Ordinal);
+        Assert.DoesNotContain("+", page.VersionText, StringComparison.Ordinal);
     }
 
     private SettingsViewModel Create() =>

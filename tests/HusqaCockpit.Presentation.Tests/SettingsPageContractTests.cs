@@ -26,15 +26,15 @@ public class SettingsPageContractTests
     [Fact]
     public void The_sections_come_in_the_agreed_order()
     {
-        // The API key comes first because only this application has one; the map section is DySS's.
+        // The API section sits where DySS has its account section, just before About; the map section is DySS's.
         Assert.Equal(
-            ["Settings_ApiHeader", "Settings_NotificationsHeader", "Settings_BehaviorHeader", "Settings_LanguageHeader", "Settings_AboutHeader"],
+            ["Settings_NotificationsHeader", "Settings_BehaviorHeader", "Settings_LanguageHeader", "Settings_ApiHeader", "Settings_AboutHeader"],
             SectionHeaderUids());
     }
 
     [Theory]
-    [InlineData("en-US", new[] { "Husqvarna API key", "Notifications", "Behavior", "Language", "About" })]
-    [InlineData("fr-FR", new[] { "Clé d'API Husqvarna", "Notifications", "Comportement", "Langue", "À propos" })]
+    [InlineData("en-US", new[] { "Notifications", "Behavior", "Language", "Husqvarna API", "About" })]
+    [InlineData("fr-FR", new[] { "Notifications", "Comportement", "Langue", "API Husqvarna", "À propos" })]
     public void The_sections_have_the_agreed_titles(string language, string[] titles)
     {
         var strings = language == "fr-FR" ? ReswStrings.French : ReswStrings.English;
