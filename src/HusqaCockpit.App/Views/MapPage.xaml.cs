@@ -7,7 +7,13 @@ using Windows.UI;
 
 namespace HusqaCockpit.App.Views;
 
-public sealed record LegendItem(string Name, Brush Brush);
+/// <summary>One mower in the legend of the map.</summary>
+/// <param name="Brush">The color of its track.</param>
+/// <param name="Status">What it is doing ("Mowing", "Parked", "Disconnected").</param>
+/// <param name="Detail">More about it: when it was last heard of, for a mower out of reach.</param>
+/// <param name="StatusBrush">The color of the status (green when all is well, red for an error, grey out of reach).</param>
+/// <param name="StatusGlyph">A dot, or a "no connection" sign for a mower out of reach.</param>
+public sealed record LegendItem(string Name, Brush Brush, string Status, string Detail, Brush StatusBrush, string StatusGlyph);
 
 /// <summary>One map with the last GPS track of every mower.</summary>
 public sealed partial class MapPage : Page
@@ -26,11 +32,20 @@ public sealed partial class MapPage : Page
     {
         var mowers = ViewModel.Mowers;
         var tracks = mowers
-            .Select((m, i) => MapTrack.From(m.Mower, MapTrack.ColorFor(i)))
+            .Select((m, i) => MapTrack.From(m.Mower, MapTrack.ColorFor(i), m.StatusTitle))
             .Where(t => t.Points.Count > 0)
             .ToList();
 
-        Legend.ItemsSource = tracks.Select(t => new LegendItem(t.Name, new SolidColorBrush(ParseColor(t.Color)))).ToList();
+        // Every mower is listed, also one that reports no position: its status is what matters then.
+        Legend.ItemsSource = mowers
+            .Select((m, i) => new LegendItem(
+                m.Name,
+                new SolidColorBrush(ParseColor(MapTrack.ColorFor(i))),
+                m.StatusTitle,
+                m.StatusDetail,
+                BindingHelpers.SeverityBrush(m.Severity),
+                m.IsConnected ? "\uEA3B" : "\uEB5E"))
+            .ToList();
         EmptyText.Visibility = tracks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         // New mowers appearing (or all positions arriving after startup) should be framed once.
         Map.SetTracks(tracks, labels: true, recenter);

@@ -9,30 +9,17 @@
     <Grid Padding="32,16,32,32" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid ColumnSpacing="12">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock x:Uid="Map_Title" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" />
-            <ItemsRepeater Grid.Column="1" Margin="24,0,0,0" VerticalAlignment="Center" x:Name="Legend">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Horizontal" Spacing="16" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="local:LegendItem">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <Ellipse Width="12" Height="12" Fill="{x:Bind Brush}" />
-                            <TextBlock Text="{x:Bind Name}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
-            <Button x:Uid="Map_Recenter" Grid.Column="2" Click="Recenter_Click">
+            <Button x:Uid="Map_Recenter" Grid.Column="1" Click="Recenter_Click">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon FontSize="14" Glyph="&#xE81D;" />
                     <TextBlock x:Uid="Map_RecenterText" />
@@ -40,7 +27,35 @@
             </Button>
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <!-- One entry per mower: the color of its track, its name, and what it is doing. -->
+        <ItemsRepeater x:Name="Legend" Grid.Row="1">
+            <ItemsRepeater.Layout>
+                <UniformGridLayout ItemsStretch="Fill" MinColumnSpacing="12" MinItemWidth="300" MinRowSpacing="8" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate x:DataType="local:LegendItem">
+                    <Border Padding="12,8" Style="{StaticResource CardStyle}">
+                        <StackPanel Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Ellipse Width="12" Height="12" Fill="{x:Bind Brush}" />
+                                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="12" Foreground="{x:Bind StatusBrush}" Glyph="{x:Bind StatusGlyph}" />
+                                <TextBlock Text="{x:Bind Status}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <TextBlock
+                                Style="{StaticResource CaptionSecondaryStyle}"
+                                Text="{x:Bind Detail}"
+                                TextTrimming="CharacterEllipsis"
+                                Visibility="{x:Bind local:BindingHelpers.VisibleWhenNotEmpty(Detail)}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
             <Grid>
                 <local:MapView x:Name="Map" />
                 <TextBlock
