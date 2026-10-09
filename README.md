@@ -61,6 +61,8 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
 3. Open **Settings**, paste the key and secret, then click **Save and connect**. They are stored in the Windows
    Credential Manager of the current user, never in plain text.
 
+To try the latest commit of `main` before any tagged version, there is the [`dev`](https://github.com/ArmandDelessert/husqvarna-automower-windows/releases/tag/dev) pre-release.
+
 The executable is not signed: on first launch, Windows SmartScreen asks for a confirmation ("More info", then
 "Run anyway").
 
@@ -119,7 +121,8 @@ on a `TimeProvider`, simulated in the tests.
   versions in one place.
 - `.github/workflows/ci.yml` builds and runs the tests on every push, on any branch, and checks that the `.resw` files
   match their Python sources.
-- `.github/workflows/release.yml` publishes a release for every `vX.Y.Z` tag.
+- `.github/workflows/release.yml` publishes a release for every `vX.Y.Z` tag, and the `dev` pre-release for every push to `main`.
+- `.github/dependabot.yml` proposes updates to the NuGet packages and the GitHub actions every week, as pull requests.
 
 ### Publishing a release
 
@@ -131,6 +134,13 @@ a zip, and their SHA-256 checksums:
 git tag v1.0.0
 git push origin v1.0.0
 ```
+
+Every push to `main` also publishes the `dev` release, a pre-release that is replaced each time: it holds the zips of
+the latest commit of `main`, under the version `0.0.0-dev.N` (N is the run number). It is never the "latest release" of
+the install link, which stays the latest tagged release. Documentation-only changes do not trigger it.
+
+The workflow can also be started by hand (Actions, "Release", "Run workflow"): it builds, tests and packages, but keeps
+the zips as an artifact of the run instead of creating a release, so it can be tried without publishing anything.
 
 A local build has the version `0.0.0-dev`.
 
