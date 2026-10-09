@@ -25,7 +25,7 @@ public sealed partial class NotificationService(ILogger<NotificationService> log
         {
             // The handler must be attached before registering.
             AppNotificationManager.Default.NotificationInvoked += (_, args) => HandleArguments(args.Arguments);
-            AppNotificationManager.Default.Register(Loc.Get("AppName"), new Uri(AppPaths.IconPngPath));
+            AppNotificationManager.Default.Register(Loc.Get("AppName"), new Uri(AppPaths.IconPath));
             _registered = true;
         }
         catch (Exception ex)

@@ -52,5 +52,4 @@ public static class AppPaths
 
     public static string IconPath { get; } = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
     public static string AlertIconPath { get; } = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIconAlert.ico");
-    public static string IconPngPath { get; } = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.png");
 }
