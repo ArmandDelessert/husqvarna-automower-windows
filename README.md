@@ -69,7 +69,7 @@ The executable is not signed: on first launch, Windows SmartScreen asks for a co
 Requirements: Windows 10 version 2004 (build 19041) or later, or Windows 11, and the Microsoft Edge WebView2 runtime
 (preinstalled on Windows 11; used for the map).
 
-Preferences, the WebView2 cache and the logs (one file a day, kept a week) are stored in `%LOCALAPPDATA%\HusqA Cockpit`.
+Preferences, the WebView2 cache and the logs (one file a day, kept a week) are stored in `%LocalAppData%\HusqA Cockpit`.
 
 ## How it works
 

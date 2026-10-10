@@ -15,7 +15,7 @@ public enum TaskNotificationMode
     StartAndEnd,
 }
 
-/// <summary>User preferences. The app stores them as JSON in %LOCALAPPDATA%\HusqA Cockpit\settings.json.</summary>
+/// <summary>User preferences. The app stores them as JSON in %LocalAppData%\HusqA Cockpit\settings.json.</summary>
 public sealed class AppSettings
 {
     /// <summary>"" follows Windows; otherwise a language tag such as "fr-FR" or "en-US".</summary>

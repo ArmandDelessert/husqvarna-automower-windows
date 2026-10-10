@@ -3,7 +3,7 @@ using HusqaCockpit.Presentation;
 
 namespace HusqaCockpit.App.Services;
 
-/// <summary>Reads and writes the settings as JSON in %LOCALAPPDATA%\HusqA Cockpit\settings.json.</summary>
+/// <summary>Reads and writes the settings as JSON in %LocalAppData%\HusqA Cockpit\settings.json.</summary>
 public sealed class AppSettingsStore : ISettingsStore
 {
     private static readonly JsonSerializerOptions s_options = new() { WriteIndented = true };
