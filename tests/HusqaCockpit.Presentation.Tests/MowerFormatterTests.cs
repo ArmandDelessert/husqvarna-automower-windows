@@ -208,6 +208,46 @@ public sealed class MowerFormatterTests : IDisposable
         Assert.Equal("sam. 13 juin à 08:00", until);
     }
 
+    // ----- Glyphs -----
+
+    [Fact]
+    public void A_disconnected_mower_has_the_no_connection_glyph_whatever_it_was_doing()
+    {
+        Assert.Equal("", MowerFormatter.GlyphOf(TestMowers.Create(TestMowers.Mowing() with { Metadata = new MetadataInfo { Connected = false } })));
+    }
+
+    [Fact]
+    public void An_error_has_the_error_glyph_before_the_activity()
+    {
+        Assert.Equal("", MowerFormatter.GlyphOf(TestMowers.Create(TestMowers.InError(1))));
+    }
+
+    [Theory]
+    [InlineData(MowerState.Off, "")]
+    [InlineData(MowerState.WaitUpdating, "")]
+    [InlineData(MowerState.WaitPowerUp, "")]
+    [InlineData(MowerState.Stopped, "")]
+    [InlineData(MowerState.Paused, "")]
+    public void The_state_gives_the_glyph_of_a_mower_that_is_not_working(MowerState state, string glyph)
+    {
+        Assert.Equal(glyph, MowerFormatter.GlyphOf(TestMowers.Create(TestMowers.Parked() with { Mower = new MowerStatus { State = state } })));
+    }
+
+    [Theory]
+    [InlineData(MowerActivity.Mowing, "")]
+    [InlineData(MowerActivity.Charging, "")]
+    [InlineData(MowerActivity.ParkedInCs, "")]
+    [InlineData(MowerActivity.GoingHome, "")]
+    [InlineData(MowerActivity.Leaving, "")]
+    [InlineData(MowerActivity.StoppedInGarden, "")]
+    [InlineData(MowerActivity.Unknown, "")]
+    public void The_activity_gives_the_glyph_of_a_working_mower(MowerActivity activity, string glyph)
+    {
+        var mower = TestMowers.Create(TestMowers.Parked() with { Mower = new MowerStatus { Activity = activity, State = MowerState.InOperation } });
+
+        Assert.Equal(glyph, MowerFormatter.GlyphOf(mower));
+    }
+
     // ----- Dates and durations -----
 
     [Theory]

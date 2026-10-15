@@ -79,6 +79,43 @@ public sealed class MowerFormatter(IStrings strings)
         }
     }
 
+    /// <summary>
+    /// The Segoe Fluent Icons glyph that stands for what the mower is doing, to be shown in the color of the severity:
+    /// a "no connection" sign, a scissors for mowing, a battery for charging, a house for the station, and so on.
+    /// </summary>
+    public static string GlyphOf(Mower mower)
+    {
+        if (!mower.IsConnected)
+        {
+            return "\uEB5E";
+        }
+        if (mower.HasError)
+        {
+            return "\uE783";
+        }
+        switch (mower.State)
+        {
+            case MowerState.Off:
+            case MowerState.WaitUpdating:
+            case MowerState.WaitPowerUp:
+                return "\uE7E8";
+            case MowerState.Stopped:
+                return "\uE733";
+            case MowerState.Paused:
+                return "\uE769";
+        }
+        return mower.Activity switch
+        {
+            MowerActivity.Mowing => "\uE8C6",
+            MowerActivity.Charging => "\uE83E",
+            MowerActivity.ParkedInCs => "\uE80F",
+            MowerActivity.GoingHome => "\uE72B",
+            MowerActivity.Leaving => "\uE72A",
+            MowerActivity.StoppedInGarden => "\uE71A",
+            _ => "\uE946",
+        };
+    }
+
     private StatusSummary Parked(Mower mower, PlannerInfo planner, string nextStart, DateTimeOffset now)
     {
         switch (planner.RestrictedReason)

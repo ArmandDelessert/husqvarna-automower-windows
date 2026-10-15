@@ -232,7 +232,7 @@
   <data name="Detail_HeadlightsCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Headlights</value></data>
   <data name="Detail_ScheduleHeader.Text" xml:space="preserve"><value>Weekly schedule</value></data>
   <data name="Detail_NoSchedule.Text" xml:space="preserve"><value>No schedule defined.</value></data>
-  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Edit schedule</value></data>
+  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Edit schedule…</value></data>
   <data name="Detail_ScheduleWorkAreas.Text" xml:space="preserve"><value>This mower uses work areas: its schedule cannot be edited here yet.</value></data>
   <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Weekly schedule</value></data>
   <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Send to the mower</value></data>
@@ -264,9 +264,9 @@
   <data name="Map_Empty.Text" xml:space="preserve"><value>No GPS position available yet.</value></data>
   <data name="Map_Unavailable" xml:space="preserve"><value>The map needs the Microsoft Edge WebView2 runtime, which could not be started.</value></data>
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Download WebView2</value></data>
-  <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Event history</value></data>
-  <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Load history</value></data>
-  <data name="Detail_NoMessages.Text" xml:space="preserve"><value>No events recorded.</value></data>
+  <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Messages from the mower</value></data>
+  <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Load the messages</value></data>
+  <data name="Detail_NoMessages.Text" xml:space="preserve"><value>Husqvarna returned no message for this mower. Its message list is often empty, even after an error.</value></data>
   <data name="Settings_Title.Text" xml:space="preserve"><value>Settings</value></data>
   <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>Husqvarna API</value></data>
   <data name="Settings_ApiHelp.Text" xml:space="preserve"><value>Create an application on the Husqvarna developer portal, connect it to the “Authentication API” and “Automower Connect API”, then copy its key and secret here.</value></data>

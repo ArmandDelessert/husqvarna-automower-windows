@@ -232,7 +232,7 @@
   <data name="Detail_HeadlightsCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Phares</value></data>
   <data name="Detail_ScheduleHeader.Text" xml:space="preserve"><value>Planning hebdomadaire</value></data>
   <data name="Detail_NoSchedule.Text" xml:space="preserve"><value>Aucun planning défini.</value></data>
-  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Modifier le planning</value></data>
+  <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Modifier le planning…</value></data>
   <data name="Detail_ScheduleWorkAreas.Text" xml:space="preserve"><value>Cette tondeuse utilise des zones de travail : son planning n'est pas encore modifiable ici.</value></data>
   <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Planning hebdomadaire</value></data>
   <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Envoyer à la tondeuse</value></data>
@@ -264,9 +264,9 @@
   <data name="Map_Empty.Text" xml:space="preserve"><value>Aucune position GPS disponible pour l'instant.</value></data>
   <data name="Map_Unavailable" xml:space="preserve"><value>La carte nécessite le runtime Microsoft Edge WebView2, qui n'a pas pu démarrer.</value></data>
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Télécharger WebView2</value></data>
-  <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Historique des événements</value></data>
-  <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Charger l'historique</value></data>
-  <data name="Detail_NoMessages.Text" xml:space="preserve"><value>Aucun événement enregistré.</value></data>
+  <data name="Detail_MessagesHeader.Text" xml:space="preserve"><value>Messages de la tondeuse</value></data>
+  <data name="Detail_LoadMessages.Content" xml:space="preserve"><value>Charger les messages</value></data>
+  <data name="Detail_NoMessages.Text" xml:space="preserve"><value>Husqvarna n'a renvoyé aucun message pour cette tondeuse. Sa liste de messages est souvent vide, même après une erreur.</value></data>
   <data name="Settings_Title.Text" xml:space="preserve"><value>Paramètres</value></data>
   <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>API Husqvarna</value></data>
   <data name="Settings_ApiHelp.Text" xml:space="preserve"><value>Créez une application sur le portail développeur Husqvarna, connectez-la aux API « Authentication API » et « Automower Connect API », puis copiez ici sa clé et son secret.</value></data>

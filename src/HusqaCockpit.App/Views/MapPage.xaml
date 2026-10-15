@@ -27,30 +27,61 @@
             </Button>
         </Grid>
 
-        <!-- One entry per mower: the color of its track, its name, and what it is doing. -->
+        <!-- One card per mower: the bar is the color of its track on the map, the icon says what it is doing.
+             A click opens the details of the mower. -->
         <ItemsRepeater x:Name="Legend" Grid.Row="1">
             <ItemsRepeater.Layout>
                 <UniformGridLayout ItemsStretch="Fill" MinColumnSpacing="12" MinItemWidth="300" MinRowSpacing="8" />
             </ItemsRepeater.Layout>
             <ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="local:LegendItem">
-                    <Border Padding="12,8" Style="{StaticResource CardStyle}">
-                        <StackPanel Spacing="2">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Ellipse Width="12" Height="12" Fill="{x:Bind Brush}" />
-                                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />
+                    <Button
+                        x:Uid="Card_Details"
+                        Padding="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Click="OpenDetails_Click"
+                        Tag="{x:Bind Mower.Id}">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="6" Background="{x:Bind TrackBrush}" CornerRadius="3,0,0,3" />
+                            <StackPanel Grid.Column="1" Padding="0,8" Spacing="2">
+                                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Mower.Name, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon
+                                        FontSize="14"
+                                        Foreground="{x:Bind local:BindingHelpers.SeverityBrush(Mower.Severity), Mode=OneWay}"
+                                        Glyph="{x:Bind Mower.StatusGlyph, Mode=OneWay}" />
+                                    <TextBlock Text="{x:Bind Mower.StatusTitle, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <TextBlock
+                                    Style="{StaticResource CaptionSecondaryStyle}"
+                                    Text="{x:Bind local:BindingHelpers.DetailWhenConnected(Mower.IsConnected, Mower.StatusDetail), Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Visibility="{x:Bind local:BindingHelpers.VisibleWhenConnectedAndNotEmpty(Mower.IsConnected, Mower.StatusDetail), Mode=OneWay}" />
+                                <TextBlock
+                                    Style="{StaticResource CaptionSecondaryStyle}"
+                                    Text="{x:Bind Mower.LastSeenText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Visibility="{x:Bind local:BindingHelpers.VisibleWhenNotEmpty(Mower.LastSeenText), Mode=OneWay}" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon FontSize="12" Foreground="{x:Bind StatusBrush}" Glyph="{x:Bind StatusGlyph}" />
-                                <TextBlock Text="{x:Bind Status}" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                            <TextBlock
-                                Style="{StaticResource CaptionSecondaryStyle}"
-                                Text="{x:Bind Detail}"
-                                TextTrimming="CharacterEllipsis"
-                                Visibility="{x:Bind local:BindingHelpers.VisibleWhenNotEmpty(Detail)}" />
-                        </StackPanel>
-                    </Border>
+                            <FontIcon
+                                Grid.Column="2"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Glyph="&#xE76C;" />
+                        </Grid>
+                    </Button>
                 </DataTemplate>
             </ItemsRepeater.ItemTemplate>
         </ItemsRepeater>

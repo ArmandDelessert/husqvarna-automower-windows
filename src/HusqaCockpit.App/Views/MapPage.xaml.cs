@@ -7,13 +7,10 @@ using Windows.UI;
 
 namespace HusqaCockpit.App.Views;
 
-/// <summary>One mower in the legend of the map.</summary>
-/// <param name="Brush">The color of its track.</param>
-/// <param name="Status">What it is doing ("Mowing", "Parked", "Disconnected").</param>
-/// <param name="Detail">More about it: when it was last heard of, for a mower out of reach.</param>
-/// <param name="StatusBrush">The color of the status (green when all is well, red for an error, grey out of reach).</param>
-/// <param name="StatusGlyph">A dot, or a "no connection" sign for a mower out of reach.</param>
-public sealed record LegendItem(string Name, Brush Brush, string Status, string Detail, Brush StatusBrush, string StatusGlyph);
+/// <summary>One mower in the legend of the map: the card binds to the view model, so its texts follow the mower.</summary>
+/// <param name="Mower">The mower, whose status, icon and last update the card shows.</param>
+/// <param name="TrackBrush">The color of its track on the map, drawn as the bar at the left of the card.</param>
+public sealed record LegendItem(MowerViewModel Mower, Brush TrackBrush);
 
 /// <summary>One map with the last GPS track of every mower.</summary>
 public sealed partial class MapPage : Page
@@ -38,17 +35,19 @@ public sealed partial class MapPage : Page
 
         // Every mower is listed, also one that reports no position: its status is what matters then.
         Legend.ItemsSource = mowers
-            .Select((m, i) => new LegendItem(
-                m.Name,
-                new SolidColorBrush(ParseColor(MapTrack.ColorFor(i))),
-                m.StatusTitle,
-                m.StatusDetail,
-                BindingHelpers.SeverityBrush(m.Severity),
-                m.IsConnected ? "\uEA3B" : "\uEB5E"))
+            .Select((m, i) => new LegendItem(m, new SolidColorBrush(ParseColor(MapTrack.ColorFor(i)))))
             .ToList();
         EmptyText.Visibility = tracks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         // New mowers appearing (or all positions arriving after startup) should be framed once.
         Map.SetTracks(tracks, labels: true, recenter);
+    }
+
+    private void OpenDetails_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string mowerId })
+        {
+            App.Current.Window.ShowMower(mowerId);
+        }
     }
 
     private void Recenter_Click(object sender, RoutedEventArgs e) => Map.Recenter();

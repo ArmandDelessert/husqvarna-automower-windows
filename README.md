@@ -28,7 +28,7 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   midnight, so 00:00–00:00 is the whole day. Overlapping slots, empty days and slots running past midnight are rejected
   before anything is sent.
 - **Map**: an OpenStreetMap map with the GPS track of a mower on its detail page, and a *Map* page showing the tracks
-  of all mowers together, with what each mower is doing. A mower that is out of reach is flagged (its track is dashed
+  of all mowers together, with a card per mower (color of its track, status icon, last update; a click opens its details). A mower that is out of reach is flagged (its track is dashed
   and its last position grey). The map zooms in to 22, beyond the 19 of the OpenStreetMap tiles, which are then enlarged.
 - **Windows notifications** for errors, theft alarms, recoveries, stops requiring a manual action and connectivity changes
   (each category can be turned off), and, if you ask for them, when a mower **starts** and when it **finishes mowing**

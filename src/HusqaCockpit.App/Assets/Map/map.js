@@ -9,6 +9,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// Nothing on the map reacts to a click, so nothing is interactive: no hand cursor, and the map can be dragged from anywhere.
 const layer = L.layerGroup().addTo(map);
 let fitted = false;
 
@@ -20,11 +21,11 @@ function render(msg) {
     if (!pts.length) continue;
     // A mower out of reach left its last positions long ago: dashed and faded, and grey where it was last seen.
     L.polyline(pts, {
-      color: track.color, weight: 4, opacity: track.offline ? 0.45 : 0.8, dashArray: track.offline ? '4 8' : null
+      color: track.color, weight: 4, opacity: track.offline ? 0.45 : 0.8, dashArray: track.offline ? '4 8' : null, interactive: false
     }).addTo(layer);
-    L.circleMarker(pts[0], { radius: 4, color: track.color, weight: 2, fillColor: '#fff', fillOpacity: 1 }).addTo(layer);
+    L.circleMarker(pts[0], { radius: 4, color: track.color, weight: 2, fillColor: '#fff', fillOpacity: 1, interactive: false }).addTo(layer);
     const marker = L.circleMarker(pts[pts.length - 1], {
-      radius: 9, color: '#fff', weight: 3, fillColor: track.offline ? '#9e9e9e' : track.color, fillOpacity: 1
+      radius: 9, color: '#fff', weight: 3, fillColor: track.offline ? '#9e9e9e' : track.color, fillOpacity: 1, interactive: false
     }).addTo(layer);
     if (msg.labels) {
       // The name is chosen by the user in the Husqvarna account: it goes in as text, not as HTML.

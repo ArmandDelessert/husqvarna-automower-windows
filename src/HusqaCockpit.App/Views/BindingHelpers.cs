@@ -14,6 +14,11 @@ public static class BindingHelpers
 
     public static InfoBarSeverity FeedbackSeverity(bool failed) => failed ? InfoBarSeverity.Error : InfoBarSeverity.Success;
 
+    /// <summary>The detail line of a status, except for a mower out of reach: it only repeats when it was last heard of.</summary>
+    public static string DetailWhenConnected(bool connected, string detail) => connected ? detail : "";
+
+    public static Visibility VisibleWhenConnectedAndNotEmpty(bool connected, string detail) => VisibleWhenNotEmpty(DetailWhenConnected(connected, detail));
+
     public static bool Not(bool value) => !value;
 
     /// <summary>The InfoBar look of a severity chosen by a view model.</summary>

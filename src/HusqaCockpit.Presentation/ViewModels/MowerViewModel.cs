@@ -50,6 +50,9 @@ public sealed partial class MowerViewModel : ObservableObject
     public string StatusTitle => Summary.Title;
     public string StatusDetail => Summary.Detail;
     public StatusSeverity Severity => Summary.Severity;
+
+    /// <summary>The icon of the status (see <see cref="MowerFormatter.GlyphOf"/>).</summary>
+    public string StatusGlyph => MowerFormatter.GlyphOf(_mower);
     public bool HasError => _mower.HasError;
     public bool IsConnected => _mower.IsConnected;
     public bool CanConfirmError => _mower.CanConfirmError;
