@@ -42,7 +42,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         _initialLanguage = settings.Language;
         PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
         TaskNotificationNames = s_taskNotificationModes.Select(strings.EnumText).ToList();
-        LogRetentionNames = AppSettings.LogRetentionChoices.Select(RetentionName).ToList();
+        RetentionNames = AppSettings.RetentionChoices.Select(RetentionName).ToList();
         VersionText = VersionTextOf(strings, Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion);
 
         var stored = credentials.LoadCredentials();
@@ -52,7 +52,8 @@ public sealed partial class SettingsViewModel : ObservableObject
         LanguageIndex = Math.Max(0, Array.IndexOf(s_languages, settings.Language));
         PollingIntervalIndex = Math.Max(0, Array.IndexOf(s_pollingIntervals, settings.PollingIntervalMinutes));
         TaskNotificationsIndex = Math.Max(0, Array.IndexOf(s_taskNotificationModes, settings.TaskNotifications));
-        LogRetentionIndex = Math.Max(0, AppSettings.LogRetentionChoices.IndexOf(settings.LogRetentionDays));
+        LogRetentionIndex = Math.Max(0, AppSettings.RetentionChoices.IndexOf(settings.LogRetentionDays));
+        EventRetentionIndex = Math.Max(0, AppSettings.RetentionChoices.IndexOf(settings.EventRetentionDays));
         StartWithWindows = shell.StartsWithWindows;
         _initialized = true;
     }
@@ -235,14 +236,18 @@ public sealed partial class SettingsViewModel : ObservableObject
         _ = _host.RestartAsync();
     }
 
-    // ----- Logs -----
+    // ----- Logs and events -----
 
-    /// <summary>The names of the choices of <see cref="LogRetentionIndex"/>: 1, 3, 7, 14, 30, 90 days, then for ever.</summary>
-    public IReadOnlyList<string> LogRetentionNames { get; }
+    /// <summary>The names of the choices of the retention lists: 1, 3, 7, 14, 30, 90 days, then for ever.</summary>
+    public IReadOnlyList<string> RetentionNames { get; }
 
-    /// <summary>Index of <see cref="AppSettings.LogRetentionDays"/> in <see cref="AppSettings.LogRetentionChoices"/>.</summary>
+    /// <summary>Index of <see cref="AppSettings.LogRetentionDays"/> in <see cref="AppSettings.RetentionChoices"/>.</summary>
     [ObservableProperty]
     public partial int LogRetentionIndex { get; set; }
+
+    /// <summary>The same for <see cref="AppSettings.EventRetentionDays"/>.</summary>
+    [ObservableProperty]
+    public partial int EventRetentionIndex { get; set; }
 
     private bool _revertingRetention;
 
@@ -251,38 +256,70 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     partial void OnLogRetentionIndexChanged(int value)
     {
-        if (!_initialized || _revertingRetention || value < 0 || value >= AppSettings.LogRetentionChoices.Length)
+        if (!_initialized || _revertingRetention || value < 0 || value >= AppSettings.RetentionChoices.Length)
         {
             return;
         }
-        _ = ChangeLogRetentionAsync(AppSettings.LogRetentionChoices[value]);
+        _ = ChangeRetentionAsync(
+            AppSettings.RetentionChoices[value],
+            _settings.LogRetentionDays,
+            _shell.CountLogsOlderThan,
+            "Settings_LogRetentionTitle",
+            "Settings_LogRetentionConfirm",
+            days =>
+            {
+                _settings.LogRetentionDays = days;
+                _shell.SetLogRetention(days);
+            },
+            () => LogRetentionIndex = AppSettings.RetentionChoices.IndexOf(_settings.LogRetentionDays));
+    }
+
+    partial void OnEventRetentionIndexChanged(int value)
+    {
+        if (!_initialized || _revertingRetention || value < 0 || value >= AppSettings.RetentionChoices.Length)
+        {
+            return;
+        }
+        _ = ChangeRetentionAsync(
+            AppSettings.RetentionChoices[value],
+            _settings.EventRetentionDays,
+            _host.Events.CountOlderThan,
+            "Settings_EventRetentionTitle",
+            "Settings_EventRetentionConfirm",
+            days =>
+            {
+                _settings.EventRetentionDays = days;
+                _host.Events.KeepDays = days;
+            },
+            () => EventRetentionIndex = AppSettings.RetentionChoices.IndexOf(_settings.EventRetentionDays));
     }
 
     /// <summary>
-    /// Applies the new retention. A shorter one deletes files at once, with no bin to take them back, so the user is asked
+    /// Applies a new retention. A shorter one deletes files at once, with no bin to take them back, so the user is asked
     /// first when some would go; on a no, the list goes back to what it was.
     /// </summary>
-    private async Task ChangeLogRetentionAsync(int days)
+    private async Task ChangeRetentionAsync(
+        int days, int current, Func<int, int> countOlder, string titleKey, string confirmKey, Action<int> apply, Action putBack)
     {
-        if (days == _settings.LogRetentionDays)
+        if (days == current)
         {
             return;
         }
-        var expired = days == 0 ? 0 : _shell.CountLogsOlderThan(days);
+        var expired = days == 0 ? 0 : countOlder(days);
         if (expired > 0 && !await _shell.ConfirmAsync(
-                _strings.Text("Settings_LogRetentionTitle"),
-                _strings.Format("Settings_LogRetentionConfirm", expired, days),
-                _strings.Text("Dialog_Delete")))
+                _strings.Text(titleKey), _strings.Format(confirmKey, expired, days), _strings.Text("Dialog_Delete")))
         {
             _revertingRetention = true;
-            try { LogRetentionIndex = AppSettings.LogRetentionChoices.IndexOf(_settings.LogRetentionDays); }
+            try { putBack(); }
             finally { _revertingRetention = false; }
             return;
         }
-        _settings.LogRetentionDays = days;
+        apply(days);
         _store.Save(_settings);
-        _shell.SetLogRetention(days);
     }
+
+    [RelayCommand]
+    private void OpenEventsFolder() => _shell.OpenEventsFolder();
 
     // ----- Usage & about -----
 

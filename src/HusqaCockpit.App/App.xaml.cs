@@ -44,6 +44,7 @@ public partial class App : Application
     public static new App Current => (App)Application.Current;
 
     public AppSettings Settings { get; private set; } = null!;
+    public EventLog Events { get; private set; } = null!;
     public FileLoggerProvider LogFile { get; private set; } = null!;
     public CredentialStore Credentials { get; private set; } = null!;
     public TaskTracker Tasks { get; private set; } = null!;
@@ -73,7 +74,9 @@ public partial class App : Application
         _quotaSaveTimer.Tick += (_, _) => AppSettingsStore.Default.Save(Settings);
         Credentials = new CredentialStore();
         Tasks = new TaskTracker(TimeProvider.System);
-        Host = new CockpitHost(Credentials, Settings, Tasks, _loggers);
+        Events = new EventLog(AppPaths.EventsFolder, Settings.EventRetentionDays);
+        Events.Purge();
+        Host = new CockpitHost(Credentials, Settings, Tasks, Events, _loggers);
         Host.RequestSent += (_, _) => _dispatcher.TryEnqueue(CountRequest);
         Host.Fleet.MowerChanged += OnMowerChanged;
 
@@ -198,6 +201,14 @@ public partial class App : Application
             var alert = Tasks.Enrich(detected);
             LogAlert(_logger, alert.Kind, alert.Mower.Name, alert.ErrorCode);
             Notifications.Show(alert, Settings);
+            try
+            {
+                Events.Record(alert);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                LogEventNotRecorded(_logger, ex);
+            }
         }
     }
 
@@ -293,6 +304,9 @@ public partial class App : Application
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Alert {Kind} for {Mower} (code {Code})")]
     private static partial void LogAlert(ILogger logger, MowerAlertKind kind, string mower, int code);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Could not record an event")]
+    private static partial void LogEventNotRecorded(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Tray icon unavailable")]
     private static partial void LogTrayUnavailable(ILogger logger, Exception exception);

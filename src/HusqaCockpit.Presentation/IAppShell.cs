@@ -13,6 +13,8 @@ public interface IAppShell
 
     void OpenLogsFolder();
 
+    void OpenEventsFolder();
+
     /// <summary>How many log files are older than <paramref name="days"/> days, and so go if that becomes the retention.</summary>
     int CountLogsOlderThan(int days);
 

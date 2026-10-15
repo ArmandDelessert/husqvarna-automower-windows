@@ -108,18 +108,11 @@
                                         Tag="{x:Bind Id}">
                                         <Grid ColumnSpacing="10">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <Ellipse
-                                                Width="12"
-                                                Height="12"
-                                                Margin="0,8,0,0"
-                                                VerticalAlignment="Top"
-                                                Fill="{x:Bind local:BindingHelpers.SeverityBrush(Severity), Mode=OneWay}" />
-                                            <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                                            <StackPanel HorizontalAlignment="Left">
                                                 <TextBlock
                                                     Style="{StaticResource SubtitleTextBlockStyle}"
                                                     Text="{x:Bind Name, Mode=OneWay}"
@@ -127,7 +120,7 @@
                                                 <TextBlock Style="{StaticResource CaptionSecondaryStyle}" Text="{x:Bind Model, Mode=OneWay}" />
                                             </StackPanel>
                                             <StackPanel
-                                                Grid.Column="2"
+                                                Grid.Column="1"
                                                 Margin="0,6,0,0"
                                                 VerticalAlignment="Top"
                                                 Orientation="Horizontal"
@@ -136,7 +129,7 @@
                                                 <TextBlock Text="{x:Bind BatteryText, Mode=OneWay}" />
                                             </StackPanel>
                                             <FontIcon
-                                                Grid.Column="3"
+                                                Grid.Column="2"
                                                 Margin="0,8,0,0"
                                                 VerticalAlignment="Top"
                                                 FontSize="14"
@@ -147,13 +140,20 @@
 
                                     <!-- Status -->
                                     <StackPanel Grid.Row="1" Spacing="2">
-                                        <TextBlock
-                                            FontSize="18"
-                                            FontWeight="SemiBold"
-                                            MaxLines="2"
-                                            Text="{x:Bind StatusTitle, Mode=OneWay}"
-                                            TextTrimming="CharacterEllipsis"
-                                            TextWrapping="Wrap" />
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <FontIcon
+                                                VerticalAlignment="Center"
+                                                FontSize="20"
+                                                Foreground="{x:Bind local:BindingHelpers.SeverityBrush(Severity), Mode=OneWay}"
+                                                Glyph="{x:Bind StatusGlyph, Mode=OneWay}" />
+                                            <TextBlock
+                                                FontSize="18"
+                                                FontWeight="SemiBold"
+                                                MaxLines="2"
+                                                Text="{x:Bind StatusTitle, Mode=OneWay}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
                                         <TextBlock
                                             MaxLines="2"
                                             Style="{StaticResource SecondaryTextStyle}"

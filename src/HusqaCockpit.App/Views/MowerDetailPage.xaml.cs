@@ -8,22 +8,17 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HusqaCockpit.App.Views;
 
-public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
+public sealed partial class MowerDetailPage : Page
 {
     public MowerDetailPage()
     {
         InitializeComponent();
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <summary>Null only when navigation targeted a mower that no longer exists.</summary>
     public MowerViewModel? ViewModel { get; private set; }
 
     public string? MowerId => ViewModel?.Id;
-
-    public Visibility NoMessagesVisibility =>
-        ViewModel is { MessagesLoaded: true, Messages.Count: 0 } ? Visibility.Visible : Visibility.Collapsed;
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -36,6 +31,7 @@ public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
         }
 
         ViewModel = viewModel;
+        ViewModel.LoadEvents();
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         Bindings.Update();
         UpdateMap(recenter: true);
@@ -55,10 +51,6 @@ public sealed partial class MowerDetailPage : Page, INotifyPropertyChanged
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(MowerViewModel.MessagesLoaded))
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NoMessagesVisibility)));
-        }
         if (string.IsNullOrEmpty(e.PropertyName))
         {
             // The mower was updated: its track may have grown.

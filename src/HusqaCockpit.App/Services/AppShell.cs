@@ -35,9 +35,13 @@ public sealed class AppShell(App app) : IAppShell
         return await dialog.ShowAsync() == ContentDialogResult.Primary;
     }
 
-    public void OpenLogsFolder()
+    public void OpenLogsFolder() => OpenFolder(AppPaths.LogsFolder);
+
+    public void OpenEventsFolder() => OpenFolder(AppPaths.EventsFolder);
+
+    private static void OpenFolder(string folder)
     {
-        Directory.CreateDirectory(AppPaths.LogsFolder);
-        Process.Start(new ProcessStartInfo(AppPaths.LogsFolder) { UseShellExecute = true });
+        Directory.CreateDirectory(folder);
+        Process.Start(new ProcessStartInfo(folder) { UseShellExecute = true });
     }
 }

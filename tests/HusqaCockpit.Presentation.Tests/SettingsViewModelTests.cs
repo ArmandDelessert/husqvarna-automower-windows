@@ -61,7 +61,7 @@ public sealed class SettingsViewModelTests : IDisposable
         var page = Create();
 
         Assert.Equal(4, page.LogRetentionIndex);
-        Assert.Equal(["1 day", "3 days", "7 days", "14 days", "30 days", "90 days", "Keep for ever"], page.LogRetentionNames);
+        Assert.Equal(["1 day", "3 days", "7 days", "14 days", "30 days", "90 days", "Keep for ever"], page.RetentionNames);
         Assert.Equal(0, _store.Saves);
         Assert.Empty(_shell.LogRetentions);
     }
@@ -118,6 +118,75 @@ public sealed class SettingsViewModelTests : IDisposable
         Assert.Equal(2, page.LogRetentionIndex);
         Assert.Empty(_shell.LogRetentions);
         Assert.Equal(0, _store.Saves);
+    }
+
+    private void OldEventFiles(int count)
+    {
+        Directory.CreateDirectory(_host.Events.Directory);
+        for (var i = 0; i < count; i++)
+        {
+            File.WriteAllText(Path.Combine(_host.Events.Directory, $"events-{DateTime.Today.AddDays(-20 - i):yyyy-MM-dd}.jsonl"), "");
+        }
+    }
+
+    [Fact]
+    public void The_event_retention_shows_the_stored_choice_and_starts_at_thirty_days()
+    {
+        Assert.Equal(4, Create().EventRetentionIndex);   // 30 days
+
+        _settings.EventRetentionDays = 0;
+
+        Assert.Equal(6, Create().EventRetentionIndex);   // for ever
+        Assert.Equal(0, _store.Saves);
+    }
+
+    [Fact]
+    public void Shortening_the_event_retention_asks_first_and_deletes_after_a_yes()
+    {
+        OldEventFiles(2);
+        var page = Create();
+
+        page.EventRetentionIndex = 3;   // 14 days: both files are older
+
+        Assert.Equal("2 event file(s) older than 14 day(s) will be deleted at once, and cannot be recovered.\n\nContinue?", Assert.Single(_shell.Questions));
+        Assert.Equal(14, _settings.EventRetentionDays);
+        Assert.Equal(14, _host.Events.KeepDays);
+        Assert.Equal(1, _store.Saves);
+        Assert.Empty(Directory.GetFiles(_host.Events.Directory));
+    }
+
+    [Fact]
+    public void Refusing_keeps_the_event_files_and_the_choice()
+    {
+        OldEventFiles(2);
+        _shell.Confirms = false;
+        var page = Create();
+
+        page.EventRetentionIndex = 3;
+
+        Assert.Equal(30, _settings.EventRetentionDays);
+        Assert.Equal(4, page.EventRetentionIndex);
+        Assert.Equal(2, Directory.GetFiles(_host.Events.Directory).Length);
+        Assert.Equal(0, _store.Saves);
+    }
+
+    [Fact]
+    public void Lengthening_the_event_retention_does_not_ask()
+    {
+        var page = Create();
+
+        page.EventRetentionIndex = 5;   // 90 days
+
+        Assert.Equal(90, _settings.EventRetentionDays);
+        Assert.Empty(_shell.Questions);
+    }
+
+    [Fact]
+    public void The_events_folder_can_be_opened()
+    {
+        Create().OpenEventsFolderCommand.Execute(null);
+
+        Assert.Equal(1, _shell.EventFolderOpened);
     }
 
     [Fact]

@@ -233,6 +233,54 @@ public sealed class DashboardViewModelTests : IDisposable
         Assert.True(_dashboard.HasCommandMessage);
     }
 
+    // ----- Events -----
+
+    [Fact]
+    public void The_events_of_a_mower_are_read_from_the_files_when_asked_and_new_ones_join_the_list_live()
+    {
+        Snapshot(("a", TestMowers.Parked("Alpha")), ("b", TestMowers.Parked("Bravo")));
+        var alpha = _dashboard.Find("a")!;
+        _host.Events.Record(new MowerAlert(MowerAlertKind.Error, TestMowers.Create(TestMowers.Parked("Alpha"), "a"), 1));
+        Assert.Empty(alpha.Events);   // not loaded yet: the page has not been opened
+
+        alpha.LoadEvents();
+        Assert.True(alpha.HasEvents);
+        Assert.Equal("Error", Assert.Single(alpha.Events).Title);
+
+        _host.Events.Record(new MowerAlert(MowerAlertKind.ErrorCleared, TestMowers.Create(TestMowers.Parked("Alpha"), "a"), 1));
+        _host.Events.Record(new MowerAlert(MowerAlertKind.Disconnected, TestMowers.Create(TestMowers.Parked("Bravo"), "b")));
+
+        Assert.Equal(["Error resolved", "Error"], alpha.Events.Select(e => e.Title));
+        Assert.Empty(_dashboard.Find("b")!.Events);
+    }
+
+    [Fact]
+    public void A_mower_without_events_has_none()
+    {
+        Snapshot(("a", TestMowers.Parked("Alpha")));
+        var alpha = _dashboard.Find("a")!;
+
+        alpha.LoadEvents();
+
+        Assert.False(alpha.HasEvents);
+        Assert.Empty(alpha.Events);
+    }
+
+    [Fact]
+    public void Only_the_latest_fifty_events_are_kept_in_the_list()
+    {
+        Snapshot(("a", TestMowers.Parked("Alpha")));
+        var alpha = _dashboard.Find("a")!;
+        alpha.LoadEvents();
+
+        for (var i = 0; i < 60; i++)
+        {
+            _host.Events.Record(new MowerAlert(MowerAlertKind.Reconnected, TestMowers.Create(TestMowers.Parked("Alpha"), "a")));
+        }
+
+        Assert.Equal(50, alpha.Events.Count);
+    }
+
     private void Snapshot(params (string Id, MowerAttributes Attributes)[] mowers) =>
         _host.Fleet.ApplySnapshot(mowers.Select(m => TestMowers.Resource(m.Id, m.Attributes)));
 

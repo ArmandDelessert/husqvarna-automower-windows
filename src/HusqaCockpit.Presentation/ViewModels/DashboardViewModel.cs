@@ -28,6 +28,7 @@ public sealed partial class DashboardViewModel : ObservableObject, IDisposable
         _host.Fleet.MowerChanged += (_, e) => OnUiThread(() => OnMowerChanged(e.Current));
         _host.Fleet.MowerRemoved += (_, e) => OnUiThread(() => OnMowerRemoved(e.Mower));
         _host.StatusChanged += (_, _) => OnUiThread(UpdateStatus);
+        _host.Events.Recorded += (_, entry) => OnUiThread(() => Find(entry.MowerId)?.AddEvent(entry));
 
         // Keeps "updated 3 min ago" texts current.
         _ticker = time.CreateTimer(_ => OnUiThread(Tick), null, s_tickInterval, s_tickInterval);

@@ -70,9 +70,16 @@
                     <ComboBox
                         x:Uid="Settings_LogRetention"
                         MinWidth="220"
-                        ItemsSource="{x:Bind ViewModel.LogRetentionNames}"
+                        ItemsSource="{x:Bind ViewModel.RetentionNames}"
                         SelectedIndex="{x:Bind ViewModel.LogRetentionIndex, Mode=TwoWay}" />
                     <TextBlock x:Uid="Settings_LogRetentionHelp" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
+                    <ComboBox
+                        x:Uid="Settings_EventRetention"
+                        MinWidth="220"
+                        ItemsSource="{x:Bind ViewModel.RetentionNames}"
+                        SelectedIndex="{x:Bind ViewModel.EventRetentionIndex, Mode=TwoWay}" />
+                    <TextBlock x:Uid="Settings_EventRetentionHelp" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
+                    <HyperlinkButton x:Uid="Settings_OpenEvents" Padding="0" Command="{x:Bind ViewModel.OpenEventsFolderCommand}" />
                     <HyperlinkButton x:Uid="Settings_OpenLogs" Padding="0" Command="{x:Bind ViewModel.OpenLogsFolderCommand}" />
                 </StackPanel>
             </Border>

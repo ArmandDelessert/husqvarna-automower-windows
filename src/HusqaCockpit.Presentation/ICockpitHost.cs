@@ -17,6 +17,9 @@ public interface ICockpitHost
 
     MonitorStatus Status { get; }
 
+    /// <summary>The events seen on the mowers, kept in files.</summary>
+    EventLog Events { get; }
+
     bool HasCredentials { get; }
 
     /// <summary>Raised on a background thread.</summary>
@@ -38,8 +41,6 @@ public interface ICockpitHost
     Task ResetBladeUsageAsync(string mowerId);
 
     Task ConfirmErrorAsync(string mowerId);
-
-    Task<IReadOnlyList<MowerMessage>> GetMessagesAsync(string mowerId);
 
     /// <summary>Checks a key/secret pair by logging in and listing the mowers.</summary>
     Task<CredentialTestResult> TestCredentialsAsync(ApiCredentials credentials);

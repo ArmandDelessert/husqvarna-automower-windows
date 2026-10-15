@@ -11,8 +11,6 @@ public sealed record ScheduleItem(string Days, string Hours);
 
 public sealed record StatisticItem(string Label, string Value);
 
-public sealed record MessageItem(string When, string Text, string Severity, string Glyph);
-
 /// <summary>One mower card / detail page. All members must be used on the UI thread.</summary>
 public sealed partial class MowerViewModel : ObservableObject
 {
@@ -23,6 +21,7 @@ public sealed partial class MowerViewModel : ObservableObject
     private readonly IStrings _strings;
     private readonly MowerFormatter _formatter;
     private readonly TimeProvider _time;
+    private readonly EventFormatter _events;
     private Mower _mower;
 
     public MowerViewModel(Mower mower, ICockpitHost host, IStrings strings, TimeProvider time)
@@ -31,6 +30,7 @@ public sealed partial class MowerViewModel : ObservableObject
         _strings = strings;
         _time = time;
         _formatter = new MowerFormatter(strings);
+        _events = new EventFormatter(strings);
         _mower = mower;
         Id = mower.Id;
         HeadlightModeNames = HeadlightModes.Select(m => strings.EnumText(m)).ToList();
@@ -138,11 +138,44 @@ public sealed partial class MowerViewModel : ObservableObject
             "https://www.openstreetmap.org/?mlat={0}&mlon={1}#map=19/{0}/{1}", p.Latitude, p.Longitude))
         : null;
 
-    // ----- Messages -----
-    public ObservableCollection<MessageItem> Messages { get; } = [];
+    // ----- Events -----
 
-    [ObservableProperty]
-    public partial bool MessagesLoaded { get; set; }
+    private const int EventsShown = 50;
+
+    /// <summary>The latest events of the mower, the newest first (see <see cref="LoadEvents"/>).</summary>
+    public ObservableCollection<EventItem> Events { get; } = [];
+
+    public bool HasEvents => Events.Count > 0;
+
+    private bool _eventsLoaded;
+
+    /// <summary>Reads the latest events from the files, when the detail page opens; after that, <see cref="AddEvent"/> keeps them current.</summary>
+    public void LoadEvents()
+    {
+        var now = _time.GetLocalNow();
+        Events.Clear();
+        foreach (var entry in _host.Events.Recent(Id, EventsShown))
+        {
+            Events.Add(_events.Describe(entry, now));
+        }
+        _eventsLoaded = true;
+        OnPropertyChanged(nameof(HasEvents));
+    }
+
+    /// <summary>Puts a new event of this mower at the top of the list, if the list has been loaded.</summary>
+    public void AddEvent(EventEntry entry)
+    {
+        if (!_eventsLoaded || entry.MowerId != Id)
+        {
+            return;
+        }
+        Events.Insert(0, _events.Describe(entry, _time.GetLocalNow()));
+        while (Events.Count > EventsShown)
+        {
+            Events.RemoveAt(Events.Count - 1);
+        }
+        OnPropertyChanged(nameof(HasEvents));
+    }
 
     // ----- Command feedback -----
     [ObservableProperty]
@@ -224,37 +257,6 @@ public sealed partial class MowerViewModel : ObservableObject
 
     [RelayCommand]
     private Task ResetBladeUsageAsync() => RunAsync(() => _host.ResetBladeUsageAsync(Id), "Command_BladeResetSent");
-
-    [RelayCommand]
-    private async Task LoadMessagesAsync()
-    {
-        IsBusy = true;
-        try
-        {
-            var messages = await _host.GetMessagesAsync(Id);
-            Messages.Clear();
-            foreach (var message in messages.OrderByDescending(m => m.Time).Take(50))
-            {
-                var when = MowerTime.FromMowerLocal(message.Time, _mower.TimeZone);
-                Messages.Add(new MessageItem(
-                    when?.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) ?? "",
-                    _strings.ErrorCode(message.Code),
-                    _strings.EnumText(message.Severity),
-                    message.Severity is MessageSeverity.Error or MessageSeverity.Fatal ? "" : ""));
-            }
-            MessagesLoaded = true;
-            CommandMessage = null;
-        }
-        catch (Exception ex)
-        {
-            CommandFailed = true;
-            CommandMessage = _strings.Format("Command_Failed", ex.Message);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
 
     private async Task RunAsync(Func<Task> action, string successKey)
     {

@@ -18,12 +18,17 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
 
 ## Features
 
-- **Dashboard** with one card per mower: activity, battery, next scheduled start, current error, cutting height,
+- **Dashboard** with one card per mower: status (with an icon colored by severity), battery, next scheduled start, current error, cutting height,
   headlights and time of the last update.
 - **Commands**: mow for a given duration, pause, park (until the next schedule, until further notice or for a duration),
   resume the schedule — per mower or for all mowers at once.
-- **Mower details**: cutting height and headlight settings, lifetime statistics, event history, blade-usage counter
-  reset, error acknowledgement.
+- **Mower details**: cutting height and headlight settings, lifetime statistics, blade-usage counter reset, error
+  acknowledgement, and the **event history** of the mower (see below).
+- **Event history**: the app records what it sees on the mowers (start and end of mowing tasks, errors and their end,
+  stops, connection lost and back) in one JSON-lines file a day, and shows the latest ones at the bottom of the detail
+  page of each mower. The Husqvarna API keeps no such history (its message list stays empty). The files are kept for a
+  duration you choose (Settings › Logs: 1 to 90 days, or for ever; 30 days by default); shortening it asks first when
+  files would be deleted.
 - **Schedule editor**: add, change and remove the weekly time slots of a mower (start, end, days). An end of 00:00 means
   midnight, so 00:00–00:00 is the whole day. Overlapping slots, empty days and slots running past midnight are rejected
   before anything is sent.
@@ -35,7 +40,7 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
   (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
 - **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Notifications, Behavior (notification
-  area, start with Windows, refresh interval), Language (with a *Restart now* button), Logs (how long they are kept, and a link to their folder), Husqvarna API (the key and the
+  area, start with Windows, refresh interval), Language (with a *Restart now* button), Logs (how long the log files and the event history are kept, with a link to each folder), Husqvarna API (the key and the
   request counter, in the place of DySS's account section) and About (version and commit, repository).
 - **Navigation**: the back button of the mouse, the browser-back key and Alt+Left go to the previous page, like the
   back button of the title bar. A *Quit* button at the bottom of the navigation bar closes the application for good
@@ -69,7 +74,9 @@ The executable is not signed: on first launch, Windows SmartScreen asks for a co
 Requirements: Windows 10 version 2004 (build 19041) or later, or Windows 11, and the Microsoft Edge WebView2 runtime
 (preinstalled on Windows 11; used for the map).
 
-Preferences, the WebView2 cache and the logs (one file a day, kept 7 days unless Settings › Logs says otherwise: 1 to 90 days, or for ever) are stored in `%LocalAppData%\HusqA Cockpit`.
+Preferences, the WebView2 cache, the logs (`Logs`, one file a day, kept 7 days by default) and the event history
+(`Events`, one file a day, kept 30 days by default) are stored in `%LocalAppData%\HusqA Cockpit`. Both durations are
+chosen in Settings › Logs: 1 to 90 days, or for ever.
 
 ## How it works
 
@@ -159,6 +166,8 @@ python tools/strings/generate_resw.py
   application on the developer portal usually fixes it.
 - The schedule of mowers with work areas (EPOS / NERA models) cannot be edited yet.
 - The map shows the last 50 positions reported by the mower, not the full history of the day.
+- The event history only holds what the app saw while it was running: nothing is recorded while it is closed, and in
+  polling mode a task shorter than the refresh interval is not seen.
 - Work areas and stay-out zones (EPOS / NERA models) are not displayed yet.
 - Mowers are assumed to be in the same time zone as the PC.
 - The end of mowing notification also fires when a restriction interrupts the task (rain sensor, frost, a daily limit),

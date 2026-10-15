@@ -19,6 +19,9 @@ internal sealed class FakeCockpitHost : ICockpitHost
 
     public MonitorStatus Status { get; private set; } = new(MonitorState.Stopped);
 
+    /// <summary>Writes under a folder of its own, created only when an event is recorded.</summary>
+    public EventLog Events { get; } = new(Path.Combine(Path.GetTempPath(), "husqa-tests-" + Guid.NewGuid().ToString("N")), keepDays: 30);
+
     public bool HasCredentials { get; set; } = true;
 
     /// <summary>Commands received, such as "ParkUntilFurtherNotice mower-1".</summary>
@@ -60,8 +63,6 @@ internal sealed class FakeCockpitHost : ICockpitHost
     public Task ResetBladeUsageAsync(string mowerId) => Record(mowerId, "ResetBladeUsage");
 
     public Task ConfirmErrorAsync(string mowerId) => Record(mowerId, "ConfirmError");
-
-    public Task<IReadOnlyList<MowerMessage>> GetMessagesAsync(string mowerId) => Task.FromResult<IReadOnlyList<MowerMessage>>([]);
 
     public Task<CredentialTestResult> TestCredentialsAsync(ApiCredentials credentials) => Task.FromResult(CredentialTest);
 
@@ -109,6 +110,10 @@ internal sealed class FakeShell : IAppShell
     public void OpenLogsFolder()
     {
     }
+
+    public int EventFolderOpened { get; private set; }
+
+    public void OpenEventsFolder() => EventFolderOpened++;
 
     public int ExpiredLogs { get; set; }
 

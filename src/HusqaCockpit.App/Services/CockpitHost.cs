@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace HusqaCockpit.App.Services;
 
 /// <summary>Owns the connection to Husqvarna: creates, restarts and stops the <see cref="FleetMonitor"/>.</summary>
-public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, TaskTracker tasks, ILoggerFactory loggers) : ICockpitHost, IAsyncDisposable
+public sealed partial class CockpitHost(CredentialStore credentialStore, AppSettings settings, TaskTracker tasks, EventLog events, ILoggerFactory loggers) : ICockpitHost, IAsyncDisposable
 {
     private static readonly TimeSpan s_refreshAfterCommand = TimeSpan.FromSeconds(15);
 
@@ -20,6 +20,9 @@ public sealed partial class CockpitHost(CredentialStore credentialStore, AppSett
     public MowerFleet Fleet { get; } = new();
 
     public MonitorStatus Status => _session?.Monitor.Status ?? new MonitorStatus(MonitorState.Stopped);
+
+    /// <summary>The events seen on the mowers, kept in files.</summary>
+    public EventLog Events => events;
 
     public bool HasCredentials => credentialStore.LoadCredentials() is not null;
 
@@ -111,9 +114,6 @@ public sealed partial class CockpitHost(CredentialStore credentialStore, AppSett
 
     public Task ConfirmErrorAsync(string mowerId) =>
         RunCommandAsync(api => api.ConfirmErrorAsync(mowerId));
-
-    public Task<IReadOnlyList<MowerMessage>> GetMessagesAsync(string mowerId) =>
-        RequireSession().Api.GetMessagesAsync(mowerId);
 
     /// <summary>Checks a key/secret pair by logging in and listing the mowers.</summary>
     public async Task<CredentialTestResult> TestCredentialsAsync(ApiCredentials credentials)

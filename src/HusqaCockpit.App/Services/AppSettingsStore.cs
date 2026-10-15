@@ -20,9 +20,14 @@ public sealed class AppSettingsStore : ISettingsStore
             if (File.Exists(FilePath))
             {
                 var settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), s_options) ?? new AppSettings();
-                if (!AppSettings.LogRetentionChoices.Contains(settings.LogRetentionDays))
+                var defaults = new AppSettings();
+                if (!AppSettings.RetentionChoices.Contains(settings.LogRetentionDays))
                 {
-                    settings.LogRetentionDays = new AppSettings().LogRetentionDays;
+                    settings.LogRetentionDays = defaults.LogRetentionDays;
+                }
+                if (!AppSettings.RetentionChoices.Contains(settings.EventRetentionDays))
+                {
+                    settings.EventRetentionDays = defaults.EventRetentionDays;
                 }
                 return settings;
             }
@@ -52,6 +57,8 @@ public static class AppPaths
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HusqA Cockpit");
 
     public static string LogsFolder { get; } = Path.Combine(DataFolder, "Logs");
+
+    public static string EventsFolder { get; } = Path.Combine(DataFolder, "Events");
 
     public static string InstallFolder { get; } = AppContext.BaseDirectory;
 
