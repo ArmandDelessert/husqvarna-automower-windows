@@ -35,8 +35,8 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
   (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
 - **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Notifications, Behavior (notification
-  area, start with Windows, refresh interval), Language (with a *Restart now* button), Logs (how long they are kept), Husqvarna API (the key and the
-  request counter, in the place of DySS's account section) and About (version and commit, repository, logs folder).
+  area, start with Windows, refresh interval), Language (with a *Restart now* button), Logs (how long they are kept, and a link to their folder), Husqvarna API (the key and the
+  request counter, in the place of DySS's account section) and About (version and commit, repository).
 - **Navigation**: the back button of the mouse, the browser-back key and Alt+Left go to the previous page, like the
   back button of the title bar. A *Quit* button at the bottom of the navigation bar closes the application for good
   (closing the window only sends it to the notification area).
