@@ -289,7 +289,7 @@ STRINGS = {
     "Map_GetWebView2.Content": ("Download WebView2", "Télécharger WebView2"),
     "Detail_EventsHeader.Text": ("Event history", "Historique des événements"),
     "Detail_NoEvents.Text": ("No event recorded for this mower yet.", "Aucun événement enregistré pour cette tondeuse pour l'instant."),
-    "Detail_EventsHint.Text": ("The app notes the start and end of mowing tasks, errors, stops and lost connections it sees while it is running. The Husqvarna API itself keeps no such history.", "L'application note ici les débuts et fins de tonte, les erreurs, les arrêts et les pertes de connexion qu'elle voit tant qu'elle tourne. L'API de Husqvarna ne conserve pas d'historique de ce genre."),
+    "Detail_EventsHint.Text": ("The app notes the start and end of mowing tasks, errors, stops and lost connections it sees while it is running.", "L'application note ici les débuts et fins de tonte, les erreurs, les arrêts et les pertes de connexion qu'elle voit tant qu'elle tourne."),
     "History_Error": ("Error", "Erreur"),
     "History_Alarm": ("Theft alarm", "Alarme antivol"),
     "History_ErrorCleared": ("Error resolved", "Erreur résolue"),

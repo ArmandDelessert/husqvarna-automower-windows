@@ -266,7 +266,7 @@
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Télécharger WebView2</value></data>
   <data name="Detail_EventsHeader.Text" xml:space="preserve"><value>Historique des événements</value></data>
   <data name="Detail_NoEvents.Text" xml:space="preserve"><value>Aucun événement enregistré pour cette tondeuse pour l'instant.</value></data>
-  <data name="Detail_EventsHint.Text" xml:space="preserve"><value>L'application note ici les débuts et fins de tonte, les erreurs, les arrêts et les pertes de connexion qu'elle voit tant qu'elle tourne. L'API de Husqvarna ne conserve pas d'historique de ce genre.</value></data>
+  <data name="Detail_EventsHint.Text" xml:space="preserve"><value>L'application note ici les débuts et fins de tonte, les erreurs, les arrêts et les pertes de connexion qu'elle voit tant qu'elle tourne.</value></data>
   <data name="History_Error" xml:space="preserve"><value>Erreur</value></data>
   <data name="History_Alarm" xml:space="preserve"><value>Alarme antivol</value></data>
   <data name="History_ErrorCleared" xml:space="preserve"><value>Erreur résolue</value></data>

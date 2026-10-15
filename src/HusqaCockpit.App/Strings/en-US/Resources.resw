@@ -266,7 +266,7 @@
   <data name="Map_GetWebView2.Content" xml:space="preserve"><value>Download WebView2</value></data>
   <data name="Detail_EventsHeader.Text" xml:space="preserve"><value>Event history</value></data>
   <data name="Detail_NoEvents.Text" xml:space="preserve"><value>No event recorded for this mower yet.</value></data>
-  <data name="Detail_EventsHint.Text" xml:space="preserve"><value>The app notes the start and end of mowing tasks, errors, stops and lost connections it sees while it is running. The Husqvarna API itself keeps no such history.</value></data>
+  <data name="Detail_EventsHint.Text" xml:space="preserve"><value>The app notes the start and end of mowing tasks, errors, stops and lost connections it sees while it is running.</value></data>
   <data name="History_Error" xml:space="preserve"><value>Error</value></data>
   <data name="History_Alarm" xml:space="preserve"><value>Theft alarm</value></data>
   <data name="History_ErrorCleared" xml:space="preserve"><value>Error resolved</value></data>
