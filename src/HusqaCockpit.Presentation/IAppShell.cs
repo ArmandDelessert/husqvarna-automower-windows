@@ -12,4 +12,13 @@ public interface IAppShell
     void Restart();
 
     void OpenLogsFolder();
+
+    /// <summary>How many log files are older than <paramref name="days"/> days, and so go if that becomes the retention.</summary>
+    int CountLogsOlderThan(int days);
+
+    /// <summary>Keeps the log files for <paramref name="days"/> days (0 for ever): the older ones are deleted at once.</summary>
+    void SetLogRetention(int days);
+
+    /// <summary>Asks a yes/no question to the user; true for yes.</summary>
+    Task<bool> ConfirmAsync(string title, string message, string confirmText);
 }

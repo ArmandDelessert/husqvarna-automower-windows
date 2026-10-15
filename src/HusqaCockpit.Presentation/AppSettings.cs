@@ -45,6 +45,12 @@ public sealed class AppSettings
     /// <summary>API requests sent from this computer during <see cref="QuotaMonth"/>.</summary>
     public int QuotaRequests { get; set; }
 
+    /// <summary>The numbers of days the log files can be kept, 0 for ever.</summary>
+    public static System.Collections.Immutable.ImmutableArray<int> LogRetentionChoices { get; } = [1, 3, 7, 14, 30, 90, 0];
+
+    /// <summary>How many days back the log files are kept, 0 for ever. One of <see cref="LogRetentionChoices"/>.</summary>
+    public int LogRetentionDays { get; set; } = 7;
+
     public WindowBounds? Window { get; set; }
 }
 

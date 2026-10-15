@@ -19,7 +19,12 @@ public sealed class AppSettingsStore : ISettingsStore
         {
             if (File.Exists(FilePath))
             {
-                return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), s_options) ?? new AppSettings();
+                var settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), s_options) ?? new AppSettings();
+                if (!AppSettings.LogRetentionChoices.Contains(settings.LogRetentionDays))
+                {
+                    settings.LogRetentionDays = new AppSettings().LogRetentionDays;
+                }
+                return settings;
             }
         }
         catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException)

@@ -42,6 +42,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         _initialLanguage = settings.Language;
         PollingIntervalNames = s_pollingIntervals.Select(m => strings.Format("Settings_EveryMinutes", m)).ToList();
         TaskNotificationNames = s_taskNotificationModes.Select(strings.EnumText).ToList();
+        LogRetentionNames = AppSettings.LogRetentionChoices.Select(RetentionName).ToList();
         VersionText = VersionTextOf(strings, Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion);
 
         var stored = credentials.LoadCredentials();
@@ -51,6 +52,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         LanguageIndex = Math.Max(0, Array.IndexOf(s_languages, settings.Language));
         PollingIntervalIndex = Math.Max(0, Array.IndexOf(s_pollingIntervals, settings.PollingIntervalMinutes));
         TaskNotificationsIndex = Math.Max(0, Array.IndexOf(s_taskNotificationModes, settings.TaskNotifications));
+        LogRetentionIndex = Math.Max(0, AppSettings.LogRetentionChoices.IndexOf(settings.LogRetentionDays));
         StartWithWindows = shell.StartsWithWindows;
         _initialized = true;
     }
@@ -231,6 +233,55 @@ public sealed partial class SettingsViewModel : ObservableObject
         _settings.PollingIntervalMinutes = s_pollingIntervals[value];
         _store.Save(_settings);
         _ = _host.RestartAsync();
+    }
+
+    // ----- Logs -----
+
+    /// <summary>The names of the choices of <see cref="LogRetentionIndex"/>: 1, 3, 7, 14, 30, 90 days, then for ever.</summary>
+    public IReadOnlyList<string> LogRetentionNames { get; }
+
+    /// <summary>Index of <see cref="AppSettings.LogRetentionDays"/> in <see cref="AppSettings.LogRetentionChoices"/>.</summary>
+    [ObservableProperty]
+    public partial int LogRetentionIndex { get; set; }
+
+    private bool _revertingRetention;
+
+    private string RetentionName(int days) =>
+        days == 0 ? _strings.Text("Settings_RetentionForever") : _strings.Format(days == 1 ? "Settings_RetentionDay" : "Settings_RetentionDays", days);
+
+    partial void OnLogRetentionIndexChanged(int value)
+    {
+        if (!_initialized || _revertingRetention || value < 0 || value >= AppSettings.LogRetentionChoices.Length)
+        {
+            return;
+        }
+        _ = ChangeLogRetentionAsync(AppSettings.LogRetentionChoices[value]);
+    }
+
+    /// <summary>
+    /// Applies the new retention. A shorter one deletes files at once, with no bin to take them back, so the user is asked
+    /// first when some would go; on a no, the list goes back to what it was.
+    /// </summary>
+    private async Task ChangeLogRetentionAsync(int days)
+    {
+        if (days == _settings.LogRetentionDays)
+        {
+            return;
+        }
+        var expired = days == 0 ? 0 : _shell.CountLogsOlderThan(days);
+        if (expired > 0 && !await _shell.ConfirmAsync(
+                _strings.Text("Settings_LogRetentionTitle"),
+                _strings.Format("Settings_LogRetentionConfirm", expired, days),
+                _strings.Text("Dialog_Delete")))
+        {
+            _revertingRetention = true;
+            try { LogRetentionIndex = AppSettings.LogRetentionChoices.IndexOf(_settings.LogRetentionDays); }
+            finally { _revertingRetention = false; }
+            return;
+        }
+        _settings.LogRetentionDays = days;
+        _store.Save(_settings);
+        _shell.SetLogRetention(days);
     }
 
     // ----- Usage & about -----

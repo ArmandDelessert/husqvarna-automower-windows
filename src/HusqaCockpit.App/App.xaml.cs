@@ -44,6 +44,7 @@ public partial class App : Application
     public static new App Current => (App)Application.Current;
 
     public AppSettings Settings { get; private set; } = null!;
+    public FileLoggerProvider LogFile { get; private set; } = null!;
     public CredentialStore Credentials { get; private set; } = null!;
     public TaskTracker Tasks { get; private set; } = null!;
     public CockpitHost Host { get; private set; } = null!;
@@ -58,13 +59,14 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         _dispatcher = DispatcherQueue.GetForCurrentThread();
+        Settings = AppSettingsStore.Load();
+        LogFile = new FileLoggerProvider(AppPaths.LogsFolder, LogLevel.Information, Settings.LogRetentionDays);
         _loggers = LoggerFactory.Create(builder => builder
             .SetMinimumLevel(LogLevel.Debug)
-            .AddProvider(new FileLoggerProvider(AppPaths.LogsFolder, LogLevel.Information)));
+            .AddProvider(LogFile));
         _logger = _loggers.CreateLogger<App>();
         LogStarting(_logger, CultureInfo.CurrentUICulture.Name);
 
-        Settings = AppSettingsStore.Load();
         _quotaSaveTimer = _dispatcher.CreateTimer();
         _quotaSaveTimer.Interval = s_quotaSaveDelay;
         _quotaSaveTimer.IsRepeating = false;

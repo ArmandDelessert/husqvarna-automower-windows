@@ -63,6 +63,19 @@
                 </StackPanel>
             </Border>
 
+            <!-- Logs -->
+            <TextBlock x:Uid="Settings_LogsHeader" Style="{StaticResource SectionHeaderStyle}" />
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="12">
+                    <ComboBox
+                        x:Uid="Settings_LogRetention"
+                        MinWidth="220"
+                        ItemsSource="{x:Bind ViewModel.LogRetentionNames}"
+                        SelectedIndex="{x:Bind ViewModel.LogRetentionIndex, Mode=TwoWay}" />
+                    <TextBlock x:Uid="Settings_LogRetentionHelp" Style="{StaticResource CaptionSecondaryStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
             <!-- Husqvarna API: the key, and how much of the monthly quota this computer used -->
             <TextBlock x:Name="ApiHeader" x:Uid="Settings_ApiHeader" Style="{StaticResource SectionHeaderStyle}" />
             <Border Style="{StaticResource CardStyle}">

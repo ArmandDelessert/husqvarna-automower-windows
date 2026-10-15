@@ -5,25 +5,39 @@ using Microsoft.Extensions.Logging;
 
 namespace HusqaCockpit.App.Services;
 
-/// <summary>Minimal daily-rolling file logger (keeps one week of logs) for troubleshooting.</summary>
+/// <summary>Minimal daily-rolling file logger for troubleshooting; the files are kept for a chosen number of days.</summary>
 public sealed class FileLoggerProvider : ILoggerProvider
 {
-    private static readonly TimeSpan s_retention = TimeSpan.FromDays(7);
-
     private readonly string _folder;
     private readonly LogLevel _minimumLevel;
     private readonly BlockingCollection<string> _queue = new(boundedCapacity: 10_000);
     private readonly Thread _writer;
+    private int _retentionDays;
 
-    public FileLoggerProvider(string folder, LogLevel minimumLevel)
+    public FileLoggerProvider(string folder, LogLevel minimumLevel, int retentionDays)
     {
         _folder = folder;
         _minimumLevel = minimumLevel;
+        _retentionDays = retentionDays;
         Directory.CreateDirectory(folder);
         DeleteOldLogs();
         _writer = new Thread(WriteLoop) { IsBackground = true, Name = "Log writer" };
         _writer.Start();
     }
+
+    /// <summary>How many days a file is kept after its last write, 0 for ever. Setting it deletes the files now too old at once.</summary>
+    public int RetentionDays
+    {
+        get => Volatile.Read(ref _retentionDays);
+        set
+        {
+            Volatile.Write(ref _retentionDays, value);
+            DeleteOldLogs();
+        }
+    }
+
+    /// <summary>How many log files of <paramref name="folder"/> were last written more than <paramref name="days"/> days ago (none when 0, for ever).</summary>
+    public static int CountOlderThan(string folder, int days) => OlderThan(folder, days).Count;
 
     public ILogger CreateLogger(string categoryName) => new FileLogger(this, ShortName(categoryName));
 
@@ -57,17 +71,24 @@ public sealed class FileLoggerProvider : ILoggerProvider
     {
         try
         {
-            foreach (var file in Directory.EnumerateFiles(_folder, "*.log"))
+            foreach (var file in OlderThan(_folder, RetentionDays))
             {
-                if (DateTime.Now - File.GetLastWriteTime(file) > s_retention)
-                {
-                    File.Delete(file);
-                }
+                File.Delete(file);
             }
         }
         catch (IOException)
         {
         }
+    }
+
+    private static List<string> OlderThan(string folder, int days)
+    {
+        if (days <= 0 || !Directory.Exists(folder))
+        {
+            return [];
+        }
+        var limit = TimeSpan.FromDays(days);
+        return Directory.EnumerateFiles(folder, "*.log").Where(file => DateTime.Now - File.GetLastWriteTime(file) > limit).ToList();
     }
 
     private sealed class FileLogger(FileLoggerProvider owner, string category) : ILogger

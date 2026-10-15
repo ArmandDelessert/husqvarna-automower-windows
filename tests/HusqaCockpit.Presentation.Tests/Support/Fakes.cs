@@ -109,4 +109,22 @@ internal sealed class FakeShell : IAppShell
     public void OpenLogsFolder()
     {
     }
+
+    public int ExpiredLogs { get; set; }
+
+    public bool Confirms { get; set; } = true;
+
+    public List<string> Questions { get; } = [];
+
+    public List<int> LogRetentions { get; } = [];
+
+    public int CountLogsOlderThan(int days) => ExpiredLogs;
+
+    public void SetLogRetention(int days) => LogRetentions.Add(days);
+
+    public Task<bool> ConfirmAsync(string title, string message, string confirmText)
+    {
+        Questions.Add(message);
+        return Task.FromResult(Confirms);
+    }
 }

@@ -35,7 +35,7 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   (Settings › Notifications: none, end only, or start and end; none by default). The start says why the mower left
   (its schedule, a command from the app, or a manual start) and the end how long the task lasted.
 - **Settings** in the same order as in DySS Cockpit, its twin for Dyson robots: Notifications, Behavior (notification
-  area, start with Windows, refresh interval), Language (with a *Restart now* button), Husqvarna API (the key and the
+  area, start with Windows, refresh interval), Language (with a *Restart now* button), Logs (how long they are kept), Husqvarna API (the key and the
   request counter, in the place of DySS's account section) and About (version and commit, repository, logs folder).
 - **Navigation**: the back button of the mouse, the browser-back key and Alt+Left go to the previous page, like the
   back button of the title bar. A *Quit* button at the bottom of the navigation bar closes the application for good
@@ -69,7 +69,7 @@ The executable is not signed: on first launch, Windows SmartScreen asks for a co
 Requirements: Windows 10 version 2004 (build 19041) or later, or Windows 11, and the Microsoft Edge WebView2 runtime
 (preinstalled on Windows 11; used for the map).
 
-Preferences, the WebView2 cache and the logs (one file a day, kept a week) are stored in `%LocalAppData%\HusqA Cockpit`.
+Preferences, the WebView2 cache and the logs (one file a day, kept 7 days unless Settings › Logs says otherwise: 1 to 90 days, or for ever) are stored in `%LocalAppData%\HusqA Cockpit`.
 
 ## How it works
 

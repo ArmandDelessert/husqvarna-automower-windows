@@ -290,6 +290,17 @@
   <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Start with Windows (in the notification area)</value></data>
   <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Refresh interval without real-time updates</value></data>
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna allows {0} requests per month per key. Every {1} minutes uses about {2} requests per month.</value></data>
+  <data name="Settings_LogsHeader.Text" xml:space="preserve"><value>Logs</value></data>
+  <data name="Settings_LogRetention.Header" xml:space="preserve"><value>Keep the logs for</value></data>
+  <data name="Settings_LogRetentionHelp.Text" xml:space="preserve"><value>One file a day, in the logs folder. The oldest ones are deleted when the app starts, and at once when you shorten the duration.</value></data>
+  <data name="Settings_RetentionDay" xml:space="preserve"><value>{0} day</value></data>
+  <data name="Settings_RetentionDays" xml:space="preserve"><value>{0} days</value></data>
+  <data name="Settings_RetentionForever" xml:space="preserve"><value>Keep for ever</value></data>
+  <data name="Settings_LogRetentionTitle" xml:space="preserve"><value>Delete old logs?</value></data>
+  <data name="Settings_LogRetentionConfirm" xml:space="preserve"><value>{0} log file(s) older than {1} day(s) will be deleted at once, and cannot be recovered.
+
+Continue?</value></data>
+  <data name="Dialog_Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Settings_LanguageHeader.Text" xml:space="preserve"><value>Language</value></data>
   <data name="Settings_Language.Header" xml:space="preserve"><value>Display language</value></data>
   <data name="Settings_LanguageSystem.Content" xml:space="preserve"><value>Automatic (Windows language)</value></data>

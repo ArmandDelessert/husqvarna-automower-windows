@@ -54,6 +54,73 @@ public sealed class SettingsViewModelTests : IDisposable
     }
 
     [Fact]
+    public void The_log_retention_list_shows_the_stored_choice_without_saving()
+    {
+        _settings.LogRetentionDays = 30;
+
+        var page = Create();
+
+        Assert.Equal(4, page.LogRetentionIndex);
+        Assert.Equal(["1 day", "3 days", "7 days", "14 days", "30 days", "90 days", "Keep for ever"], page.LogRetentionNames);
+        Assert.Equal(0, _store.Saves);
+        Assert.Empty(_shell.LogRetentions);
+    }
+
+    [Fact]
+    public void Lengthening_the_log_retention_applies_it_without_asking()
+    {
+        _shell.ExpiredLogs = 5;
+        var page = Create();
+
+        page.LogRetentionIndex = 6;   // for ever
+
+        Assert.Equal(0, _settings.LogRetentionDays);
+        Assert.Equal([0], _shell.LogRetentions);
+        Assert.Equal(1, _store.Saves);
+        Assert.Empty(_shell.Questions);
+    }
+
+    [Fact]
+    public void Shortening_the_log_retention_with_nothing_to_delete_applies_it_without_asking()
+    {
+        var page = Create();
+
+        page.LogRetentionIndex = 1;   // 3 days
+
+        Assert.Equal(3, _settings.LogRetentionDays);
+        Assert.Equal([3], _shell.LogRetentions);
+        Assert.Empty(_shell.Questions);
+    }
+
+    [Fact]
+    public void Shortening_the_log_retention_asks_first_when_files_would_go_and_says_how_many()
+    {
+        _shell.ExpiredLogs = 4;
+        var page = Create();
+
+        page.LogRetentionIndex = 0;   // 1 day
+
+        Assert.Equal(1, _settings.LogRetentionDays);
+        Assert.Equal([1], _shell.LogRetentions);
+        Assert.Equal("4 log file(s) older than 1 day(s) will be deleted at once, and cannot be recovered.\n\nContinue?", Assert.Single(_shell.Questions));
+    }
+
+    [Fact]
+    public void Refusing_the_deletion_keeps_the_retention_and_puts_the_list_back()
+    {
+        _shell.ExpiredLogs = 4;
+        _shell.Confirms = false;
+        var page = Create();
+
+        page.LogRetentionIndex = 0;
+
+        Assert.Equal(7, _settings.LogRetentionDays);
+        Assert.Equal(2, page.LogRetentionIndex);
+        Assert.Empty(_shell.LogRetentions);
+        Assert.Equal(0, _store.Saves);
+    }
+
+    [Fact]
     public void Choosing_the_current_polling_interval_again_does_nothing()
     {
         var page = Create();

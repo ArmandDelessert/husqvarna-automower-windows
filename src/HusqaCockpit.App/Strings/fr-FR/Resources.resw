@@ -290,6 +290,17 @@
   <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Démarrer avec Windows (dans la zone de notification)</value></data>
   <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Intervalle d'actualisation sans temps réel</value></data>
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna autorise {0} requêtes par mois et par clé. Toutes les {1} minutes représente environ {2} requêtes par mois.</value></data>
+  <data name="Settings_LogsHeader.Text" xml:space="preserve"><value>Journaux</value></data>
+  <data name="Settings_LogRetention.Header" xml:space="preserve"><value>Durée de conservation des journaux</value></data>
+  <data name="Settings_LogRetentionHelp.Text" xml:space="preserve"><value>Un fichier par jour, dans le dossier des journaux. Les plus anciens sont supprimés au démarrage de l'application, et tout de suite si vous raccourcissez la durée.</value></data>
+  <data name="Settings_RetentionDay" xml:space="preserve"><value>{0} jour</value></data>
+  <data name="Settings_RetentionDays" xml:space="preserve"><value>{0} jours</value></data>
+  <data name="Settings_RetentionForever" xml:space="preserve"><value>Conserver toujours</value></data>
+  <data name="Settings_LogRetentionTitle" xml:space="preserve"><value>Supprimer les anciens journaux ?</value></data>
+  <data name="Settings_LogRetentionConfirm" xml:space="preserve"><value>{0} fichier(s) de journal plus ancien(s) que {1} jour(s) seront supprimé(s) tout de suite, sans pouvoir être récupéré(s).
+
+Continuer ?</value></data>
+  <data name="Dialog_Delete" xml:space="preserve"><value>Supprimer</value></data>
   <data name="Settings_LanguageHeader.Text" xml:space="preserve"><value>Langue</value></data>
   <data name="Settings_Language.Header" xml:space="preserve"><value>Langue d'affichage</value></data>
   <data name="Settings_LanguageSystem.Content" xml:space="preserve"><value>Automatique (langue de Windows)</value></data>
