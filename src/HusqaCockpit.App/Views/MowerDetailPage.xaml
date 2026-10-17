@@ -290,7 +290,7 @@
             <TextBlock x:Uid="Detail_EventsHeader" Style="{StaticResource SectionHeaderStyle}" />
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="12">
-                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.Events}">
+                    <ItemsRepeater x:Name="EventsList" ItemsSource="{x:Bind ViewModel.Events}">
                         <ItemsRepeater.Layout>
                             <StackLayout Spacing="8" />
                         </ItemsRepeater.Layout>

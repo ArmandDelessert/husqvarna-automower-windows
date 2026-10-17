@@ -44,6 +44,9 @@ public sealed partial class MowerDetailPage : Page
         {
             ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
+        // The list belongs to the mower, which outlives the page: a page left behind must not stay subscribed to it,
+        // or the next LoadEvents (and any new event) is raised into a destroyed control.
+        EventsList.ItemsSource = null;
         // A new page (and map) is created on every visit: release the browser process.
         Map.CloseWebView();
         base.OnNavigatedFrom(e);
