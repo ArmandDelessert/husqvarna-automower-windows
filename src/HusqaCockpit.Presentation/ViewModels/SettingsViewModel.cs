@@ -9,7 +9,35 @@ namespace HusqaCockpit.Presentation.ViewModels;
 public sealed partial class SettingsViewModel : ObservableObject
 {
     public const int MonthlyQuota = 10_000;
-    private static readonly string[] s_languages = ["", "fr-FR", "en-US"];
+
+    /// <summary>
+    /// The languages of the interface, as the Language box lists them after "Automatic": the tag of the language, and its name
+    /// in that language. Each one has its texts in Strings\{tag}; the page lists them in this order (French and English first,
+    /// then the others by name), and the box in SettingsPage.xaml must follow it.
+    /// </summary>
+    public static IReadOnlyList<(string Tag, string Name)> Languages { get; } =
+    [
+        ("fr-FR", "Français"),
+        ("en-US", "English"),
+        ("da-DK", "Dansk"),
+        ("de-DE", "Deutsch"),
+        ("es-ES", "Español"),
+        ("it-IT", "Italiano"),
+        ("nl-NL", "Nederlands"),
+        ("nb-NO", "Norsk"),
+        ("pl-PL", "Polski"),
+        ("pt-BR", "Português (Brasil)"),
+        ("ro-RO", "Română"),
+        ("fi-FI", "Suomi"),
+        ("sv-SE", "Svenska"),
+        ("tr-TR", "Türkçe"),
+        ("uk-UA", "Українська"),
+        ("ja-JP", "日本語"),
+        ("ko-KR", "한국어"),
+        ("zh-CN", "简体中文"),
+    ];
+
+    private static readonly string[] s_languages = ["", .. Languages.Select(l => l.Tag)];
     private static readonly int[] s_pollingIntervals = [5, 10, 15, 30, 60];
     private static readonly TaskNotificationMode[] s_taskNotificationModes = [.. Enum.GetValues<TaskNotificationMode>()];
 

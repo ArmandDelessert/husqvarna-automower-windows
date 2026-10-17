@@ -1,5 +1,8 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using HusqaCockpit.Presentation.Tests.Support;
+using HusqaCockpit.Presentation.ViewModels;
 
 namespace HusqaCockpit.Presentation.Tests;
 
@@ -68,5 +71,27 @@ public class SettingsPageContractTests
         Assert.Contains("Settings_OpenLogs", uids);
         Assert.Contains(page.Descendants(s_presentation + "HyperlinkButton"),
             link => ((string?)link.Attribute("NavigateUri"))?.StartsWith("https://github.com/", StringComparison.Ordinal) == true);
+    }
+
+    [Fact]
+    public void The_language_box_lists_the_languages_of_the_app_in_the_order_of_the_view_model()
+    {
+        var page = XDocument.Load(Path.Combine(AppContext.BaseDirectory, "Views", "SettingsPage.xaml"));
+        var box = page.Descendants(s_presentation + "ComboBox").Single(c => (string?)c.Attribute(s_xaml + "Uid") == "Settings_Language");
+        var items = box.Elements(s_presentation + "ComboBoxItem").ToList();
+
+        // The first item is "Automatic" (a text of the resources); the others are written in their own language.
+        Assert.Equal("Settings_LanguageSystem", (string?)items[0].Attribute(s_xaml + "Uid"));
+        Assert.Equal(SettingsViewModel.Languages.Select(l => l.Name), items.Skip(1).Select(i => (string?)i.Attribute("Content")));
+    }
+
+    [Fact]
+    public void Every_language_of_the_box_has_its_texts_and_every_text_folder_is_in_the_box()
+    {
+        var tags = SettingsViewModel.Languages.Select(l => l.Tag).ToList();
+
+        Assert.Equal(tags.Count, tags.Distinct(StringComparer.Ordinal).Count());
+        Assert.Equal(tags.Order(StringComparer.Ordinal), ReswStrings.Languages);
+        Assert.All(tags, tag => Assert.Equal(tag, CultureInfo.GetCultureInfo(tag).Name));
     }
 }

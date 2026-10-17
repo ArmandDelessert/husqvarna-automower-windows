@@ -1,3 +1,4 @@
+using System.Globalization;
 using HusqaCockpit.Core.Fleet;
 using HusqaCockpit.Presentation.Tests.Support;
 
@@ -132,13 +133,16 @@ public sealed class AlertMessagesTests
     }
 
     [Theory]
-    [InlineData("en-US")]
-    [InlineData("fr-FR")]
-    public void Every_alert_has_a_title_and_a_text_in_both_languages(string language)
+    [MemberData(nameof(Languages))]
+    public void Every_alert_has_a_title_and_a_text_in_every_language(string language)
     {
-        var french = language == "fr-FR";
-        using var _ = TestCulture.Use(french ? TestCulture.French : TestCulture.English);
-        var messages = new AlertMessages(french ? ReswStrings.French : ReswStrings.English);
+        using var _ = TestCulture.Use(language switch
+        {
+            "en-US" => TestCulture.English,
+            "fr-FR" => TestCulture.French,
+            _ => CultureInfo.GetCultureInfo(language),
+        });
+        var messages = new AlertMessages(ReswStrings.For(language));
 
         foreach (var kind in Enum.GetValues<MowerAlertKind>())
         {
@@ -151,6 +155,8 @@ public sealed class AlertMessagesTests
             Assert.Contains("Alpha", title, StringComparison.Ordinal);
         }
     }
+
+    public static TheoryData<string> Languages => [.. ReswStrings.Languages];
 
     [Fact]
     public void An_unknown_kind_of_alert_is_a_programming_error()

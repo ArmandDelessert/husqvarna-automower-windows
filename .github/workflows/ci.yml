@@ -35,7 +35,7 @@ jobs:
           path: TestResults/**/*.trx
 
   strings:
-    # The .resw files are generated from tools/strings/*.py: fail when someone edits one side only.
+    # The .resw files are generated from tools/strings: fail when someone edits one side only.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -45,6 +45,7 @@ jobs:
           python-version: '3.x'
 
       - name: Regenerate the resource files
+        # Also fails on a translation that loses a placeholder; a text a language lacks is only a warning.
         run: python tools/strings/generate_resw.py
 
       - name: Check they are unchanged

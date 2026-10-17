@@ -47,7 +47,9 @@ It uses the official [Automower Connect API](https://developer.husqvarnagroup.cl
   (closing the window only sends it to the notification area).
 - **Notification area icon**: the app keeps watching the mowers when its window is closed; the icon gets a red badge when
   a mower is in error. Optional start with Windows.
-- **French and English** user interface (follows Windows by default).
+- **18 languages**: French, English, Danish, German, Spanish, Italian, Dutch, Norwegian, Polish, Brazilian Portuguese, Romanian,
+  Finnish, Swedish, Turkish, Ukrainian, Japanese, Korean and Simplified Chinese. It follows Windows by default when the app
+  speaks its language; the Language box of the settings overrides it.
 
 ## Getting started
 
@@ -153,11 +155,19 @@ A local build has the version `0.0.0-dev`.
 
 ### Translations
 
-Edit `tools/strings/ui_strings.py` or `tools/strings/error_codes.py`, then regenerate the resource files:
+The English and French texts are in `tools/strings/ui_strings.py` and `tools/strings/error_codes.py`; the 16 other languages
+are in `tools/strings/translations/{language}.json` (`da-DK`, `de-DE`, `es-ES`, `fi-FI`, `it-IT`, `ja-JP`, `ko-KR`, `nb-NO`,
+`nl-NL`, `pl-PL`, `pt-BR`, `ro-RO`, `sv-SE`, `tr-TR`, `uk-UA`, `zh-CN`), each with its `ui` texts and its `errors`, under the
+same keys. Edit these files, then regenerate the resource files:
 
 ```bash
 python tools/strings/generate_resw.py
 ```
+
+A text a language lacks is left out of its `.resw`: Windows shows the English one, so a new text can be written in English and
+French first and translated afterwards; the generator lists what is missing, and `--check` (run by the CI) fails on a
+translation that loses a `{0}` placeholder. To add a language, add its file, its name to `SettingsViewModel.Languages` and to
+the Language box of `SettingsPage.xaml`.
 
 ## Known limitations
 

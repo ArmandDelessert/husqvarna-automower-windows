@@ -50,6 +50,22 @@
                         <ComboBoxItem x:Uid="Settings_LanguageSystem" />
                         <ComboBoxItem Content="Français" />
                         <ComboBoxItem Content="English" />
+                        <ComboBoxItem Content="Dansk" />
+                        <ComboBoxItem Content="Deutsch" />
+                        <ComboBoxItem Content="Español" />
+                        <ComboBoxItem Content="Italiano" />
+                        <ComboBoxItem Content="Nederlands" />
+                        <ComboBoxItem Content="Norsk" />
+                        <ComboBoxItem Content="Polski" />
+                        <ComboBoxItem Content="Português (Brasil)" />
+                        <ComboBoxItem Content="Română" />
+                        <ComboBoxItem Content="Suomi" />
+                        <ComboBoxItem Content="Svenska" />
+                        <ComboBoxItem Content="Türkçe" />
+                        <ComboBoxItem Content="Українська" />
+                        <ComboBoxItem Content="日本語" />
+                        <ComboBoxItem Content="한국어" />
+                        <ComboBoxItem Content="简体中文" />
                     </ComboBox>
                     <InfoBar
                         x:Uid="Settings_RestartRequired"
