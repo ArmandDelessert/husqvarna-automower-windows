@@ -124,7 +124,7 @@
   <data name="Tray_Refresh" xml:space="preserve"><value>Yenile</value></data>
   <data name="Tray_ParkAll" xml:space="preserve"><value>Tüm çim biçme robotlarını park et</value></data>
   <data name="Tray_ResumeAll" xml:space="preserve"><value>Tüm zamanlamalara devam et</value></data>
-  <data name="Tray_Quit" xml:space="preserve"><value>Çık</value></data>
+  <data name="Tray_Quit" xml:space="preserve"><value>Çıkış</value></data>
   <data name="Connection_Live" xml:space="preserve"><value>Gerçek zamanlı</value></data>
   <data name="Connection_Polling" xml:space="preserve"><value>Düzenli yenileme</value></data>
   <data name="Connection_Starting" xml:space="preserve"><value>Bağlanıyor…</value></data>
@@ -171,7 +171,7 @@
   <data name="Notification_TaskFinishedUnknown" xml:space="preserve"><value>Biçme sona erdi.</value></data>
   <data name="Notification_Open" xml:space="preserve"><value>Aç</value></data>
   <data name="Notification_TestTitle" xml:space="preserve"><value>Test bildirimi</value></data>
-  <data name="Notification_TestBody" xml:space="preserve"><value>Bir çim biçme robotunun ilginize ihtiyacı olduğunda HusqA Cockpit sizi böyle uyaracak.</value></data>
+  <data name="Notification_TestBody" xml:space="preserve"><value>Bir çim biçme robotu dikkatinizi gerektirdiğinde HusqA Cockpit sizi böyle uyaracak.</value></data>
   <data name="Notification_TrayHintTitle" xml:space="preserve"><value>HusqA Cockpit hâlâ çalışıyor</value></data>
   <data name="Notification_TrayHintBody" xml:space="preserve"><value>Çim biçme robotlarınızı bildirim alanından izlemeye devam ediyor. Çıkmak için simgesine sağ tıklayın.</value></data>
   <data name="Dialog_ResetBladesTitle" xml:space="preserve"><value>Bıçak sayacı sıfırlansın mı?</value></data>
@@ -244,9 +244,9 @@
   <data name="ScheduleEditor_Empty.Text" xml:space="preserve"><value>Zaman aralığı yok: çim biçme robotu kendiliğinden başlamayacak.</value></data>
   <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Bu aralığı kaldır</value></data>
   <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Bu aralığı kaldır</value></data>
-  <data name="Issue_NoDays" xml:space="preserve"><value>Aralık {0}: en az bir gün seçin.</value></data>
-  <data name="Issue_EndBeforeStart" xml:space="preserve"><value>Aralık {0}: bitiş, başlangıçtan sonra olmalıdır.</value></data>
-  <data name="Issue_CrossesMidnight" xml:space="preserve"><value>Aralık {0} gece yarısını geçemez.</value></data>
+  <data name="Issue_NoDays" xml:space="preserve"><value>{0}. zaman aralığı: en az bir gün seçin.</value></data>
+  <data name="Issue_EndBeforeStart" xml:space="preserve"><value>{0}. zaman aralığı: bitiş, başlangıçtan sonra olmalıdır.</value></data>
+  <data name="Issue_CrossesMidnight" xml:space="preserve"><value>{0}. zaman aralığı gece yarısını geçemez.</value></data>
   <data name="Issue_Overlap" xml:space="preserve"><value>{0} ve {1} numaralı aralıklar {2} günü çakışıyor.</value></data>
   <data name="Command_ScheduleSent" xml:space="preserve"><value>Zamanlama çim biçme robotuna gönderildi.</value></data>
   <data name="Detail_StatisticsHeader.Text" xml:space="preserve"><value>İstatistikler</value></data>
@@ -256,7 +256,7 @@
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Yeniden ortala</value></data>
   <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Çizgi: çim biçme robotunun bildirdiği son konumlar (büyük nokta en yenisi, küçük nokta en eskisidir).</value></data>
   <data name="Nav_Map.Content" xml:space="preserve"><value>Harita</value></data>
-  <data name="Nav_Quit.Content" xml:space="preserve"><value>Çık</value></data>
+  <data name="Nav_Quit.Content" xml:space="preserve"><value>Çıkış</value></data>
   <data name="Nav_Quit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>HusqA Cockpit'ten çık</value></data>
   <data name="Map_Title.Text" xml:space="preserve"><value>Harita</value></data>
   <data name="Map_RecenterText.Text" xml:space="preserve"><value>Yeniden ortala</value></data>

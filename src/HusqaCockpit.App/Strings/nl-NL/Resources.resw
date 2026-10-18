@@ -131,7 +131,7 @@
   <data name="Connection_Offline" xml:space="preserve"><value>Offline</value></data>
   <data name="Connection_NotConfigured" xml:space="preserve"><value>API-sleutel vereist</value></data>
   <data name="Banner_NoCredentialsTitle" xml:space="preserve"><value>Welkom!</value></data>
-  <data name="Banner_NoCredentials" xml:space="preserve"><value>Voer uw Husqvarna API-sleutel in om uw maaiers te zien.</value></data>
+  <data name="Banner_NoCredentials" xml:space="preserve"><value>Voer uw Husqvarna-API-sleutel in om uw maaiers te zien.</value></data>
   <data name="Banner_StartingTitle" xml:space="preserve"><value>Verbinden met Husqvarna…</value></data>
   <data name="Banner_PollingTitle" xml:space="preserve"><value>Realtime-updates niet beschikbaar</value></data>
   <data name="Banner_Polling" xml:space="preserve"><value>De maaiers worden periodiek vernieuwd.</value></data>
@@ -276,7 +276,7 @@
   <data name="History_TaskFinished" xml:space="preserve"><value>Maaibeurt voltooid</value></data>
   <data name="Settings_EventRetention.Header" xml:space="preserve"><value>Gebeurtenisgeschiedenis bewaren gedurende</value></data>
   <data name="Settings_EventRetentionHelp.Text" xml:space="preserve"><value>Start en einde van maaibeurten, fouten, stops en verbroken verbindingen die de app waarneemt, in één bestand per dag. Ze worden onderaan de pagina van elke maaier weergegeven.</value></data>
-  <data name="Settings_OpenEvents.Content" xml:space="preserve"><value>Gebeurtenissenmap openen</value></data>
+  <data name="Settings_OpenEvents.Content" xml:space="preserve"><value>Gebeurtenismap openen</value></data>
   <data name="Settings_EventRetentionTitle" xml:space="preserve"><value>Oude gebeurtenissen verwijderen?</value></data>
   <data name="Settings_EventRetentionConfirm" xml:space="preserve"><value>{0} gebeurtenisbestand(en) ouder dan {1} dag(en) worden onmiddellijk verwijderd en kunnen niet worden hersteld.
 

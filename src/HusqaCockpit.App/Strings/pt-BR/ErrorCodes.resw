@@ -32,7 +32,7 @@
   <data name="E24" xml:space="preserve"><value>Sistema de corte bloqueado</value></data>
   <data name="E25" xml:space="preserve"><value>Sistema de corte bloqueado</value></data>
   <data name="E26" xml:space="preserve"><value>Combinação de subdispositivos inválida</value></data>
-  <data name="E27" xml:space="preserve"><value>Ajustes restaurados</value></data>
+  <data name="E27" xml:space="preserve"><value>Configurações restauradas</value></data>
   <data name="E28" xml:space="preserve"><value>Problema no circuito de memória</value></data>
   <data name="E29" xml:space="preserve"><value>Declive muito acentuado</value></data>
   <data name="E30" xml:space="preserve"><value>Problema no sistema de carregamento</value></data>
@@ -158,14 +158,14 @@
   <data name="E153" xml:space="preserve"><value>Carregamento interrompido</value></data>
   <data name="E154" xml:space="preserve"><value>Mangueira de jardim detectada na área de trabalho</value></data>
   <data name="E155" xml:space="preserve"><value>Código PIN alterado</value></data>
-  <data name="E156" xml:space="preserve"><value>Ajustes de Wi-Fi alterados</value></data>
-  <data name="E157" xml:space="preserve"><value>Ajustes de Bluetooth alterados</value></data>
-  <data name="E158" xml:space="preserve"><value>Ajustes da rede celular alterados</value></data>
+  <data name="E156" xml:space="preserve"><value>Configurações de Wi-Fi alteradas</value></data>
+  <data name="E157" xml:space="preserve"><value>Configurações de Bluetooth alteradas</value></data>
+  <data name="E158" xml:space="preserve"><value>Configurações da rede celular alteradas</value></data>
   <data name="E159" xml:space="preserve"><value>Posição de instalação do cortador de grama alterada</value></data>
   <data name="E160" xml:space="preserve"><value>O firmware foi atualizado</value></data>
   <data name="E161" xml:space="preserve"><value>Sem sinal da estação de carregamento</value></data>
   <data name="E701" xml:space="preserve"><value>Problema de conectividade</value></data>
-  <data name="E702" xml:space="preserve"><value>Ajustes de conectividade restaurados</value></data>
+  <data name="E702" xml:space="preserve"><value>Configurações de conectividade restauradas</value></data>
   <data name="E703" xml:space="preserve"><value>Problema de conectividade</value></data>
   <data name="E704" xml:space="preserve"><value>Problema de conectividade</value></data>
   <data name="E705" xml:space="preserve"><value>Problema de conectividade</value></data>

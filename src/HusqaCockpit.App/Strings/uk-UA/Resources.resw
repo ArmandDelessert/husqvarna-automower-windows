@@ -12,7 +12,7 @@
   <data name="Status_LastSeen" xml:space="preserve"><value>Останній зв’язок {0}</value></data>
   <data name="Status_ErrorSince" xml:space="preserve"><value>З {0}</value></data>
   <data name="Status_Stopped" xml:space="preserve"><value>Зупинена</value></data>
-  <data name="Status_StoppedDetail" xml:space="preserve"><value>Потрібне втручання на газонокосарці</value></data>
+  <data name="Status_StoppedDetail" xml:space="preserve"><value>Потрібне ручне втручання на газонокосарці</value></data>
   <data name="Status_Paused" xml:space="preserve"><value>Призупинена</value></data>
   <data name="Status_PausedDetail" xml:space="preserve"><value>Чекає в саду</value></data>
   <data name="Status_NextStart" xml:space="preserve"><value>Наступний запуск {0}</value></data>
@@ -24,7 +24,7 @@
   <data name="Status_Parked" xml:space="preserve"><value>Припаркована</value></data>
   <data name="Status_ParkedUntil" xml:space="preserve"><value>До {0}</value></data>
   <data name="Status_ParkedUntilFurtherNotice" xml:space="preserve"><value>Припаркована до подальшого повідомлення</value></data>
-  <data name="Status_ParkedUntilFurtherNoticeDetail" xml:space="preserve"><value>Натисніть «Відновити», щоб знову працювати за розкладом</value></data>
+  <data name="Status_ParkedUntilFurtherNoticeDetail" xml:space="preserve"><value>Натисніть «Відновити», щоб газонокосарка знову працювала за розкладом</value></data>
   <data name="Status_NoSchedule" xml:space="preserve"><value>Немає запланованих запусків</value></data>
   <data name="When_Today" xml:space="preserve"><value>сьогодні о {0}</value></data>
   <data name="When_Tomorrow" xml:space="preserve"><value>завтра о {0}</value></data>
@@ -78,7 +78,7 @@
   <data name="RestrictedReason_DailyLimit" xml:space="preserve"><value>Досягнуто добового ліміту</value></data>
   <data name="RestrictedReason_Fota" xml:space="preserve"><value>Оновлення ПЗ</value></data>
   <data name="RestrictedReason_Frost" xml:space="preserve"><value>Захист від заморозків</value></data>
-  <data name="RestrictedReason_AllWorkAreasCompleted" xml:space="preserve"><value>Усі робочі зони завершено</value></data>
+  <data name="RestrictedReason_AllWorkAreasCompleted" xml:space="preserve"><value>Усі робочі зони оброблено</value></data>
   <data name="RestrictedReason_External" xml:space="preserve"><value>Зовнішнє обмеження (розумний дім, голосовий помічник…)</value></data>
   <data name="RestrictedReason_NotApplicable" xml:space="preserve"><value>Не застосовується</value></data>
   <data name="HeadlightMode_Unknown" xml:space="preserve"><value>—</value></data>
@@ -106,7 +106,7 @@
   <data name="Stats_ChargingCycles" xml:space="preserve"><value>Цикли заряджання</value></data>
   <data name="Stats_Collisions" xml:space="preserve"><value>Зіткнення</value></data>
   <data name="Stats_Distance" xml:space="preserve"><value>Пройдена відстань</value></data>
-  <data name="Stats_BladeUsage" xml:space="preserve"><value>Використання ножів від останнього скидання</value></data>
+  <data name="Stats_BladeUsage" xml:space="preserve"><value>Використання ножів з моменту останнього скидання</value></data>
   <data name="Command_Failed" xml:space="preserve"><value>Не вдалося виконати команду: {0}</value></data>
   <data name="Command_FailedFor" xml:space="preserve"><value>Команду не виконано для: {0}</value></data>
   <data name="Command_StartSent" xml:space="preserve"><value>Команду запуску надіслано.</value></data>
@@ -156,7 +156,7 @@
   <data name="Notification_ClearedTitle" xml:space="preserve"><value>{0} знову працює</value></data>
   <data name="Notification_ClearedBody" xml:space="preserve"><value>Усунуто: {0}</value></data>
   <data name="Notification_StoppedTitle" xml:space="preserve"><value>{0} зупинилася</value></data>
-  <data name="Notification_StoppedBody" xml:space="preserve"><value>Потрібне втручання на газонокосарці.</value></data>
+  <data name="Notification_StoppedBody" xml:space="preserve"><value>Потрібне ручне втручання на газонокосарці.</value></data>
   <data name="Notification_DisconnectedTitle" xml:space="preserve"><value>{0} втратила зв’язок</value></data>
   <data name="Notification_DisconnectedBody" xml:space="preserve"><value>Газонокосарка більше не обмінюється даними з хмарою Husqvarna.</value></data>
   <data name="Notification_ReconnectedTitle" xml:space="preserve"><value>{0} знову на зв’язку</value></data>
@@ -210,9 +210,9 @@
   <data name="Action_ParkLong.Text" xml:space="preserve"><value>Повернутися на станцію</value></data>
   <data name="Action_ParkNextSchedule.Text" xml:space="preserve"><value>До наступного запланованого запуску</value></data>
   <data name="Action_ParkFurtherNotice.Text" xml:space="preserve"><value>До подальшого повідомлення</value></data>
-  <data name="Action_Park180.Text" xml:space="preserve"><value>Протягом 3 годин</value></data>
-  <data name="Action_Park360.Text" xml:space="preserve"><value>Протягом 6 годин</value></data>
-  <data name="Action_Park1440.Text" xml:space="preserve"><value>Протягом 24 годин</value></data>
+  <data name="Action_Park180.Text" xml:space="preserve"><value>На 3 години</value></data>
+  <data name="Action_Park360.Text" xml:space="preserve"><value>На 6 годин</value></data>
+  <data name="Action_Park1440.Text" xml:space="preserve"><value>На 24 години</value></data>
   <data name="Action_Resume.Text" xml:space="preserve"><value>Відновити</value></data>
   <data name="Action_ResumeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Знову дотримуватися тижневого розкладу</value></data>
   <data name="Action_ResumeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Відновити розклад</value></data>
@@ -295,14 +295,14 @@
   <data name="Settings_NotificationsHeader.Text" xml:space="preserve"><value>Сповіщення</value></data>
   <data name="Settings_NotifyErrors.Header" xml:space="preserve"><value>Коли газонокосарка повідомляє про помилку або тривогу</value></data>
   <data name="Settings_NotifyRecoveries.Header" xml:space="preserve"><value>Коли газонокосарка знову працює після помилки</value></data>
-  <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Коли газонокосарка зупиняється й потребує втручання</value></data>
+  <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Коли газонокосарка зупиняється й потребує ручного втручання</value></data>
   <data name="Settings_NotifyConnectivity.Header" xml:space="preserve"><value>Коли газонокосарка втрачає або відновлює зв’язок</value></data>
   <data name="Settings_TaskNotifications.Header" xml:space="preserve"><value>Сповіщення про початок і закінчення кошення</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Надіслати тестове сповіщення</value></data>
   <data name="Settings_BehaviorHeader.Text" xml:space="preserve"><value>Поведінка</value></data>
   <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Продовжувати працювати в області сповіщень після закриття вікна</value></data>
   <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Запускати разом із Windows (в області сповіщень)</value></data>
-  <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Інтервал оновлення без оновлень у реальному часі</value></data>
+  <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Інтервал оновлення без підключення в реальному часі</value></data>
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna дозволяє {0} запитів на місяць для кожного ключа. Оновлення кожні {1} хв — це приблизно {2} запитів на місяць.</value></data>
   <data name="Settings_LogsHeader.Text" xml:space="preserve"><value>Журнали</value></data>
   <data name="Settings_LogRetention.Header" xml:space="preserve"><value>Зберігати журнали протягом</value></data>

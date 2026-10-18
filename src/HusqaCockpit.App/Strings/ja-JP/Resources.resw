@@ -23,7 +23,7 @@
   <data name="Status_ChargingRemaining" xml:space="preserve"><value>残り{0}</value></data>
   <data name="Status_Parked" xml:space="preserve"><value>パーク中</value></data>
   <data name="Status_ParkedUntil" xml:space="preserve"><value>{0}まで</value></data>
-  <data name="Status_ParkedUntilFurtherNotice" xml:space="preserve"><value>再開するまでパーク</value></data>
+  <data name="Status_ParkedUntilFurtherNotice" xml:space="preserve"><value>再開するまでパーク中</value></data>
   <data name="Status_ParkedUntilFurtherNoticeDetail" xml:space="preserve"><value>スケジュールに戻るには「再開」を選びます</value></data>
   <data name="Status_NoSchedule" xml:space="preserve"><value>次回の開始予定なし</value></data>
   <data name="When_Today" xml:space="preserve"><value>今日 {0}</value></data>
@@ -130,7 +130,7 @@
   <data name="Connection_Starting" xml:space="preserve"><value>接続中…</value></data>
   <data name="Connection_Offline" xml:space="preserve"><value>オフライン</value></data>
   <data name="Connection_NotConfigured" xml:space="preserve"><value>APIキーが必要です</value></data>
-  <data name="Banner_NoCredentialsTitle" xml:space="preserve"><value>ようこそ</value></data>
+  <data name="Banner_NoCredentialsTitle" xml:space="preserve"><value>ようこそ！</value></data>
   <data name="Banner_NoCredentials" xml:space="preserve"><value>HusqvarnaのAPIキーを入力すると、ロボット芝刈機が表示されます。</value></data>
   <data name="Banner_StartingTitle" xml:space="preserve"><value>Husqvarnaに接続中…</value></data>
   <data name="Banner_PollingTitle" xml:space="preserve"><value>リアルタイム更新を利用できません</value></data>
@@ -172,7 +172,7 @@
   <data name="Notification_Open" xml:space="preserve"><value>開く</value></data>
   <data name="Notification_TestTitle" xml:space="preserve"><value>テスト通知</value></data>
   <data name="Notification_TestBody" xml:space="preserve"><value>ロボット芝刈機の確認が必要なとき、HusqA Cockpitはこのようにお知らせします。</value></data>
-  <data name="Notification_TrayHintTitle" xml:space="preserve"><value>HusqA Cockpitは実行中です</value></data>
+  <data name="Notification_TrayHintTitle" xml:space="preserve"><value>HusqA Cockpitは引き続き実行中です</value></data>
   <data name="Notification_TrayHintBody" xml:space="preserve"><value>通知領域でロボット芝刈機の監視を続けます。終了するには、アイコンを右クリックしてください。</value></data>
   <data name="Dialog_ResetBladesTitle" xml:space="preserve"><value>ブレードカウンターをリセットしますか？</value></data>
   <data name="Dialog_ResetBladesText" xml:space="preserve"><value>{0}のブレードを交換した後に行ってください。</value></data>
@@ -285,9 +285,9 @@
   <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>Husqvarna API</value></data>
   <data name="Settings_ApiHelp.Text" xml:space="preserve"><value>Husqvarna開発者ポータルでアプリケーションを作成し、「Authentication API」と「Automower Connect API」に接続して、そのキーとシークレットをここにコピーしてください。</value></data>
   <data name="Settings_ApiPortal.Content" xml:space="preserve"><value>Husqvarna開発者ポータルを開く</value></data>
-  <data name="Settings_ApplicationKey.Header" xml:space="preserve"><value>アプリケーションキー（Application key）</value></data>
+  <data name="Settings_ApplicationKey.Header" xml:space="preserve"><value>アプリケーションキー</value></data>
   <data name="Settings_ApplicationKey.PlaceholderText" xml:space="preserve"><value>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</value></data>
-  <data name="Settings_ApplicationSecret.Header" xml:space="preserve"><value>アプリケーションシークレット（Application secret）</value></data>
+  <data name="Settings_ApplicationSecret.Header" xml:space="preserve"><value>アプリケーションシークレット</value></data>
   <data name="Settings_Save.Content" xml:space="preserve"><value>保存して接続</value></data>
   <data name="Settings_Test.Content" xml:space="preserve"><value>テスト</value></data>
   <data name="Settings_Delete.Content" xml:space="preserve"><value>削除</value></data>

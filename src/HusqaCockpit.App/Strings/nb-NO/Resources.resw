@@ -58,7 +58,7 @@
   <data name="MowerState_Off" xml:space="preserve"><value>Slått av</value></data>
   <data name="MowerState_Stopped" xml:space="preserve"><value>Stoppet</value></data>
   <data name="MowerState_Error" xml:space="preserve"><value>Feil</value></data>
-  <data name="MowerState_FatalError" xml:space="preserve"><value>Alvorlig feil</value></data>
+  <data name="MowerState_FatalError" xml:space="preserve"><value>Kritisk feil</value></data>
   <data name="MowerState_ErrorAtPowerUp" xml:space="preserve"><value>Feil ved oppstart</value></data>
   <data name="MowerMode_Unknown" xml:space="preserve"><value>Ukjent</value></data>
   <data name="MowerMode_MainArea" xml:space="preserve"><value>Hovedområde</value></data>
@@ -142,7 +142,7 @@
   <data name="Banner_OfflineTitle" xml:space="preserve"><value>Husqvarna-serverne kan ikke nås</value></data>
   <data name="Banner_RetryAt" xml:space="preserve"><value>Neste forsøk kl. {0}.</value></data>
   <data name="Settings_TestSuccess" xml:space="preserve"><value>Tilkoblingen lyktes: {0} gressklipper(e) funnet.</value></data>
-  <data name="Settings_TestTooManyLogins" xml:space="preserve"><value>Husqvarna avviser påloggingsforsøk som kommer for tett. Vent ett minutt og prøv igjen.</value></data>
+  <data name="Settings_TestTooManyLogins" xml:space="preserve"><value>Husqvarna avviser påloggingsforsøk som kommer for tett etter hverandre. Vent ett minutt og prøv igjen.</value></data>
   <data name="Settings_TestInvalid" xml:space="preserve"><value>Programnøkkelen eller programhemmeligheten er feil.</value></data>
   <data name="Settings_TestForbidden" xml:space="preserve"><value>Nøkkelen er gyldig, men har ikke tilgang til Automower Connect API. Koble dette API-et til programmet ditt på utviklerportalen.</value></data>
   <data name="Settings_TestError" xml:space="preserve"><value>Testen mislyktes: {0}</value></data>
@@ -301,7 +301,7 @@ Vil du fortsette?</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Send et testvarsel</value></data>
   <data name="Settings_BehaviorHeader.Text" xml:space="preserve"><value>Oppførsel</value></data>
   <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Fortsett å kjøre i varslingsområdet når vinduet lukkes</value></data>
-  <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Start med Windows (i varslingsområdet)</value></data>
+  <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Start når Windows starter (i varslingsområdet)</value></data>
   <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Oppdateringsintervall uten sanntidsoppdateringer</value></data>
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna tillater {0} forespørsler per måned per nøkkel. Hvert {1}. minutt gir omtrent {2} forespørsler per måned.</value></data>
   <data name="Settings_LogsHeader.Text" xml:space="preserve"><value>Logger</value></data>

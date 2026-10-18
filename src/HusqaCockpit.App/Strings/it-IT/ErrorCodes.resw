@@ -79,7 +79,7 @@
   <data name="E71" xml:space="preserve"><value>Allarme! Robot tagliaerba sollevato</value></data>
   <data name="E72" xml:space="preserve"><value>Allarme! Robot tagliaerba inclinato</value></data>
   <data name="E73" xml:space="preserve"><value>Allarme! Robot tagliaerba in movimento</value></data>
-  <data name="E74" xml:space="preserve"><value>Allarme! Fuori dall'area virtuale (geofence)</value></data>
+  <data name="E74" xml:space="preserve"><value>Allarme! Fuori dal recinto virtuale (geofence)</value></data>
   <data name="E75" xml:space="preserve"><value>Connessione modificata</value></data>
   <data name="E76" xml:space="preserve"><value>Connessione NON modificata</value></data>
   <data name="E77" xml:space="preserve"><value>Scheda di comunicazione non disponibile</value></data>
@@ -131,7 +131,7 @@
   <data name="E123" xml:space="preserve"><value>Destinazione non raggiungibile</value></data>
   <data name="E124" xml:space="preserve"><value>Destinazione bloccata</value></data>
   <data name="E125" xml:space="preserve"><value>La batteria deve essere sostituita</value></data>
-  <data name="E126" xml:space="preserve"><value>Batteria a fine vita</value></data>
+  <data name="E126" xml:space="preserve"><value>Batteria prossima a fine vita</value></data>
   <data name="E127" xml:space="preserve"><value>Problema alla batteria</value></data>
   <data name="E128" xml:space="preserve"><value>Rilevate più stazioni di riferimento</value></data>
   <data name="E129" xml:space="preserve"><value>Dispositivo di taglio ausiliario bloccato</value></data>
@@ -141,10 +141,10 @@
   <data name="E133" xml:space="preserve"><value>Comunicazione Bluetooth con la stazione di ricarica non riuscita</value></data>
   <data name="E134" xml:space="preserve"><value>Configurazione software non valida</value></data>
   <data name="E135" xml:space="preserve"><value>Problema al radar</value></data>
-  <data name="E136" xml:space="preserve"><value>Area di lavoro modificata</value></data>
-  <data name="E137" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, destra</value></data>
-  <data name="E138" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, centro</value></data>
-  <data name="E139" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, sinistra</value></data>
+  <data name="E136" xml:space="preserve"><value>Area di lavoro manomessa</value></data>
+  <data name="E137" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, destro</value></data>
+  <data name="E138" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, centrale</value></data>
+  <data name="E139" xml:space="preserve"><value>Temperatura elevata nel motore di taglio, sinistro</value></data>
   <data name="E141" xml:space="preserve"><value>Problema al motore della spazzola della ruota</value></data>
   <data name="E142" xml:space="preserve"><value>Errore di autodiagnosi</value></data>
   <data name="E143" xml:space="preserve"><value>Problema di alimentazione di un accessorio</value></data>
@@ -176,8 +176,8 @@
   <data name="E710" xml:space="preserve"><value>Scheda SIM bloccata</value></data>
   <data name="E711" xml:space="preserve"><value>Scheda SIM bloccata</value></data>
   <data name="E712" xml:space="preserve"><value>Scheda SIM bloccata</value></data>
-  <data name="E713" xml:space="preserve"><value>Problema con l'area virtuale (geofence)</value></data>
-  <data name="E714" xml:space="preserve"><value>Problema con l'area virtuale (geofence)</value></data>
+  <data name="E713" xml:space="preserve"><value>Problema con il recinto virtuale (geofence)</value></data>
+  <data name="E714" xml:space="preserve"><value>Problema con il recinto virtuale (geofence)</value></data>
   <data name="E715" xml:space="preserve"><value>Problema di connettività</value></data>
   <data name="E716" xml:space="preserve"><value>Problema di connettività</value></data>
   <data name="E717" xml:space="preserve"><value>Impossibile inviare l'SMS</value></data>

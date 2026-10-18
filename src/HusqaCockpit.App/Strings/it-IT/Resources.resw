@@ -79,7 +79,7 @@
   <data name="RestrictedReason_Fota" xml:space="preserve"><value>Aggiornamento software</value></data>
   <data name="RestrictedReason_Frost" xml:space="preserve"><value>Protezione antigelo</value></data>
   <data name="RestrictedReason_AllWorkAreasCompleted" xml:space="preserve"><value>Tutte le aree di lavoro completate</value></data>
-  <data name="RestrictedReason_External" xml:space="preserve"><value>Limitazione esterna (smart home, assistente vocale…)</value></data>
+  <data name="RestrictedReason_External" xml:space="preserve"><value>Limitazione esterna (domotica, assistente vocale…)</value></data>
   <data name="RestrictedReason_NotApplicable" xml:space="preserve"><value>Non applicabile</value></data>
   <data name="HeadlightMode_Unknown" xml:space="preserve"><value>—</value></data>
   <data name="HeadlightMode_AlwaysOn" xml:space="preserve"><value>Sempre accesi</value></data>
@@ -87,7 +87,7 @@
   <data name="HeadlightMode_EveningOnly" xml:space="preserve"><value>Solo la sera</value></data>
   <data name="HeadlightMode_EveningAndNight" xml:space="preserve"><value>Sera e notte</value></data>
   <data name="TaskNotificationMode_None" xml:space="preserve"><value>Nessuna</value></data>
-  <data name="TaskNotificationMode_EndOnly" xml:space="preserve"><value>Solo fine del taglio</value></data>
+  <data name="TaskNotificationMode_EndOnly" xml:space="preserve"><value>Solo alla fine del taglio</value></data>
   <data name="TaskNotificationMode_StartAndEnd" xml:space="preserve"><value>Inizio e fine del taglio</value></data>
   <data name="MessageSeverity_Unknown" xml:space="preserve"><value>Sconosciuta</value></data>
   <data name="MessageSeverity_Fatal" xml:space="preserve"><value>Critico</value></data>
@@ -135,7 +135,7 @@
   <data name="Banner_StartingTitle" xml:space="preserve"><value>Connessione a Husqvarna in corso…</value></data>
   <data name="Banner_PollingTitle" xml:space="preserve"><value>Aggiornamenti in tempo reale non disponibili</value></data>
   <data name="Banner_Polling" xml:space="preserve"><value>I robot tagliaerba vengono aggiornati periodicamente.</value></data>
-  <data name="Banner_Forbidden" xml:space="preserve"><value>Husqvarna ha rifiutato la connessione in tempo reale: nel portale per sviluppatori verifica che la tua applicazione sia collegata a «Automower Connect API» (spesso rinnovare la chiave aiuta). Nel frattempo i robot tagliaerba vengono aggiornati periodicamente.</value></data>
+  <data name="Banner_Forbidden" xml:space="preserve"><value>Husqvarna ha rifiutato la connessione in tempo reale: nel portale per sviluppatori verifica che la tua applicazione sia collegata a «Automower Connect API» (rinnovare la chiave spesso aiuta). Nel frattempo i robot tagliaerba vengono aggiornati periodicamente.</value></data>
   <data name="Banner_PollingTimes" xml:space="preserve"><value>Ultimo aggiornamento {0}, prossimo {1}.</value></data>
   <data name="Banner_AuthFailedTitle" xml:space="preserve"><value>Chiave API rifiutata</value></data>
   <data name="Banner_AuthFailed" xml:space="preserve"><value>Husqvarna ha rifiutato la chiave o il segreto dell'applicazione. Controllali nelle impostazioni.</value></data>
@@ -254,7 +254,7 @@
   <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Ultima posizione nota</value></data>
   <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Apri in OpenStreetMap</value></data>
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Ricentra</value></data>
-  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linea: le ultime posizioni segnalate dal robot tagliaerba (il punto grande è la più recente, quello piccolo la più vecchia).</value></data>
+  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linea: le ultime posizioni segnalate dal robot tagliaerba (il punto grande è il più recente, quello piccolo il più vecchio).</value></data>
   <data name="Nav_Map.Content" xml:space="preserve"><value>Mappa</value></data>
   <data name="Nav_Quit.Content" xml:space="preserve"><value>Esci</value></data>
   <data name="Nav_Quit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Esci da HusqA Cockpit</value></data>

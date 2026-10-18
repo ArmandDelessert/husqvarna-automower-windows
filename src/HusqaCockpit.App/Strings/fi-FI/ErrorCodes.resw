@@ -169,7 +169,7 @@
   <data name="E703" xml:space="preserve"><value>Yhteysongelma</value></data>
   <data name="E704" xml:space="preserve"><value>Yhteysongelma</value></data>
   <data name="E705" xml:space="preserve"><value>Yhteysongelma</value></data>
-  <data name="E706" xml:space="preserve"><value>Heikko signaalin laatu</value></data>
+  <data name="E706" xml:space="preserve"><value>Huono signaalin laatu</value></data>
   <data name="E707" xml:space="preserve"><value>SIM-kortti vaatii PIN-koodin</value></data>
   <data name="E708" xml:space="preserve"><value>SIM-kortti lukittu</value></data>
   <data name="E709" xml:space="preserve"><value>SIM-korttia ei löydy</value></data>

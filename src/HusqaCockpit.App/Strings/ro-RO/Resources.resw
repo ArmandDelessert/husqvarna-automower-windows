@@ -20,7 +20,7 @@
   <data name="Status_MowingOverride" xml:space="preserve"><value>Pornire manuală (în afara programului)</value></data>
   <data name="Status_MowingSchedule" xml:space="preserve"><value>Conform programului</value></data>
   <data name="Status_Charging" xml:space="preserve"><value>Încărcare</value></data>
-  <data name="Status_ChargingRemaining" xml:space="preserve"><value>Încă {0}</value></data>
+  <data name="Status_ChargingRemaining" xml:space="preserve"><value>Mai sunt {0}</value></data>
   <data name="Status_Parked" xml:space="preserve"><value>Parcat</value></data>
   <data name="Status_ParkedUntil" xml:space="preserve"><value>Până {0}</value></data>
   <data name="Status_ParkedUntilFurtherNotice" xml:space="preserve"><value>Parcat până la noi instrucțiuni</value></data>
@@ -175,7 +175,7 @@
   <data name="Notification_TrayHintTitle" xml:space="preserve"><value>HusqA Cockpit rulează în continuare</value></data>
   <data name="Notification_TrayHintBody" xml:space="preserve"><value>Continuă să vă supravegheze roboții din zona de notificare. Faceți clic dreapta pe pictogramă pentru a ieși.</value></data>
   <data name="Dialog_ResetBladesTitle" xml:space="preserve"><value>Resetați contorul lamelor?</value></data>
-  <data name="Dialog_ResetBladesText" xml:space="preserve"><value>De făcut după înlocuirea lamelor robotului {0}.</value></data>
+  <data name="Dialog_ResetBladesText" xml:space="preserve"><value>Faceți acest lucru după înlocuirea lamelor robotului {0}.</value></data>
   <data name="Dialog_Reset" xml:space="preserve"><value>Resetați</value></data>
   <data name="Dialog_Cancel" xml:space="preserve"><value>Anulare</value></data>
   <data name="Nav_Dashboard.Content" xml:space="preserve"><value>Roboții mei</value></data>
@@ -285,9 +285,9 @@ Continuați?</value></data>
   <data name="Settings_ApiHeader.Text" xml:space="preserve"><value>API Husqvarna</value></data>
   <data name="Settings_ApiHelp.Text" xml:space="preserve"><value>Creați o aplicație în portalul pentru dezvoltatori Husqvarna, conectați-o la „Authentication API” și „Automower Connect API”, apoi copiați aici cheia și secretul acesteia.</value></data>
   <data name="Settings_ApiPortal.Content" xml:space="preserve"><value>Deschideți portalul pentru dezvoltatori Husqvarna</value></data>
-  <data name="Settings_ApplicationKey.Header" xml:space="preserve"><value>Cheie de aplicație (Application key)</value></data>
+  <data name="Settings_ApplicationKey.Header" xml:space="preserve"><value>Cheia aplicației</value></data>
   <data name="Settings_ApplicationKey.PlaceholderText" xml:space="preserve"><value>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</value></data>
-  <data name="Settings_ApplicationSecret.Header" xml:space="preserve"><value>Secret de aplicație (Application secret)</value></data>
+  <data name="Settings_ApplicationSecret.Header" xml:space="preserve"><value>Secretul aplicației</value></data>
   <data name="Settings_Save.Content" xml:space="preserve"><value>Salvați și conectați-vă</value></data>
   <data name="Settings_Test.Content" xml:space="preserve"><value>Testați</value></data>
   <data name="Settings_Delete.Content" xml:space="preserve"><value>Ștergeți</value></data>

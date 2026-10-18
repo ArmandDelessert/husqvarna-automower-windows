@@ -30,7 +30,7 @@
   <data name="When_Tomorrow" xml:space="preserve"><value>明天 {0}</value></data>
   <data name="When_Yesterday" xml:space="preserve"><value>昨天 {0}</value></data>
   <data name="When_Date" xml:space="preserve"><value>{0} {1}</value></data>
-  <data name="When_DatePattern" xml:space="preserve"><value>M月d日 ddd</value></data>
+  <data name="When_DatePattern" xml:space="preserve"><value>M\月d\日 ddd</value></data>
   <data name="Relative_JustNow" xml:space="preserve"><value>刚刚</value></data>
   <data name="Relative_Minutes" xml:space="preserve"><value>{0} 分钟前</value></data>
   <data name="Relative_Hours" xml:space="preserve"><value>{0} 小时前</value></data>
@@ -278,7 +278,7 @@
   <data name="Settings_EventRetentionHelp.Text" xml:space="preserve"><value>应用发现的割草开始和结束、错误、停止以及连接中断，每天保存为一个文件。它们显示在每台割草机器人页面的底部。</value></data>
   <data name="Settings_OpenEvents.Content" xml:space="preserve"><value>打开事件文件夹</value></data>
   <data name="Settings_EventRetentionTitle" xml:space="preserve"><value>删除旧事件？</value></data>
-  <data name="Settings_EventRetentionConfirm" xml:space="preserve"><value>将立即删除 {0} 个早于 {1} 天的事件文件，且无法恢复。
+  <data name="Settings_EventRetentionConfirm" xml:space="preserve"><value>将立即删除 {0} 个超过 {1} 天的事件文件，且无法恢复。
 
 是否继续？</value></data>
   <data name="Settings_Title.Text" xml:space="preserve"><value>设置</value></data>
@@ -311,7 +311,7 @@
   <data name="Settings_RetentionDays" xml:space="preserve"><value>{0} 天</value></data>
   <data name="Settings_RetentionForever" xml:space="preserve"><value>永久保留</value></data>
   <data name="Settings_LogRetentionTitle" xml:space="preserve"><value>删除旧日志？</value></data>
-  <data name="Settings_LogRetentionConfirm" xml:space="preserve"><value>将立即删除 {0} 个早于 {1} 天的日志文件，且无法恢复。
+  <data name="Settings_LogRetentionConfirm" xml:space="preserve"><value>将立即删除 {0} 个超过 {1} 天的日志文件，且无法恢复。
 
 是否继续？</value></data>
   <data name="Dialog_Delete" xml:space="preserve"><value>删除</value></data>

@@ -30,7 +30,7 @@
   <data name="When_Tomorrow" xml:space="preserve"><value>amanhã às {0}</value></data>
   <data name="When_Yesterday" xml:space="preserve"><value>ontem às {0}</value></data>
   <data name="When_Date" xml:space="preserve"><value>{0} às {1}</value></data>
-  <data name="When_DatePattern" xml:space="preserve"><value>ddd, d MMM</value></data>
+  <data name="When_DatePattern" xml:space="preserve"><value>ddd, d 'de' MMM</value></data>
   <data name="Relative_JustNow" xml:space="preserve"><value>agora mesmo</value></data>
   <data name="Relative_Minutes" xml:space="preserve"><value>há {0} min</value></data>
   <data name="Relative_Hours" xml:space="preserve"><value>há {0} h</value></data>
@@ -114,7 +114,7 @@
   <data name="Command_ResumeSent" xml:space="preserve"><value>O cortador de grama voltará a seguir a programação.</value></data>
   <data name="Command_ParkSent" xml:space="preserve"><value>Comando para estacionar enviado.</value></data>
   <data name="Command_ConfirmSent" xml:space="preserve"><value>Erro reconhecido.</value></data>
-  <data name="Command_SettingsSent" xml:space="preserve"><value>Ajuste enviado ao cortador de grama.</value></data>
+  <data name="Command_SettingsSent" xml:space="preserve"><value>Configuração enviada ao cortador de grama.</value></data>
   <data name="Command_BladeResetSent" xml:space="preserve"><value>Contador de uso das lâminas redefinido.</value></data>
   <data name="Command_ParkAllSent" xml:space="preserve"><value>Todos os cortadores de grama estão voltando para a estação até novo aviso.</value></data>
   <data name="Command_ResumeAllSent" xml:space="preserve"><value>Todos os cortadores de grama voltarão a seguir a programação.</value></data>
@@ -122,7 +122,7 @@
   <data name="Tray_Errors" xml:space="preserve"><value>{0} com problema</value></data>
   <data name="Tray_Open" xml:space="preserve"><value>Abrir o HusqA Cockpit</value></data>
   <data name="Tray_Refresh" xml:space="preserve"><value>Atualizar</value></data>
-  <data name="Tray_ParkAll" xml:space="preserve"><value>Estacionar todos os cortadores</value></data>
+  <data name="Tray_ParkAll" xml:space="preserve"><value>Estacionar todos os cortadores de grama</value></data>
   <data name="Tray_ResumeAll" xml:space="preserve"><value>Retomar todas as programações</value></data>
   <data name="Tray_Quit" xml:space="preserve"><value>Sair</value></data>
   <data name="Connection_Live" xml:space="preserve"><value>Tempo real</value></data>
@@ -224,7 +224,7 @@
   <data name="Detail_Mode.Text" xml:space="preserve"><value>Modo</value></data>
   <data name="Detail_LastUpdate.Text" xml:space="preserve"><value>Última atualização</value></data>
   <data name="Detail_CommandsHeader.Text" xml:space="preserve"><value>Comandos</value></data>
-  <data name="Detail_SettingsHeader.Text" xml:space="preserve"><value>Ajustes</value></data>
+  <data name="Detail_SettingsHeader.Text" xml:space="preserve"><value>Configurações</value></data>
   <data name="Detail_CuttingHeight.Text" xml:space="preserve"><value>Altura de corte (1–9)</value></data>
   <data name="Detail_Headlights.Text" xml:space="preserve"><value>Faróis</value></data>
   <data name="Detail_Apply.Content" xml:space="preserve"><value>Aplicar</value></data>
@@ -254,7 +254,7 @@
   <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Última posição conhecida</value></data>
   <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Abrir no OpenStreetMap</value></data>
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Recentralizar</value></data>
-  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linha: as últimas posições informadas pelo cortador de grama (o ponto grande é a mais recente; o pequeno, a mais antiga).</value></data>
+  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linha: as últimas posições informadas pelo cortador de grama (o ponto grande é o mais recente; o pequeno, o mais antigo).</value></data>
   <data name="Nav_Map.Content" xml:space="preserve"><value>Mapa</value></data>
   <data name="Nav_Quit.Content" xml:space="preserve"><value>Sair</value></data>
   <data name="Nav_Quit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Sair do HusqA Cockpit</value></data>

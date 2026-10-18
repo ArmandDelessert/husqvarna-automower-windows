@@ -39,7 +39,7 @@
   <data name="E31" xml:space="preserve"><value>Проблема з кнопкою STOP</value></data>
   <data name="E32" xml:space="preserve"><value>Проблема з датчиком нахилу</value></data>
   <data name="E33" xml:space="preserve"><value>Газонокосарку нахилено</value></data>
-  <data name="E34" xml:space="preserve"><value>Різання зупинено — занадто крутий схил</value></data>
+  <data name="E34" xml:space="preserve"><value>Кошення зупинено — занадто крутий схил</value></data>
   <data name="E35" xml:space="preserve"><value>Двигун колеса перевантажено, праворуч</value></data>
   <data name="E36" xml:space="preserve"><value>Двигун колеса перевантажено, ліворуч</value></data>
   <data name="E37" xml:space="preserve"><value>Занадто великий струм заряджання</value></data>

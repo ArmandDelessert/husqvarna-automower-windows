@@ -102,7 +102,7 @@
   <data name="Stats_CuttingTime" xml:space="preserve"><value>총 예초 시간</value></data>
   <data name="Stats_RunningTime" xml:space="preserve"><value>총 가동 시간</value></data>
   <data name="Stats_ChargingTime" xml:space="preserve"><value>총 충전 시간</value></data>
-  <data name="Stats_SearchingTime" xml:space="preserve"><value>스테이션 검색 소요 시간</value></data>
+  <data name="Stats_SearchingTime" xml:space="preserve"><value>스테이션 탐색 소요 시간</value></data>
   <data name="Stats_ChargingCycles" xml:space="preserve"><value>충전 횟수</value></data>
   <data name="Stats_Collisions" xml:space="preserve"><value>충돌</value></data>
   <data name="Stats_Distance" xml:space="preserve"><value>주행 거리</value></data>
@@ -241,7 +241,7 @@
   <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>시작</value></data>
   <data name="ScheduleEditor_End.Header" xml:space="preserve"><value>종료</value></data>
   <data name="ScheduleEditor_Add.Content" xml:space="preserve"><value>시간 구간 추가</value></data>
-  <data name="ScheduleEditor_Empty.Text" xml:space="preserve"><value>시간 구간 없음: 로봇 잔디깎이가 저절로 시작되지 않습니다.</value></data>
+  <data name="ScheduleEditor_Empty.Text" xml:space="preserve"><value>시간 구간 없음: 로봇 잔디깎이가 자동으로 시작되지 않습니다.</value></data>
   <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>이 시간 구간 제거</value></data>
   <data name="ScheduleEditor_Remove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>이 시간 구간 제거</value></data>
   <data name="Issue_NoDays" xml:space="preserve"><value>시간 구간 {0}: 요일을 하나 이상 선택하세요.</value></data>

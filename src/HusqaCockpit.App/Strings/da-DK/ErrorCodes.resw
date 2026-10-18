@@ -96,7 +96,7 @@
   <data name="E88" xml:space="preserve"><value>Problem med vinkelsensor</value></data>
   <data name="E89" xml:space="preserve"><value>Ugyldig systemkonfiguration</value></data>
   <data name="E90" xml:space="preserve"><value>Ingen strøm i ladestationen</value></data>
-  <data name="E91" xml:space="preserve"><value>Problem med kontaktledning</value></data>
+  <data name="E91" xml:space="preserve"><value>Problem med afbryderledning</value></data>
   <data name="E92" xml:space="preserve"><value>Ugyldigt arbejdsområde</value></data>
   <data name="E93" xml:space="preserve"><value>Ingen nøjagtig position fra satellitter</value></data>
   <data name="E94" xml:space="preserve"><value>Problem med kommunikation med referencestationen</value></data>

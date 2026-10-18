@@ -300,7 +300,7 @@ Fortsæt?</value></data>
   <data name="Settings_TaskNotifications.Header" xml:space="preserve"><value>Notifikationer, når en robotplæneklipper starter eller afslutter klipning</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Send en testnotifikation</value></data>
   <data name="Settings_BehaviorHeader.Text" xml:space="preserve"><value>Adfærd</value></data>
-  <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Fortsæt i meddelelsesområdet, når vinduet lukkes</value></data>
+  <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Fortsæt med at køre i meddelelsesområdet, når vinduet lukkes</value></data>
   <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Start med Windows (i meddelelsesområdet)</value></data>
   <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Opdateringsinterval uden realtidsopdateringer</value></data>
   <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna tillader {0} forespørgsler pr. måned pr. nøgle. Hvert {1}. minut bruger omkring {2} forespørgsler pr. måned.</value></data>

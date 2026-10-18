@@ -83,7 +83,7 @@
   <data name="E75" xml:space="preserve"><value>Conexión modificada</value></data>
   <data name="E76" xml:space="preserve"><value>Conexión NO modificada</value></data>
   <data name="E77" xml:space="preserve"><value>Placa de comunicación no disponible</value></data>
-  <data name="E78" xml:space="preserve"><value>Patinaje: la situación no se ha resuelto con las maniobras</value></data>
+  <data name="E78" xml:space="preserve"><value>Patinaje: situación no resuelta con el patrón de movimiento</value></data>
   <data name="E79" xml:space="preserve"><value>Combinación de baterías no válida</value></data>
   <data name="E80" xml:space="preserve"><value>Desequilibrio del sistema de corte</value></data>
   <data name="E81" xml:space="preserve"><value>Fallo en la función de seguridad</value></data>
@@ -131,7 +131,7 @@
   <data name="E123" xml:space="preserve"><value>Destino inalcanzable</value></data>
   <data name="E124" xml:space="preserve"><value>Destino bloqueado</value></data>
   <data name="E125" xml:space="preserve"><value>Hay que sustituir la batería</value></data>
-  <data name="E126" xml:space="preserve"><value>Batería al final de su vida útil</value></data>
+  <data name="E126" xml:space="preserve"><value>Batería cerca del final de su vida útil</value></data>
   <data name="E127" xml:space="preserve"><value>Problema de batería</value></data>
   <data name="E128" xml:space="preserve"><value>Se han detectado varias estaciones de referencia</value></data>
   <data name="E129" xml:space="preserve"><value>Dispositivo de corte auxiliar bloqueado</value></data>

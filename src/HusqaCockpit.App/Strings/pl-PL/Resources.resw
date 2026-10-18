@@ -7,7 +7,7 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="AppName" xml:space="preserve"><value>HusqA Cockpit</value></data>
   <data name="ErrorCode_Unknown" xml:space="preserve"><value>Nieznany błąd (kod {0})</value></data>
-  <data name="Error_NotConnected" xml:space="preserve"><value>Brak połączenia z Husqvarna. Sprawdź klucz API w ustawieniach.</value></data>
+  <data name="Error_NotConnected" xml:space="preserve"><value>Brak połączenia z Husqvarną. Sprawdź klucz API w ustawieniach.</value></data>
   <data name="Status_Disconnected" xml:space="preserve"><value>Rozłączony</value></data>
   <data name="Status_LastSeen" xml:space="preserve"><value>Ostatni kontakt {0}</value></data>
   <data name="Status_ErrorSince" xml:space="preserve"><value>Od {0}</value></data>
@@ -132,7 +132,7 @@
   <data name="Connection_NotConfigured" xml:space="preserve"><value>Wymagany klucz API</value></data>
   <data name="Banner_NoCredentialsTitle" xml:space="preserve"><value>Witaj!</value></data>
   <data name="Banner_NoCredentials" xml:space="preserve"><value>Wprowadź klucz API Husqvarna, aby zobaczyć swoje roboty koszące.</value></data>
-  <data name="Banner_StartingTitle" xml:space="preserve"><value>Łączenie z Husqvarna…</value></data>
+  <data name="Banner_StartingTitle" xml:space="preserve"><value>Łączenie z Husqvarną…</value></data>
   <data name="Banner_PollingTitle" xml:space="preserve"><value>Aktualizacje w czasie rzeczywistym są niedostępne</value></data>
   <data name="Banner_Polling" xml:space="preserve"><value>Dane robotów koszących są odświeżane okresowo.</value></data>
   <data name="Banner_Forbidden" xml:space="preserve"><value>Husqvarna odrzuciła połączenie w czasie rzeczywistym: w portalu dla deweloperów sprawdź, czy Twoja aplikacja jest połączona z „Automower Connect API” (często pomaga odnowienie klucza). W międzyczasie dane robotów koszących są odświeżane okresowo.</value></data>
@@ -186,7 +186,7 @@
   <data name="Dashboard_ParkAll.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Odeślij wszystkie roboty koszące do stacji do odwołania</value></data>
   <data name="Dashboard_Refresh.Label" xml:space="preserve"><value>Odśwież</value></data>
   <data name="Dashboard_EmptyTitle.Text" xml:space="preserve"><value>Brak robotów koszących</value></data>
-  <data name="Dashboard_EmptyText.Text" xml:space="preserve"><value>Twoje roboty koszące pojawią się tutaj, gdy tylko zostanie nawiązane połączenie z Husqvarna.</value></data>
+  <data name="Dashboard_EmptyText.Text" xml:space="preserve"><value>Twoje roboty koszące pojawią się tutaj, gdy tylko zostanie nawiązane połączenie z Husqvarną.</value></data>
   <data name="Banner_OpenSettings.Content" xml:space="preserve"><value>Otwórz ustawienia</value></data>
   <data name="Card_Details.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Szczegóły</value></data>
   <data name="Card_Details.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>Szczegóły</value></data>
@@ -295,7 +295,7 @@ Kontynuować?</value></data>
   <data name="Settings_NotificationsHeader.Text" xml:space="preserve"><value>Powiadomienia</value></data>
   <data name="Settings_NotifyErrors.Header" xml:space="preserve"><value>Gdy robot koszący zgłosi błąd lub alarm</value></data>
   <data name="Settings_NotifyRecoveries.Header" xml:space="preserve"><value>Gdy robot koszący wróci do działania po błędzie</value></data>
-  <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Gdy robot koszący zatrzyma się i wymaga ręcznej interwencji</value></data>
+  <data name="Settings_NotifyStopped.Header" xml:space="preserve"><value>Gdy robot koszący zatrzyma się i będzie wymagał ręcznej interwencji</value></data>
   <data name="Settings_NotifyConnectivity.Header" xml:space="preserve"><value>Gdy robot koszący utraci lub odzyska połączenie</value></data>
   <data name="Settings_TaskNotifications.Header" xml:space="preserve"><value>Powiadomienia o rozpoczęciu i zakończeniu koszenia</value></data>
   <data name="Settings_TestNotification.Content" xml:space="preserve"><value>Wyślij powiadomienie testowe</value></data>

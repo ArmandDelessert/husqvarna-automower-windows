@@ -30,7 +30,7 @@
   <data name="When_Tomorrow" xml:space="preserve"><value>huomenna klo {0}</value></data>
   <data name="When_Yesterday" xml:space="preserve"><value>eilen klo {0}</value></data>
   <data name="When_Date" xml:space="preserve"><value>{0} klo {1}</value></data>
-  <data name="When_DatePattern" xml:space="preserve"><value>ddd d. MMM</value></data>
+  <data name="When_DatePattern" xml:space="preserve"><value>ddd d.M.</value></data>
   <data name="Relative_JustNow" xml:space="preserve"><value>juuri äsken</value></data>
   <data name="Relative_Minutes" xml:space="preserve"><value>{0} min sitten</value></data>
   <data name="Relative_Hours" xml:space="preserve"><value>{0} h sitten</value></data>
@@ -90,7 +90,7 @@
   <data name="TaskNotificationMode_EndOnly" xml:space="preserve"><value>Vain leikkuun loppu</value></data>
   <data name="TaskNotificationMode_StartAndEnd" xml:space="preserve"><value>Leikkuun alku ja loppu</value></data>
   <data name="MessageSeverity_Unknown" xml:space="preserve"><value>Tuntematon</value></data>
-  <data name="MessageSeverity_Fatal" xml:space="preserve"><value>Kriittinen</value></data>
+  <data name="MessageSeverity_Fatal" xml:space="preserve"><value>Vakava</value></data>
   <data name="MessageSeverity_Error" xml:space="preserve"><value>Virhe</value></data>
   <data name="MessageSeverity_Warning" xml:space="preserve"><value>Varoitus</value></data>
   <data name="MessageSeverity_Info" xml:space="preserve"><value>Tieto</value></data>
@@ -178,8 +178,8 @@
   <data name="Dialog_ResetBladesText" xml:space="preserve"><value>Tee tämä robottiruohonleikkurin {0} terien vaihdon jälkeen.</value></data>
   <data name="Dialog_Reset" xml:space="preserve"><value>Nollaa</value></data>
   <data name="Dialog_Cancel" xml:space="preserve"><value>Peruuta</value></data>
-  <data name="Nav_Dashboard.Content" xml:space="preserve"><value>Robottiruohonleikkurit</value></data>
-  <data name="Dashboard_Title.Text" xml:space="preserve"><value>Robottiruohonleikkurit</value></data>
+  <data name="Nav_Dashboard.Content" xml:space="preserve"><value>Omat robottiruohonleikkurit</value></data>
+  <data name="Dashboard_Title.Text" xml:space="preserve"><value>Omat robottiruohonleikkurit</value></data>
   <data name="Dashboard_ResumeAll.Label" xml:space="preserve"><value>Jatka kaikkia</value></data>
   <data name="Dashboard_ResumeAll.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>Kaikki robottiruohonleikkurit noudattavat taas aikataulua</value></data>
   <data name="Dashboard_ParkAll.Label" xml:space="preserve"><value>Pysäköi kaikki</value></data>
@@ -235,7 +235,7 @@
   <data name="Detail_EditSchedule.Content" xml:space="preserve"><value>Muokkaa aikataulua…</value></data>
   <data name="Detail_ScheduleWorkAreas.Text" xml:space="preserve"><value>Tämä robottiruohonleikkuri käyttää työalueita: sen aikataulua ei voi vielä muokata täällä.</value></data>
   <data name="ScheduleEditorDialog.Title" xml:space="preserve"><value>Viikkoaikataulu</value></data>
-  <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Lähetä robottiruohonleikkurille</value></data>
+  <data name="ScheduleEditorDialog.PrimaryButtonText" xml:space="preserve"><value>Lähetä leikkurille</value></data>
   <data name="ScheduleEditorDialog.CloseButtonText" xml:space="preserve"><value>Peruuta</value></data>
   <data name="ScheduleEditor_Hint.Text" xml:space="preserve"><value>Robottiruohonleikkuri leikkaa näinä aikaväleinä valittuina päivinä. Aikaväli voi päättyä keskiyöhön; keskiyöstä keskiyöhön se kestää koko päivän. Muutos lähetetään robottiruohonleikkurille, kun vahvistat.</value></data>
   <data name="ScheduleEditor_Start.Header" xml:space="preserve"><value>Alkaa</value></data>
@@ -251,7 +251,7 @@
   <data name="Command_ScheduleSent" xml:space="preserve"><value>Aikataulu lähetetty robottiruohonleikkurille.</value></data>
   <data name="Detail_StatisticsHeader.Text" xml:space="preserve"><value>Tilastot</value></data>
   <data name="Detail_ResetBlades.Content" xml:space="preserve"><value>Nollaa terälaskuri</value></data>
-  <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Viimeksi tiedossa ollut sijainti</value></data>
+  <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Viimeisin tunnettu sijainti</value></data>
   <data name="Detail_OpenMap.Content" xml:space="preserve"><value>Avaa OpenStreetMapissa</value></data>
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Keskitä uudelleen</value></data>
   <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Viiva: robottiruohonleikkurin viimeksi ilmoittamat sijainnit (suuri piste on uusin, pieni vanhin).</value></data>

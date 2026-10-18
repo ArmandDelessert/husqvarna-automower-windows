@@ -254,7 +254,7 @@
   <data name="Detail_PositionHeader.Text" xml:space="preserve"><value>Letzte bekannte Position</value></data>
   <data name="Detail_OpenMap.Content" xml:space="preserve"><value>In OpenStreetMap öffnen</value></data>
   <data name="Detail_Recenter.Content" xml:space="preserve"><value>Zentrieren</value></data>
-  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linie: die zuletzt vom Mähroboter gemeldeten Positionen (der große Punkt ist die neueste, der kleine die älteste).</value></data>
+  <data name="Detail_TrackHint.Text" xml:space="preserve"><value>Linie: die zuletzt vom Mähroboter gemeldeten Positionen (der große Punkt zeigt die neueste Position, der kleine die älteste).</value></data>
   <data name="Nav_Map.Content" xml:space="preserve"><value>Karte</value></data>
   <data name="Nav_Quit.Content" xml:space="preserve"><value>Beenden</value></data>
   <data name="Nav_Quit.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>HusqA Cockpit beenden</value></data>
@@ -303,7 +303,7 @@ Fortfahren?</value></data>
   <data name="Settings_CloseToTray.Header" xml:space="preserve"><value>Beim Schließen des Fensters im Infobereich weiterlaufen</value></data>
   <data name="Settings_StartWithWindows.Header" xml:space="preserve"><value>Mit Windows starten (im Infobereich)</value></data>
   <data name="Settings_PollingInterval.Header" xml:space="preserve"><value>Aktualisierungsintervall ohne Echtzeitverbindung</value></data>
-  <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna erlaubt {0} Anfragen pro Monat und Schlüssel. Alle {1} Minuten verbrauchen etwa {2} Anfragen pro Monat.</value></data>
+  <data name="Settings_PollingHelp" xml:space="preserve"><value>Husqvarna erlaubt {0} Anfragen pro Monat und Schlüssel. Eine Aktualisierung alle {1} Minuten verbraucht etwa {2} Anfragen pro Monat.</value></data>
   <data name="Settings_LogsHeader.Text" xml:space="preserve"><value>Protokolle</value></data>
   <data name="Settings_LogRetention.Header" xml:space="preserve"><value>Protokolle aufbewahren für</value></data>
   <data name="Settings_LogRetentionHelp.Text" xml:space="preserve"><value>Eine Datei pro Tag im Protokollordner. Die ältesten werden beim Start der App gelöscht, bei einer Verkürzung der Dauer sofort.</value></data>

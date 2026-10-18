@@ -153,7 +153,7 @@
   <data name="E147" xml:space="preserve"><value>Klippeskive mistet</value></data>
   <data name="E148" xml:space="preserve"><value>Kollisjon med understellet</value></data>
   <data name="E149" xml:space="preserve"><value>Feil på synssystemet</value></data>
-  <data name="E151" xml:space="preserve"><value>Dårlig synsytelse</value></data>
+  <data name="E151" xml:space="preserve"><value>Dårlig ytelse fra synssystemet</value></data>
   <data name="E152" xml:space="preserve"><value>Feil i synssystemet</value></data>
   <data name="E153" xml:space="preserve"><value>Lading avbrutt</value></data>
   <data name="E154" xml:space="preserve"><value>Vannslange funnet i arbeidsområdet</value></data>
