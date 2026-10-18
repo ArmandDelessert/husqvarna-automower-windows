@@ -1,11 +1,11 @@
-"""Generates the .resw resource files of HusqaCockpit.App from the tables of this folder.
+"""Generates the .resw resource files of the application (src/*.App/Strings) from the tables of this folder.
 
 Usage (from the repository root):
     python tools/strings/generate_resw.py           writes src/HusqaCockpit.App/Strings/{language}/*.resw
     python tools/strings/generate_resw.py --check   writes nothing, fails on a translation that cannot be used
 
 Sources:
-    ui_strings.py, error_codes.py   the English and French texts (the source of the texts)
+    ui_strings.py, error_codes.py   the English and French texts (the source of the texts); error_codes.py is optional
     translations/{language}.json    the other languages: {"ui": {key: text}, "errors": {"0": text, ...}}
 
 Edit these files, never the generated .resw files. A text missing from a translation is left out of its .resw:
@@ -18,12 +18,18 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-from error_codes import ERROR_CODES
 from ui_strings import STRINGS
+
+try:
+    from error_codes import ERROR_CODES
+except ModuleNotFoundError:
+    ERROR_CODES = {}
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-STRINGS_DIR = ROOT / "src" / "HusqaCockpit.App" / "Strings"
+APP_DIR = next((ROOT / "src").glob("*.App"))
+STRINGS_DIR = APP_DIR / "Strings"
+XAML_UID = re.compile(r'x:Uid="([^"]+)"')
 TRANSLATIONS_DIR = HERE / "translations"
 PLACEHOLDER = re.compile(r"\{(\d+)(?::[^}]*)?\}")
 
@@ -73,6 +79,14 @@ def problems(language: str, table: dict) -> list[str]:
     return found
 
 
+def xaml_problems() -> list[str]:
+    """Every x:Uid of the XAML has resources, and every resource with a dot belongs to an x:Uid: a text missing shows nothing, silently."""
+    used = {uid for path in APP_DIR.rglob("*.xaml") if "obj" not in path.parts for uid in XAML_UID.findall(path.read_text(encoding="utf-8"))}
+    defined = {key.split(".", 1)[0] for key in STRINGS if "." in key}
+    return [f"x:Uid '{uid}' has no resource in ui_strings.py" for uid in sorted(used - defined)] \
+        + [f"ui_strings.py has resources for '{uid}', which no XAML file uses" for uid in sorted(defined - used)]
+
+
 def missing(table: dict) -> tuple[list[str], list[int]]:
     return [k for k in STRINGS if k not in table.get("ui", {})], [c for c in ERROR_CODES if str(c) not in table.get("errors", {})]
 
@@ -80,7 +94,7 @@ def missing(table: dict) -> tuple[list[str], list[int]]:
 def main() -> int:
     check_only = "--check" in sys.argv[1:]
     translations = load_translations()
-    failures = [p for language, table in translations.items() for p in problems(language, table)]
+    failures = xaml_problems() + [p for language, table in translations.items() for p in problems(language, table)]
     for failure in failures:
         print(f"error: {failure}", file=sys.stderr)
     if failures:
@@ -88,16 +102,18 @@ def main() -> int:
 
     if not check_only:
         write(STRINGS_DIR / "en-US" / "Resources.resw", {k: v[0] for k, v in STRINGS.items()})
-        write(STRINGS_DIR / "en-US" / "ErrorCodes.resw", {f"E{code}": texts[0] for code, texts in ERROR_CODES.items()})
         write(STRINGS_DIR / "fr-FR" / "Resources.resw", {k: v[1] for k, v in STRINGS.items()})
-        write(STRINGS_DIR / "fr-FR" / "ErrorCodes.resw", {f"E{code}": texts[1] for code, texts in ERROR_CODES.items()})
+        for index, language in enumerate(("en-US", "fr-FR")):
+            if ERROR_CODES:
+                write(STRINGS_DIR / language / "ErrorCodes.resw", {f"E{code}": texts[index] for code, texts in ERROR_CODES.items()})
         for language, table in translations.items():
             ui, errors = table.get("ui", {}), table.get("errors", {})
             write(STRINGS_DIR / language / "Resources.resw", {k: ui[k] for k in STRINGS if k in ui})
-            write(STRINGS_DIR / language / "ErrorCodes.resw", {f"E{code}": errors[str(code)] for code in ERROR_CODES if str(code) in errors})
+            if ERROR_CODES:
+                write(STRINGS_DIR / language / "ErrorCodes.resw", {f"E{code}": errors[str(code)] for code in ERROR_CODES if str(code) in errors})
 
     languages = ["en-US", "fr-FR", *translations]
-    print(f"{len(STRINGS)} UI strings and {len(ERROR_CODES)} error codes, in {len(languages)} languages: {', '.join(languages)}")
+    print(f"{len(STRINGS)} UI strings{f' and {len(ERROR_CODES)} error codes' if ERROR_CODES else ''}, in {len(languages)} languages: {', '.join(languages)}")
     for language, table in translations.items():
         ui_missing, errors_missing = missing(table)
         if ui_missing or errors_missing:
