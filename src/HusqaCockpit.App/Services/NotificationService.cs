@@ -25,7 +25,15 @@ public sealed partial class NotificationService(ILogger<NotificationService> log
         {
             // The handler must be attached before registering.
             AppNotificationManager.Default.NotificationInvoked += (_, args) => HandleArguments(args.Arguments);
-            AppNotificationManager.Default.Register(Loc.Get("AppName"), new Uri(AppPaths.IconPath));
+            if (PackageIdentity.IsPackaged)
+            {
+                // The name and the icon are the manifest's, and so is the way a click starts the application again.
+                AppNotificationManager.Default.Register();
+            }
+            else
+            {
+                AppNotificationManager.Default.Register(Loc.Get("AppName"), new Uri(AppPaths.IconPath));
+            }
             _registered = true;
         }
         catch (Exception ex)

@@ -142,20 +142,21 @@ public partial class App : Application
         Exit();
     }
 
-    /// <summary>Starts a new instance of the app, then quits this one (e.g. to apply a new language).</summary>
+    /// <summary>
+    /// Starts the app again, to apply a new language. Windows does it, whichever way the app was started: from its package, whose
+    /// folder cannot be launched directly, or from a folder. It ends this process at once, the new one waiting for it to be gone
+    /// (see Program); so what has to be kept is kept first, and the icon goes. It only comes back when Windows could not restart the
+    /// app, the icon then put back.
+    /// </summary>
     public void Restart()
     {
-        try
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(
-                Environment.ProcessPath!, $"{Program.WaitForExitArgument}={Environment.ProcessId}") { UseShellExecute = false });
-        }
-        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
-        {
-            LogRestartFailed(_logger, ex);
-            return;
-        }
-        Quit();
+        SavePendingQuota();
+        _tray?.Dispose();
+        _tray = null;
+        var failure = AppInstance.Restart($"{Program.WaitForExitArgument}={Environment.ProcessId}");
+        LogRestartFailed(_logger, failure);
+        CreateTrayIcon();
+        UpdateTray();
     }
 
     /// <summary>Called when the main window is closed while the app keeps running in the tray.</summary>
@@ -296,8 +297,8 @@ public partial class App : Application
     [LoggerMessage(Level = LogLevel.Warning, Message = "Clean shutdown failed")]
     private static partial void LogShutdownFailed(ILogger logger, Exception exception);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "Could not restart")]
-    private static partial void LogRestartFailed(ILogger logger, Exception exception);
+    [LoggerMessage(Level = LogLevel.Error, Message = "Could not restart: {Reason}")]
+    private static partial void LogRestartFailed(ILogger logger, Windows.ApplicationModel.Core.AppRestartFailureReason reason);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Could not start monitoring")]
     private static partial void LogMonitoringStartFailed(ILogger logger, Exception exception);

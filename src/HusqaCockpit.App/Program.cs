@@ -38,7 +38,10 @@ public static class Program
         {
             var context = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
             SynchronizationContext.SetSynchronizationContext(context);
-            _ = new App(startMinimized: args.Contains(MinimizedArgument, StringComparer.OrdinalIgnoreCase));
+            // "Start with Windows" starts the app with the switch, or, from the MSIX package, as a startup task: no arguments then.
+            var startMinimized = args.Contains(MinimizedArgument, StringComparer.OrdinalIgnoreCase)
+                || AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.StartupTask;
+            _ = new App(startMinimized);
         });
         return 0;
     }
