@@ -132,6 +132,8 @@ on a `TimeProvider`, simulated in the tests.
   match their Python sources.
 - `.github/workflows/release.yml` publishes a release for every `vX.Y.Z` tag, and the `dev` pre-release for every push to `main`.
 - `.github/dependabot.yml` proposes updates to the NuGet packages and the GitHub actions every week, as pull requests.
+  `.github/workflows/dependabot-auto-merge.yml` merges the small ones (patch and minor) once the CI is green; majors, the Windows
+  App SDK family, WebView2, Win2D and anything that fails stay open for a review.
 
 ### Publishing a release
 
